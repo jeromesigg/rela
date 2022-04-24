@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\surveillance;
+use App\Models\HealthInformation;
+use App\Models\Surveillance;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class SurveillanceController extends Controller
 {
@@ -15,16 +19,54 @@ class SurveillanceController extends Controller
     public function index()
     {
         //
+        return view('dashboard.surveillance.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function createDataTables()
     {
         //
+        $surveillances = Surveillance::get();
+
+        return DataTables::of($surveillances)
+            ->addColumn('code', function (Surveillance $surveillance) {
+                $healthinfo = $surveillance->health_information;
+                return '<a href='.\URL::route('surveillance.show',$surveillance).'>'.$healthinfo['code'].'</a>';
+            })
+            ->addColumn('user', function (Surveillance $surveillance) {
+                return $surveillance->user['name'];
+            })
+            ->addColumn('date', function (Surveillance $surveillance) {
+                return Carbon::parse($surveillance['date'])->format('d.m.Y');
+            })
+            ->rawColumns(['code'])
+            ->make(true);
+    }
+
+    public function create(Request $request)
+    {
+        //
+        $input = $request->all();
+        if(count($input)>0) {
+            $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
+            if ($healthinfo == null) {
+                return redirect()->to(url()->previous())
+                    ->withErrors('Es konnte kein Teilnehmer mit diesen Angaben gefunden werden.')
+                    ->withInput();
+            }
+            $surveillance = new Surveillance([
+                'health_information_id' => $healthinfo['id'],
+                'date' => Carbon::now()->toDateString(),
+                'time' => Carbon::now()->toTimeString(),
+            ]);
+        }
+        else{
+            $surveillance = new Surveillance([
+                'date' => Carbon::now()->toDateString(),
+                'time' => Carbon::now()->toTimeString(),
+            ]);
+        }
+        $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
+        return view('dashboard.surveillance.create', compact('surveillance', 'healthinfos'));
     }
 
     /**
@@ -36,15 +78,21 @@ class SurveillanceController extends Controller
     public function store(Request $request)
     {
         //
+        $input = $request->all();
+        $user = Auth::user();
+        $input['user_id'] = $user['id'];
+        Surveillance::create($input);
+
+        return redirect('/dashboard/surveillance');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\surveillance  $surveillance
+     * @param  \App\Models\Surveillance  $surveillance
      * @return \Illuminate\Http\Response
      */
-    public function show(surveillance $surveillance)
+    public function show(Surveillance $surveillance)
     {
         //
     }
@@ -52,10 +100,10 @@ class SurveillanceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\surveillance  $surveillance
+     * @param  \App\Models\Surveillance  $surveillance
      * @return \Illuminate\Http\Response
      */
-    public function edit(surveillance $surveillance)
+    public function edit(Surveillance $surveillance)
     {
         //
     }
@@ -64,10 +112,10 @@ class SurveillanceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\surveillance  $surveillance
+     * @param  \App\Models\Surveillance  $surveillance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, surveillance $surveillance)
+    public function update(Request $request, Surveillance $surveillance)
     {
         //
     }
@@ -75,10 +123,10 @@ class SurveillanceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\surveillance  $surveillance
+     * @param  \App\Models\Surveillance  $surveillance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(surveillance $surveillance)
+    public function destroy(Surveillance $surveillance)
     {
         //
     }

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::connection('mysql_info')->create('groups', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::connection('mysql_info')->dropIfExists('groups');
     }
 };

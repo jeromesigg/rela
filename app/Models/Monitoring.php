@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Monitoring extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id'
+    ];
+
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function health_information(){
+        return $this->belongsTo(HealthInformation::class);
+    }
 }

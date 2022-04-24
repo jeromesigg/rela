@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\HealthInformation;
+use App\Models\HealthStatus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class HealthInformationController extends Controller
 {
@@ -15,8 +18,42 @@ class HealthInformationController extends Controller
     public function index()
     {
         //
+        return view('dashboard.healthinformation.index');
     }
 
+    public function createDataTables()
+    {
+        //
+        $healthinfo = HealthInformation::get();
+
+        return DataTables::of($healthinfo)
+            ->addColumn('code', function (HealthInformation $act_healthinfo) {
+                return '<a href='.\URL::route('healthinformation.show',$act_healthinfo).'>'.$act_healthinfo['code'].'</a>';
+            })
+            ->addColumn('allergies', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->allergies);
+            })
+            ->addColumn('monitorings', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->monitorings);
+            })
+            ->addColumn('medications', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->medications);
+            })
+            ->addColumn('measures', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->measures);
+            })
+            ->addColumn('surveillances', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->surveillances);
+            })
+            ->addColumn('healthstatus', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->healthstatus);
+            })
+            ->addColumn('incidents', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->incidents);
+            })
+            ->rawColumns(['code'])
+            ->make(true);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -44,9 +81,11 @@ class HealthInformationController extends Controller
      * @param  \App\Models\HealthInformation  $healthInformation
      * @return \Illuminate\Http\Response
      */
-    public function show(HealthInformation $healthInformation)
+    public function show(HealthInformation $healthinformation)
     {
         //
+        return view('dashboard.healthinformation.show', compact('healthinformation'));
+
     }
 
     /**
@@ -55,7 +94,7 @@ class HealthInformationController extends Controller
      * @param  \App\Models\HealthInformation  $healthInformation
      * @return \Illuminate\Http\Response
      */
-    public function edit(HealthInformation $healthInformation)
+    public function edit(HealthInformation $healthinformation)
     {
         //
     }

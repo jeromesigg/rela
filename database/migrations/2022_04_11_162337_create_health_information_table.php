@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('health_information', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->longText('code');
+            $table->integer('code');
             $table->string('recent_issues')->nullable();
             $table->string('recent_issues_doctor')->nullable();
             $table->string('drugs')->nullable();

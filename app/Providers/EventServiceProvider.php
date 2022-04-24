@@ -21,10 +21,6 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        UserCreated::class => [
-            MakeUserSlug::class,
-            CreateCampUser::class,
-        ],
         'Illuminate\Auth\Events\Verified' => [
             'App\Listeners\LogVerifiedUser',
         ],

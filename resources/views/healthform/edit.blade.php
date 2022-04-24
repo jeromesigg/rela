@@ -151,17 +151,16 @@ Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten u
         <br>
         <h4>7. Abschluss</h4>
         <hr>
-        <div class="form-group col-md-6">
-            {!! Form::checkbox('healthform[finish]', '1', $healthform['finish']) !!}
-            {!! Form::label('healthform[finish]', 'Gesundheitsblatt abschliessen') !!}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {!! Form::submit('Gesundheitsblatt senden', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
+            </div>
+            <div class="form-group col-md-6">
+                Ich bestätige, dass alle Angaben vollständig sind und der Wahrheit entsprechen:
+                {!! Form::submit('Gesundheitsblatt abschliessen', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'close'])!!}
+            </div>
         </div>
-
-
-
-
-        <div class="form-group">
-            {!! Form::submit('Gesundheitsblatt senden', ['class' => 'btn btn-primary'])!!}
-        </div>
+        {!! Form::close()!!}
     </div>
 
 @endsection

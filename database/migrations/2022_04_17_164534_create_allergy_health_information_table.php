@@ -18,7 +18,7 @@ class CreateAllergyHealthInformationTable extends Migration
             $table->timestamps();
             $table->string('comment')->nullable();
             $table->bigInteger('health_information_id')->index()->unsigned();
-            $table->foreign('health_information_id')->references('id')->on('health_information');
+            $table->foreign('health_information_id')->references('id')->on('health_information')->onDelete('cascade');
             $table->bigInteger('allergy_id')->index()->unsigned();
             $table->foreign('allergy_id')->references('id')->on('allergies');
         });

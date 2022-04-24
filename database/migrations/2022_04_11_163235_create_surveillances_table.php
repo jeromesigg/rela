@@ -20,7 +20,8 @@ return new class extends Migration
             $table->foreign('health_information_id')->references('id')->on('health_information');
             $table->bigInteger('user_id')->index()->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->dateTime('datetime');
+            $table->date('date');
+            $table->time('time');
             $table->mediumText('comment')->nullable();
             $table->string('parameter');
             $table->string('value');

@@ -10,12 +10,9 @@
     "require": {
         "php": "^7.4.1",
         "andcarpi/laravel-popper": "^0.9.4",
-        "bugsnag/bugsnag-laravel": "^2.0",
-        "calebporzio/parental": "^1.0",
+        "barryvdh/laravel-dompdf": "^1.0",
         "doctrine/dbal": "^3.0",
         "fideloper/proxy": "^4.2",
-        "fzaninotto/faker": "^1.9",
-        "intervention/image": "^2.5",
         "ixudra/curl": "^6.21",
         "laravel-lang/lang": "~7.0",
         "laravel/framework": "^8.0",
@@ -23,10 +20,6 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.1",
-        "maatwebsite/excel": "^3.1",
-        "nicolaslopezj/searchable": "^1.13",
-        "socialiteproviders/zoho": "^4.1",
-        "spatie/laravel-ray": "^1.26",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {

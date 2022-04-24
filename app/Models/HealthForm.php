@@ -14,6 +14,8 @@ class HealthForm extends Model
         'doctor_contact', 'health_insurance_contact', 'accident_insurance_contact', 'liability_insurance_contact', 'finish', 'birthday', 'phone_number', 'swimmer'
     ];
 
+    protected $connection = 'mysql_info';
+
     public function group(){
         return $this->belongsTo(Group::class);
     }

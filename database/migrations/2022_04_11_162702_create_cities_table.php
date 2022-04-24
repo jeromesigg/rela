@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::connection('mysql_info')->create('cities', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cities');
+        Schema::connection('mysql_info')->dropIfExists('cities');
     }
 };

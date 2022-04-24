@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Models\Allergy;
 use App\Models\AllergyHealthInformation;
 use App\Models\City;
@@ -9,6 +10,7 @@ use App\Models\Group;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -36,6 +38,10 @@ class HealthFormController extends Controller
         return DataTables::of($healthForm)
             ->addColumn('group', function (HealthForm $healthForm) {
                 return $healthForm->group ? $healthForm->group['name'] : '';})
+            ->addColumn('nickname', function (HealthForm $healthForm) {
+                $nickname = $healthForm->nickname;
+                return '<a href='.\URL::route('healthform.show',$healthForm).'>'.$nickname.'</a>';
+                })
             ->addColumn('code', function (HealthForm $healthForm) {
                 if(Auth::user()->isAdmin()) {
                     return Crypt::decryptString($healthForm->code);
@@ -46,6 +52,7 @@ class HealthFormController extends Controller
             })
             ->addColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
+            ->rawColumns(['nickname'])
             ->make(true);
     }
     /**
@@ -56,7 +63,7 @@ class HealthFormController extends Controller
     public function create()
     {
         //
-        $groups = Group::pluck('name', 'id')->all();
+        $groups = Group::on('mysql_info')->pluck('name', 'id')->all();
         return view('dashboard.healthform.create', compact('groups'));
     }
 
@@ -87,7 +94,7 @@ class HealthFormController extends Controller
             foreach($participants as $participant){
                 $user = User::where('id','=',$participant->id)->first();
                 if(!$user){
-                    $group = Group::where('id','=', $participant->ortsgruppe_id)->first();
+                    $group = Group::on('mysql_info')->where('id','=', $participant->ortsgruppe_id)->first();
                     if(!$group){
                         $group_id = 2;
                     }
@@ -108,7 +115,7 @@ class HealthFormController extends Controller
                         'birthday' => $participant->birthday,
                     );
                     HealthForm::create($insertData);
-                    HealthInformation::create(['code' => Crypt::encryptString($code)]);
+                    HealthInformation::create(['code' => $code]);
                 }
             }
             return true;
@@ -123,7 +130,24 @@ class HealthFormController extends Controller
         return $code;
     }
 
-    public function show(Request $request)
+    public function show(HealthForm $healthform)
+    {
+        //
+        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $allergies = $healthinfo->allergies;
+
+        return view('healthform.show', compact('healthform', 'healthinfo', 'allergies'));
+
+    }
+
+    public function downloadPDF(HealthForm $healthform)
+    {
+        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $allergies = $healthinfo->allergies;
+        return view('healthform.print', compact('healthform', 'healthinfo', 'allergies'));
+    }
+
+    public function edit(Request $request)
     {
         //
         $input = $request->all();
@@ -135,43 +159,29 @@ class HealthFormController extends Controller
                 break;
             }
         }
-        $healthinfos = HealthInformation::get();
-        $healthinfo = null;
-        foreach ($healthinfos as $act_healthinfo){
-            if($input['code'] == Crypt::decryptString($act_healthinfo['code'])){
-                $healthinfo = $act_healthinfo;
-                $allergyHealthInformation = AllergyHealthInformation::where('health_information_id','=',$healthinfo['id'])->get();
-                if (count($allergyHealthInformation)==0){
-                    $allergies = Allergy::get();
-                    foreach ($allergies as $allergy){
-                        AllergyHealthInformation::create([
-                            'health_information_id' => $healthinfo['id'],
-                            'allergy_id' => $allergy['id']]);
-                    }
-                }
-                $allergies = AllergyHealthInformation::where('health_information_id','=',$healthinfo['id'])->get();
-                break;
+        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $allergyHealthInformation = $healthinfo->allergies;
+        if (count($allergyHealthInformation)==0){
+            $allergies = Allergy::get();
+            foreach ($allergies as $allergy){
+                AllergyHealthInformation::create([
+                    'health_information_id' => $healthinfo['id'],
+                    'allergy_id' => $allergy['id']]);
             }
         }
+        $allergies = AllergyHealthInformation::where('health_information_id','=',$healthinfo['id'])->get();
 //
         if ($healthform == null) {
             return redirect()->to(url()->previous())
                 ->withErrors('Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.')
                 ->withInput();
         }
-
-        return view('healthform.edit', compact('healthform', 'healthinfo', 'allergies'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Health_Form  $health_Form
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(HealthForm $healthform)
-    {
-        //
+        elseif($healthform['finish']) {
+            return view('healthform.show', compact('healthform', 'healthinfo', 'allergies'));
+        }
+        else{
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'allergies'));
+        }
     }
 
     /**
@@ -189,16 +199,18 @@ class HealthFormController extends Controller
         $input_healthinfo = $input['healthinfo'];
         $input_allergies = $input['allergies'];
 
-        $healthinfos = HealthInformation::get();
-        $healthinfo = null;
-        foreach ($healthinfos as $act_healthinfo){
-            if(Crypt::decryptString($healthform['code']) == Crypt::decryptString($act_healthinfo['code'])){
-                $healthinfo = $act_healthinfo;
-                break;
-            }
-        }
+        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+
         $input_healthform['swimmer'] = isset($input_healthform['swimmer']);
-        $input_healthform['finish'] = isset($input_healthform['finish']);
+        if($input['submit_btn'] == 'Gesundheitsblatt abschliessen') {
+            $finish = true;
+            $message = 'Dein Gesundheitsblatt wurde übermittelt, vielen Dank.';
+        }
+        else{
+            $finish = false;
+            $message = 'Vielen Dank für die Eingaben. Dein Gesundheitsblatt wurde aktualisiert.';
+        }
+        $input_healthform['finish'] = $finish;
         $input_healthinfo['drugs_only_contact'] = isset($input_healthinfo['drugs_only_contact']);
         $healthform->update($input_healthform);
         $healthinfo->update($input_healthinfo);
@@ -207,7 +219,12 @@ class HealthFormController extends Controller
         foreach ($allergies as $index => $allergy){
             $allergy->update(['comment' => $input_allergies[$index]]);
         }
-        return redirect()->to('/')->with('success', 'Vielen Dank für die Eingaben. Dein Gesundheitsblatt wurde aktualisiert.');
+        if($finish){
+            return redirect()->route('healthform.show', $healthform);
+        }
+        else {
+            return redirect()->to('/')->with('success', $message);
+        }
     }
 
     /**

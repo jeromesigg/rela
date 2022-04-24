@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Measure extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'id', 'health_information_id', 'date', 'time', 'action', 'comment', 'user_id'
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function health_information(){
+        return $this->belongsTo(HealthInformation::class);
+    }
 }

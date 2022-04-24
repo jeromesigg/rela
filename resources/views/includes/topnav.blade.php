@@ -48,6 +48,29 @@
                                 Aktion <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ActionDropdown">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a class="nav-link" href="{{route('healthinformation.index')}}">J+S-Patientenprotokoll</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('monitoring.index')}}">Patientenüberwachung</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('medications.index')}}">Verabreichte Medikation</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('measures.index')}}">Durchgeführte Massnahmen</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('surveillance.index')}}">Zustand des Patienten</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('healthstatus.index')}}">Überwachung der Vitalfunktionen</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('incidents.index')}}">Allgemeine Geschehnisse</a>
+                                    </li>
+                                </ul>
                             </div>
                         </li>
                     @endif

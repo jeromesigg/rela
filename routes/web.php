@@ -19,8 +19,10 @@ Route::get('/', function () {
 });
 
 
-Route::post('/healthform', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
+Route::post('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
 Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'uses'=>'HealthFormController@update']);
+Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
+Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
 
 
 Route::get('/email/verify', function () {
@@ -41,12 +43,39 @@ Route::group(['middleware' => 'verified'], function() {
     Route::get('/user/{user}', ['as'=>'dashboard.user', 'uses'=>'UsersController@edit']);
     Route::patch('/user/{user}', ['as'=>'dashboard.update', 'uses'=>'UsersController@update']);
 
+    Route::resource('dashboard/healthinformation', 'HealthInformationController');
+    Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
+    Route::resource('dashboard/incidents', 'IncidentController');
+    Route::get('incidents/createDataTables', ['as'=>'incidents.CreateDataTables','uses'=>'IncidentController@createDataTables']);
+    Route::resource('dashboard/measures', 'MeasureController');
+    Route::get('measures/createDataTables', ['as'=>'measures.CreateDataTables','uses'=>'MeasureController@createDataTables']);
+    Route::resource('dashboard/medications', 'MedicationController');
+    Route::get('medications/createDataTables', ['as'=>'medications.CreateDataTables','uses'=>'MedicationController@createDataTables']);
+    Route::resource('dashboard/monitoring', 'MonitoringController');
+    Route::get('monitoring/createDataTables', ['as'=>'monitoring.CreateDataTables','uses'=>'MonitoringController@createDataTables']);
+    Route::resource('dashboard/surveillance', 'SurveillanceController');
+    Route::get('surveillance/createDataTables', ['as'=>'surveillance.CreateDataTables','uses'=>'SurveillanceController@createDataTables']);
+    Route::resource('dashboard/healthstatus', 'HealthStatusController');
+    Route::get('healthstatus/createDataTables', ['as'=>'healthstatus.CreateDataTables','uses'=>'HealthStatusController@createDataTables']);
 
     Route::group(['middleware' => 'manager'], function() {
         Route::resource('dashboard/users', 'AdminUsersController', ['as' => 'dashboard']);
         Route::get('users/createDataTables', ['as'=>'users.CreateDataTables','uses'=>'AdminUsersController@createDataTables']);
-        Route::resource('dashboard/healthforms', 'HealthFormController');
-        Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthformController@import']);
-        Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthformController@createDataTables']);
+        Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
+        Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
+        Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
     });
+});
+
+Route::get('admin/run-migrations', function () {
+    return Artisan::call('migrate', ["--force" => true ]);
+});
+
+Route::get('admin/run-deployment', function () {
+    Artisan::call('optimize:clear');
+    return true;
+});
+
+Route::get('admin/run-migrations-seed', function () {
+    return Artisan::call('migrate:refresh', ["--seed" => true ]);
 });

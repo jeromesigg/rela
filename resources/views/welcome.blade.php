@@ -17,7 +17,7 @@
       <!-- SERVICES SECTION-->
       <section class="py-5">
         <div class="container py-4">
-          {!! Form::open(['method' => 'POST', 'action'=>'HealthFormController@show']) !!}
+          {!! Form::open(['method' => 'POST', 'action'=>'HealthFormController@edit']) !!}
           <div class="card-body">
               @if ($errors->any())
                   <div class="alert alert-danger">

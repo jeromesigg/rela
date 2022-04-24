@@ -17,7 +17,7 @@ class CitySeeder extends Seeder
     public function run()
     {
         $path = base_path('storage/app/cities.sql');
-        DB::unprepared(file_get_contents($path));
+        DB::connection('mysql_info')->unprepared(file_get_contents($path));
         $this->command->info('City table seeded!');
     }
 }

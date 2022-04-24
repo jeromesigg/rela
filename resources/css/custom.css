@@ -5408,3 +5408,36 @@ img {
   margin: 1rem 0;
 
 }
+
+.healthform--text{
+    font-weight: bold;
+    font-size: large;
+}
+
+.healthform--label{
+    font-size: large;
+    margin-bottom: 5px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 25px; /* 5px rounded corners */
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+    padding: 2px 16px;
+}
+
+.dropdown-menu {
+    min-width: 20rem;
+}

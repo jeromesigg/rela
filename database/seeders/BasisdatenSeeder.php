@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Allergy;
+use App\Models\ObservationClass;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -37,5 +38,36 @@ class BasisdatenSeeder extends Seeder
         Allergy::create(['name' => 'Lebensmittel']);
         Allergy::create(['name' => 'Medikament (Wirkstoff)']);
         Allergy::create(['name' => 'Andere']);
+
+        ObservationClass::create([
+            'id' => config('observations.monitoring'),
+            'name' => 'Patientenüberwachung',
+            'short_name' => 'Patientenüberwachung',
+        ]);
+        ObservationClass::create([
+            'id' => config('observations.medication'),
+            'name' => 'Verabreichte Medikation',
+            'short_name' => 'Medikation',
+        ]);
+        ObservationClass::create([
+            'id' => config('observations.measures'),
+            'name' => 'Durchgeführte Massnahmen',
+            'short_name' => 'Massnahme',
+        ]);
+        ObservationClass::create([
+            'id' => config('observations.surveillance'),
+            'name' => 'Zustand des Patienten',
+            'short_name' => 'Zustand',
+        ]);
+        ObservationClass::create([
+            'id' => config('observations.healthstatus'),
+            'name' => 'Überwachung der Vitalfunktionen',
+            'short_name' => 'Überwachung',
+        ]);
+        ObservationClass::create([
+            'id' => config('observations.incidents'),
+            'name' => 'Allgemeine Geschehnisse',
+            'short_name' => 'Geschehniss',
+        ]);
     }
 }

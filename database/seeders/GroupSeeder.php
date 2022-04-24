@@ -17,7 +17,7 @@ class GroupSeeder extends Seeder
     {
         //
         $path = base_path('storage/app/groups.sql');
-        DB::unprepared(file_get_contents($path));
+        DB::connection('mysql_info')->unprepared(file_get_contents($path));
         $this->command->info('Groups table seeded!');
     }
 }
