@@ -18,28 +18,32 @@ class HealthInformation extends Model
         return $this->hasMany(AllergyHealthInformation::class, 'health_information_id');
     }
 
+    public function observations(){
+        return $this->hasMany(Observation::class, 'health_information_id');
+    }
+
     public function healthstatus(){
-        return $this->hasMany(HealthStatus::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id','=',config('observations.healthstatus'));
     }
 
     public function incidents(){
-        return $this->hasMany(Incident::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id', '=', config('observations.incident'));
     }
 
     public function measures(){
-        return $this->hasMany(Measure::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id', '=', config('observations.measure'));
     }
 
     public function medications(){
-        return $this->hasMany(Medication::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id', '=', config('observations.medication'));
     }
 
     public function monitorings(){
-        return $this->hasMany(Monitoring::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id', '=', config('observations.monitoring'));
     }
 
     public function surveillances(){
-        return $this->hasMany(Surveillance::class, 'health_information_id');
+        return $this->observations()->where('observation_class_id', '=', config('observations.surveillance'));
     }
 
     public function getRouteKeyName()

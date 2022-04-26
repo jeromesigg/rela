@@ -498,7 +498,7 @@ nav.navbar a.menu-btn:hover {
 @media (max-width: 1199px) {
     .page {
         width: 100%;
-        padding-left: 15px;
+        padding-left: 30px;
     }
     .page.active {
         width: 100%;
@@ -5440,4 +5440,11 @@ img {
 
 .dropdown-menu {
     min-width: 20rem;
+}
+
+@media (max-width: 767.98px) {
+    .navbar-expand-md > .container,
+    .navbar-expand-md > .container-fluid, .navbar-expand-md > .container-sm, .navbar-expand-md > .container-md, .navbar-expand-md > .container-lg, .navbar-expand-md > .container-xl {
+        padding-left: 10px;
+    }
 }

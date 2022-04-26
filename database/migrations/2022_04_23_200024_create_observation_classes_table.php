@@ -18,6 +18,8 @@ class CreateObservationClassesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('short_name');
+            $table->string('parameter_name');
+            $table->string('value_name')->nullable();
         });
     }
 

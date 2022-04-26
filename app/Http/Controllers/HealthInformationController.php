@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HealthInformation;
 use App\Models\HealthStatus;
+use App\Models\ObservationClass;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -84,7 +85,9 @@ class HealthInformationController extends Controller
     public function show(HealthInformation $healthinformation)
     {
         //
-        return view('dashboard.healthinformation.show', compact('healthinformation'));
+
+        $observation_classes = ObservationClass::pluck('short_name');
+        return view('dashboard.healthinformation.show', compact('healthinformation', 'observation_classes'));
 
     }
 

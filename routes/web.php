@@ -45,18 +45,8 @@ Route::group(['middleware' => 'verified'], function() {
 
     Route::resource('dashboard/healthinformation', 'HealthInformationController');
     Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
-    Route::resource('dashboard/incidents', 'IncidentController');
-    Route::get('incidents/createDataTables', ['as'=>'incidents.CreateDataTables','uses'=>'IncidentController@createDataTables']);
-    Route::resource('dashboard/measures', 'MeasureController');
-    Route::get('measures/createDataTables', ['as'=>'measures.CreateDataTables','uses'=>'MeasureController@createDataTables']);
-    Route::resource('dashboard/medications', 'MedicationController');
-    Route::get('medications/createDataTables', ['as'=>'medications.CreateDataTables','uses'=>'MedicationController@createDataTables']);
-    Route::resource('dashboard/monitoring', 'MonitoringController');
-    Route::get('monitoring/createDataTables', ['as'=>'monitoring.CreateDataTables','uses'=>'MonitoringController@createDataTables']);
-    Route::resource('dashboard/surveillance', 'SurveillanceController');
-    Route::get('surveillance/createDataTables', ['as'=>'surveillance.CreateDataTables','uses'=>'SurveillanceController@createDataTables']);
-    Route::resource('dashboard/healthstatus', 'HealthStatusController');
-    Route::get('healthstatus/createDataTables', ['as'=>'healthstatus.CreateDataTables','uses'=>'HealthStatusController@createDataTables']);
+    Route::resource('dashboard/observations', 'ObservationController');
+    Route::get('observations/createDataTables', ['as'=>'observations.CreateDataTables','uses'=>'ObservationController@createDataTables']);
 
     Route::group(['middleware' => 'manager'], function() {
         Route::resource('dashboard/users', 'AdminUsersController', ['as' => 'dashboard']);

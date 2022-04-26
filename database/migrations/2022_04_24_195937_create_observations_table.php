@@ -17,7 +17,7 @@ class CreateObservationsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('observation_class_id')->index()->unsigned();
-            $table->foreign('observation_class_id')->references('id')->on('observations');
+            $table->foreign('observation_class_id')->references('id')->on('observation_classes');
             $table->bigInteger('health_information_id')->index()->unsigned();
             $table->foreign('health_information_id')->references('id')->on('health_information');
             $table->bigInteger('user_id')->index()->unsigned();
@@ -26,7 +26,7 @@ class CreateObservationsTable extends Migration
             $table->time('time');
             $table->mediumText('comment')->nullable();
             $table->string('parameter');
-            $table->string('value');
+            $table->string('value')->nullable();
         });
     }
 
