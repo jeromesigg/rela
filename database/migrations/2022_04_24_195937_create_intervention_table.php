@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateObservationsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateObservationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('observations', function (Blueprint $table) {
+        Schema::create('interventions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('observation_class_id')->index()->unsigned();
-            $table->foreign('observation_class_id')->references('id')->on('observation_classes');
+            $table->bigInteger('intervention_class_id')->index()->unsigned();
+            $table->foreign('intervention_class_id')->references('id')->on('intervention_classes');
             $table->bigInteger('health_information_id')->index()->unsigned();
             $table->foreign('health_information_id')->references('id')->on('health_information');
             $table->bigInteger('user_id')->index()->unsigned();
@@ -37,6 +37,6 @@ class CreateObservationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('observations');
+        Schema::dropIfExists('interventions');
     }
-}
+};

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ObservationClassController extends Controller
+class InterventionClassController extends Controller
 {
     //
 }

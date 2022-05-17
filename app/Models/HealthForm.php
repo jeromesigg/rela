@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class HealthForm extends Model
 {
@@ -19,4 +20,10 @@ class HealthForm extends Model
     public function group(){
         return $this->belongsTo(Group::class);
     }
+
+    public function getCodeAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
 }

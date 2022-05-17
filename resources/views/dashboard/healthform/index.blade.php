@@ -32,13 +32,14 @@
             <table class="table table-striped table-bordered" style="width:100%" id="datatable">
                 <thead>
                     <tr>
-                        <th scope="col" width="5%">Code</th>
-                        <th scope="col" width="15%">Ceviname</th>
-                        <th scope="col" width="15%">Vorname</th>
-                        <th scope="col" width="15%">Nachname</th>
-                        <th scope="col" width="25%">Abteilung</th>
-                        <th scope="col" width="20%">Ort</th>
-                        <th scope="col" width="5%">Ausgefüllt</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Ceviname</th>
+                        <th scope="col">Vorname</th>
+                        <th scope="col">Nachname</th>
+                        <th scope="col" >Geburtsdatum</th>
+                        <th scope="col">Abteilung</th>
+                        <th scope="col">Ort</th>
+                        <th scope="col">Ausgefüllt</th>
                     </tr>
                 </thead>
             </table>
@@ -84,6 +85,7 @@
                     { data: 'nickname', name: 'nickname' },
                     { data: 'first_name', name: 'first_name' },
                     { data: 'last_name', name: 'last_name' },
+                    { data: 'birthday', name: 'birthday' },
                     { data: 'group', name: 'group' },
                     { data: 'city', name: 'city' },
                     { data: 'finish', name: 'finish' },

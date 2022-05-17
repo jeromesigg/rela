@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\HealthInformation;
-use App\Models\Observation;
-use App\Models\ObservationClass;
+use App\Models\Intervention;
+use App\Models\InterventionClass;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
-class ObservationController extends Controller
+class InterventionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,46 +20,46 @@ class ObservationController extends Controller
     public function index()
     {
         //
-        $observation_classes = ObservationClass::pluck('short_name');
+        $intervention_classes = interventionClass::pluck('short_name');
         $healthinformation = [];
-        return view('dashboard.observations.index', compact('observation_classes', 'healthinformation'));
+        return view('dashboard.interventions.index', compact('intervention_classes', 'healthinformation'));
     }
 
     public function createDataTables(Request $request)
     {
         //
         $input = $request->all();
-        $observation_class = ObservationClass::where('short_name','=',$input['filter'])->first();
+        $intervention_class = interventionClass::where('short_name','=',$input['filter'])->first();
         $healthinfo = HealthInformation::where('id','=',$input['info'])->first();
-        $observations = Observation::
-            when($observation_class, function($query, $observation_class){
-                $query->where('observation_class_id','=',$observation_class['id']);})
+        $interventions = intervention::
+            when($intervention_class, function($query, $intervention_class){
+                $query->where('intervention_class_id','=',$intervention_class['id']);})
             ->when($healthinfo, function($query, $healthinfo){
                 $query->where('health_information_id','=',$healthinfo['id']);})
             ->get();
 
-        return DataTables::of($observations)
-            ->addColumn('code', function (Observation $observation) {
-                $healthinfo = $observation->health_information;
+        return DataTables::of($interventions)
+            ->addColumn('code', function (intervention $intervention) {
+                $healthinfo = $intervention->health_information;
                 return '<a href='.\URL::route('healthinformation.show',$healthinfo).'>'.$healthinfo['code'].'</a>';
             })
-            ->addColumn('user', function (Observation $observation) {
-                return $observation->user['name'];
+            ->addColumn('user', function (intervention $intervention) {
+                return $intervention->user['name'];
             })
-            ->editColumn('date', function (Observation $observation) {
+            ->editColumn('date', function (intervention $intervention) {
                 return [
-                    'display' => Carbon::parse($observation['date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($observation['date'])->diffInDays('01.01.2022')
+                    'display' => Carbon::parse($intervention['date'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($intervention['date'])->diffInDays('01.01.2022')
                 ];
             })
-            ->editColumn('time', function (Observation $observation) {
+            ->editColumn('time', function (intervention $intervention) {
                 return [
-                    'display' => Carbon::parse($observation['time'])->format('H:i'),
-                    'sort' => Carbon::parse($observation['time'])->diffInSeconds('01.01.2022')
+                    'display' => Carbon::parse($intervention['time'])->format('H:i'),
+                    'sort' => Carbon::parse($intervention['time'])->diffInSeconds('01.01.2022')
                 ];
             })
-            ->addColumn('observation', function (Observation $observation) {
-                return $observation->observation_class['name'];
+            ->addColumn('intervention', function (intervention $intervention) {
+                return $intervention->intervention_class['name'];
             })
             ->rawColumns(['code'])
             ->make(true);
@@ -70,7 +70,7 @@ class ObservationController extends Controller
     {
         //
         $input = $request->all();
-        $observation_class = ObservationClass::where('id', '=', $input['observation_class_id'])->first();
+        $intervention_class = InterventionClass::where('id', '=', $input['intervention_class_id'])->first();
         if($input['code']) {
             $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
             if ($healthinfo == null) {
@@ -78,24 +78,22 @@ class ObservationController extends Controller
                     ->withErrors('Es konnte kein Teilnehmer mit diesen Angaben gefunden werden.')
                     ->withInput();
             }
-            $observation = new Observation([
-                'observation_class_id' => $observation_class['id'],
+            $intervention = new intervention([
                 'health_information_id' => $healthinfo['id'],
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
             ]);
         }
         else{
-            $observation = new Observation([
-                'observation_class_id' => $observation_class['id'],
+            $intervention = new intervention([
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
             ]);
         }
         $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
-        $observation_classes_all = ObservationClass::get();
-        $observation_classes = ObservationClass::pluck('short_name','id');
-        return view('dashboard.observations.create', compact('observation', 'healthinfos', 'observation_class', 'observation_classes', 'observation_classes_all'));
+        $intervention_classes_all = InterventionClass::get();
+        $intervention_classes = InterventionClass::pluck('short_name','id');
+        return view('dashboard.interventions.create', compact('intervention', 'healthinfos', 'intervention_class', 'intervention_classes', 'intervention_classes_all'));
     }
 
     /**
@@ -110,9 +108,9 @@ class ObservationController extends Controller
         $input = $request->all();
         $user = Auth::user();
         $input['user_id'] = $user['id'];
-        Observation::create($input);
+        intervention::create($input);
 
-        return redirect('/dashboard/observations');
+        return redirect()->back();
 
     }
 

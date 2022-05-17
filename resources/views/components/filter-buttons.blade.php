@@ -4,9 +4,9 @@
     </div>
     <br>
     <div class="row">
-        @foreach ($observation_classes as $observation_class)
+        @foreach ($intervention_classes as $intervention_class)
             <div class="col-md-2">
-                    <button class="btn btn-primary ">{{$observation_class}}</button>
+                    <button class="btn btn-primary ">{{$intervention_class}}</button>
             </div>
         @endforeach
     </div>

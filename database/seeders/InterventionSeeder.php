@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Observation;
+use App\Models\Intervention;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 
-class ObservationSeeder extends Seeder
+class InterventionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +16,6 @@ class ObservationSeeder extends Seeder
     public function run()
     {
         //
-        Observation::factory()->count(100)->create();
+        Intervention::factory()->count(1000)->create();
     }
 }

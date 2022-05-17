@@ -50,10 +50,10 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ActionDropdown">
                                 <ul class="list-unstyled">
                                     <li>
-                                        <a class="nav-link" href="{{route('healthinformation.index')}}">J+S-Patientenprotokoll</a>
+                                        <a class="nav-link" href="{{route('healthinformation.index')}}">Teilnehmerübersicht</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link" href="{{route('observations.index')}}">Beobachtungen</a>
+                                        <a class="nav-link" href="{{route('interventions.index')}}">Alle Interventionen</a>
                                     </li>
                                 </ul>
                             </div>

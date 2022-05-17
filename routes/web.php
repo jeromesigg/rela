@@ -23,6 +23,7 @@ Route::post('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormControll
 Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'uses'=>'HealthFormController@update']);
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
+Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
 
 
 Route::get('/email/verify', function () {
@@ -34,7 +35,11 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-Auth::routes(['verify' => true]);
+Auth::routes([
+    'register' => false, // Registration Routes...
+    'reset' => false, // Password Reset Routes...
+    'verify' => false, // Email Verification Routes...
+]);
 
 Route::group(['middleware' => 'verified'], function() {
 
@@ -45,8 +50,10 @@ Route::group(['middleware' => 'verified'], function() {
 
     Route::resource('dashboard/healthinformation', 'HealthInformationController');
     Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
-    Route::resource('dashboard/observations', 'ObservationController');
-    Route::get('observations/createDataTables', ['as'=>'observations.CreateDataTables','uses'=>'ObservationController@createDataTables']);
+    Route::get('healthinformation/searchajaxcode', ['as'=>'searchajaxcode','uses'=>'HealthInformationController@searchResponseCode']);
+    Route::get('healthinformation/search', ['uses'=>'HealthInformationController@search']);
+    Route::resource('dashboard/interventions', 'InterventionController');
+    Route::get('interventions/createDataTables', ['as'=>'interventions.CreateDataTables','uses'=>'InterventionController@createDataTables']);
 
     Route::group(['middleware' => 'manager'], function() {
         Route::resource('dashboard/users', 'AdminUsersController', ['as' => 'dashboard']);
@@ -54,6 +61,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
         Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
+        Route::get('healthinformation/print/{healthinformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
     });
 });
 

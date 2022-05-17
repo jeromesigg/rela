@@ -32,15 +32,16 @@
             </div>
             <div class="form-group col-md-2">
                 {!! Form::label('healthform[zip_code]', 'Postleitzahl:') !!}
-                {!! Form::number('healthform[zip_code]', $healthform['zip_code'], ['class' => 'form-control', 'required']) !!}
+                {!! Form::number('healthform[zip_code]', $healthform['zip_code'], ['class' => 'form-control autocomplete_txt', 'required']) !!}
             </div>
             <div class="form-group col-md-3">
                 {!! Form::label('healthform[city]', 'Ortschaft:') !!}
-                {!! Form::text('healthform[city]', $healthform['city'], ['class' => 'form-control', 'required']) !!}
+                {!! Form::text('healthform[city]', $healthform['city'], ['class' => 'form-control autocomplete_txt', 'required']) !!}
             </div>
+            {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
             <div class="form-group col-md-3">
                 {!! Form::label('healthform[phone_number]', 'Telefon:') !!}
-                {!! Form::text('healthform[phone_number]', $healthform['phone_number'], ['class' => 'form-control', 'required']) !!}
+                {!! Form::text('healthform[phone_number]', $healthform['phone_number'], ['class' => 'form-control']) !!}
             </div>
         </div>
         <br>
@@ -88,7 +89,7 @@
         <hr>
         <div class="form-row">
             <div class="form-group col-md-6">
-                {!! Form::label('healthinfo[recent_issues]', 'kürzliche Unfälle / Krankheiten? abgeschlossen?') !!}
+                {!! Form::label('healthinfo[recent_issues]', 'kürzliche Unfälle / Krankheiten abgeschlossen?') !!}
                 {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 4]) !!}
             </div>
             <div class="col-md-6">
@@ -135,11 +136,14 @@
         <h4>6. Ergänzungen</h4>
         <hr>
         <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-2">
                 {!! Form::checkbox('healthform[swimmer]', '1', $healthform['swimmer']) !!}
                 {!! Form::label('healthform[swimmer]', 'Teilnehmer/-in kann schwimmen') !!}
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-5">
+                {!! Form::checkbox('healthinfo[ointment_only_contact]', '1', $healthinfo['ointment_only_contact']) !!}{!! Form::label('healthinfo[ointment_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Salben selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+            </div>
+            <div class="form-group col-md-5">
                 {!! Form::checkbox('healthinfo[drugs_only_contact]', '1', $healthinfo['drugs_only_contact']) !!}{!! Form::label('healthinfo[drugs_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Medikamente (z.B.
 Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
             </div>
@@ -153,7 +157,7 @@ Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten u
         <hr>
         <div class="form-row">
             <div class="form-group col-md-6">
-                {!! Form::submit('Gesundheitsblatt senden', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
+                {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
             </div>
             <div class="form-group col-md-6">
                 Ich bestätige, dass alle Angaben vollständig sind und der Wahrheit entsprechen:
@@ -163,4 +167,50 @@ Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten u
         {!! Form::close()!!}
     </div>
 
+@endsection
+
+
+@section('scripts')
+    <script type="text/javascript">
+
+        //autocomplete script
+        $(document).on('focus','.autocomplete_txt',function(){
+            type = $(this).attr('name');
+
+            if(type =='healthform[city]')autoType='name';
+            if(type =='healthform[zip_code]')autoType='plz';
+            if(type =='city_id')autoType='id';
+
+            $(this).autocomplete({
+                minLength: 2,
+                highlight: true,
+                source: function( request, response ) {
+                    $.ajax({
+                        url: "{{ route('searchajaxcity') }}",
+                        dataType: "json",
+                        data: {
+                            term : request.term,
+                            type : type,
+                        },
+                        success: function(data) {
+                            var array = $.map(data, function (item) {
+                                return {
+                                    label: item['plz'] + ' ' + item['name'],
+                                    value: item[autoType],
+                                    data : item
+                                }
+                            });
+                            response(array)
+                        }
+                    });
+                },
+                select: function( event, ui ) {
+                    var data = ui.item.data;
+                    $("[name='healthform[city]']").val(data.name);
+                    $("[name='healthform[zip_code]']").val(data.plz);
+                    $("[name='city_id']").val(data.id);
+                }
+            });
+        });
+    </script>
 @endsection

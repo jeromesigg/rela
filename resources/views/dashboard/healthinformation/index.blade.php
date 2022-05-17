@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item active">J+S-Patientenprotokoll</li>
+            <li class="breadcrumb-item active">Teilnehmerübersicht</li>
             </ul>
         </div>
     </div>
@@ -13,7 +13,7 @@
         <div class="container-fluid">
             <!-- Page Header-->
             <header>
-                <h1 class="h3 display">J+S-Patientenprotokoll</h1>
+                <h1 class="h3 display">Teilnehmerübersicht</h1>
             </header>
             <br>
             <table class="table table-striped table-bordered" style="width:100%" id="datatable">

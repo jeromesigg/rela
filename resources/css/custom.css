@@ -3929,6 +3929,7 @@ STYLE SWITCHER FOR DEMO
     color: white;
     background-color: var(--blue);
     border-color: var(--blue);
+    margin-bottom: 5px;
 }
 
 .btn-primary:hover {

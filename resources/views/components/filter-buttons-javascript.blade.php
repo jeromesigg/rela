@@ -12,7 +12,7 @@
                 "url": "/lang/Datatables.json"
             },
             ajax: {
-                url: "{!! route('observations.CreateDataTables') !!}",
+                url: "{!! route('interventions.CreateDataTables') !!}",
                 data: function(d) {
                     d.filter = $('#btn_value').val()
                     d.info = $healthinfo_id
@@ -35,7 +35,7 @@
                     name: 'time.sort'
                 },
                 { data: 'code', name: 'code' },
-                { data: 'observation', name: 'observation' },
+                { data: 'intervention', name: 'intervention' },
                 { data: 'parameter', name: 'parameter' },
                 { data: 'value', name: 'value' },
                 { data: 'comment', name: 'comment' },

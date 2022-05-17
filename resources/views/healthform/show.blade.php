@@ -171,6 +171,14 @@
     </div>
     <div class="row">
         <div class="col-md-1 healthform--text">
+            {{$healthinfo['ointment_only_contact'] ? 'Ja' : 'Nein'}}
+        </div>
+        <div class="col-md-11 healthform--label">
+            Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Sablen selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 healthform--text">
             {{$healthinfo['drugs_only_contact'] ? 'Ja' : 'Nein'}}
         </div>
         <div class="col-md-11 healthform--label">

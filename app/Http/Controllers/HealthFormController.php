@@ -11,6 +11,7 @@ use App\Models\HealthForm;
 use App\Models\HealthInformation;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -36,23 +37,27 @@ class HealthFormController extends Controller
         $healthForm = HealthForm::get();
 
         return DataTables::of($healthForm)
-            ->addColumn('group', function (HealthForm $healthForm) {
+            ->editColumn('group', function (HealthForm $healthForm) {
                 return $healthForm->group ? $healthForm->group['name'] : '';})
-            ->addColumn('nickname', function (HealthForm $healthForm) {
+            ->editColumn('birthday', function (HealthForm $healthForm) {
+                return Carbon::parse($healthForm['birthday'])->format('d.m.Y');
+            })
+            ->editColumn('nickname', function (HealthForm $healthForm) {
                 $nickname = $healthForm->nickname;
                 return '<a href='.\URL::route('healthform.show',$healthForm).'>'.$nickname.'</a>';
-                })
-            ->addColumn('code', function (HealthForm $healthForm) {
+            })
+            ->editColumn('code', function (HealthForm $healthForm) {
                 if(Auth::user()->isAdmin()) {
-                    return Crypt::decryptString($healthForm->code);
+                    $healthinfo = Helper::getHealthInfo($healthForm['code']);
+                    return '<a href='.\URL::route('healthinformation.show',$healthinfo).'>'. $healthForm->code.'</a>';
                 }
                 else{
                     return '';
                 }
             })
-            ->addColumn('finish', function (HealthForm $healthForm) {
+            ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
-            ->rawColumns(['nickname'])
+            ->rawColumns(['nickname', 'code'])
             ->make(true);
     }
     /**
@@ -133,7 +138,7 @@ class HealthFormController extends Controller
     public function show(HealthForm $healthform)
     {
         //
-        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $healthinfo = Helper::getHealthInfo($healthform['code']);
         $allergies = $healthinfo->allergies;
 
         return view('healthform.show', compact('healthform', 'healthinfo', 'allergies'));
@@ -142,7 +147,7 @@ class HealthFormController extends Controller
 
     public function downloadPDF(HealthForm $healthform)
     {
-        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $healthinfo = Helper::getHealthInfo($healthform['code']);
         $allergies = $healthinfo->allergies;
         return view('healthform.print', compact('healthform', 'healthinfo', 'allergies'));
     }
@@ -154,12 +159,12 @@ class HealthFormController extends Controller
         $healthforms = HealthForm::where('zip_code','=',$input['zip_code'])->get();
         $healthform = null;
         foreach ($healthforms as $act_healthform){
-            if($input['code'] == Crypt::decryptString($act_healthform['code'])){
+            if($input['code'] == $act_healthform['code']){
                 $healthform = $act_healthform;
                 break;
             }
         }
-        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $healthinfo = Helper::getHealthInfo($healthform['code']);
         $allergyHealthInformation = $healthinfo->allergies;
         if (count($allergyHealthInformation)==0){
             $allergies = Allergy::get();
@@ -199,7 +204,7 @@ class HealthFormController extends Controller
         $input_healthinfo = $input['healthinfo'];
         $input_allergies = $input['allergies'];
 
-        $healthinfo = Helper::getHealthInfo(Crypt::decryptString($healthform['code']));
+        $healthinfo = Helper::getHealthInfo($healthform['code']);
 
         $input_healthform['swimmer'] = isset($input_healthform['swimmer']);
         if($input['submit_btn'] == 'Gesundheitsblatt abschliessen') {
@@ -212,6 +217,7 @@ class HealthFormController extends Controller
         }
         $input_healthform['finish'] = $finish;
         $input_healthinfo['drugs_only_contact'] = isset($input_healthinfo['drugs_only_contact']);
+        $input_healthinfo['ointment_only_contact'] = isset($input_healthinfo['ointment_only_contact']);
         $healthform->update($input_healthform);
         $healthinfo->update($input_healthinfo);
         $allergies = $healthinfo->allergies;
@@ -236,5 +242,12 @@ class HealthFormController extends Controller
     public function destroy(Health_Form $health_Form)
     {
         //
+    }
+
+    public function searchResponseCity(Request $request)
+    {
+        // $query = $request->get('term','');
+        $cities = City::search($request->get('term'))->get();
+        return $cities;
     }
 }

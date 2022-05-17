@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('recent_issues_doctor')->nullable();
             $table->string('drugs')->nullable();
             $table->boolean('drugs_only_contact')->default(false);
+            $table->boolean('ointment_only_contact')->default(false);
             $table->string('chronicle_diseases')->nullable();
         });
     }

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Allergy;
-use App\Models\ObservationClass;
+use App\Models\InterventionClass;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -39,42 +39,42 @@ class BasisdatenSeeder extends Seeder
         Allergy::create(['name' => 'Medikament (Wirkstoff)']);
         Allergy::create(['name' => 'Andere']);
 
-        ObservationClass::create([
-            'id' => config('observations.monitoring'),
+        InterventionClass::create([
+            'id' => config('interventions.monitoring'),
             'name' => 'Patientenüberwachung',
             'short_name' => 'Patientenüberwachung',
             'parameter_name' => 'Symptom',
             'value_name' => 'Wert',
         ]);
-        ObservationClass::create([
-            'id' => config('observations.medication'),
+        InterventionClass::create([
+            'id' => config('interventions.medication'),
             'name' => 'Verabreichte Medikation',
             'short_name' => 'Medikation',
             'parameter_name' => 'Medikament',
             'value_name' => 'Dosis',
         ]);
-        ObservationClass::create([
-            'id' => config('observations.measures'),
+        InterventionClass::create([
+            'id' => config('interventions.measures'),
             'name' => 'Durchgeführte Massnahmen',
             'short_name' => 'Massnahme',
             'parameter_name' => 'Massnahme',
         ]);
-        ObservationClass::create([
-            'id' => config('observations.surveillance'),
+        InterventionClass::create([
+            'id' => config('interventions.surveillance'),
             'name' => 'Zustand des Patienten',
             'short_name' => 'Zustand',
             'parameter_name' => 'Messwert',
             'value_name' => 'Wert',
         ]);
-        ObservationClass::create([
-            'id' => config('observations.healthstatus'),
+        InterventionClass::create([
+            'id' => config('interventions.healthstatus'),
             'name' => 'Überwachung der Vitalfunktionen',
             'short_name' => 'Überwachung',
             'parameter_name' => 'Symptom',
             'value_name' => 'Wert',
         ]);
-        ObservationClass::create([
-            'id' => config('observations.incidents'),
+        InterventionClass::create([
+            'id' => config('interventions.incidents'),
             'name' => 'Allgemeine Geschehnisse',
             'short_name' => 'Geschehen',
             'parameter_name' => 'Geschehen',

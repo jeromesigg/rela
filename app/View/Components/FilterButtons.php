@@ -6,16 +6,16 @@ use Illuminate\View\Component;
 
 class FilterButtons extends Component
 {
-    public $observation_classes;
+    public $intervention_classes;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($observationclasses)
+    public function __construct($interventionclasses)
     {
         //
-        $this->observation_classes = $observationclasses;
+        $this->intervention_classes = $interventionclasses;
     }
 
     /**

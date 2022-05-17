@@ -135,6 +135,7 @@ class AdminUsersController extends Controller
         $input['is_Manager'] = isset($input['is_Manager']);
         $input['is_Helper'] = isset($input['is_Helper']);
         $input['slug'] = Str::slug($input['name']);
+        return $request->password;
 
         $user->update($input);
         return redirect('/dashboard/users');

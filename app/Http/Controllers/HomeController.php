@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ObservationClass;
+use App\Models\InterventionClass;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $observation_classes = ObservationClass::pluck('name', 'id');
-        return view('home', compact('observation_classes'));
+        $intervention_classes = InterventionClass::pluck('name', 'id');
+        return view('home', compact('intervention_classes'));
     }
 }

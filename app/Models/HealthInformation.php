@@ -5,45 +5,53 @@ namespace App\Models;
 use Illuminate\Contracts\Queue\Monitor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class HealthInformation extends Model
 {
     use HasFactory;
+    use SearchableTrait;
 
     protected $fillable = [
-        'code', 'recent_issues', 'recent_issues_doctor', 'drugs', 'drugs_only_contact', 'chronicle_diseases'
+        'code', 'recent_issues', 'recent_issues_doctor', 'drugs', 'drugs_only_contact', 'ointment_only_contact', 'chronicle_diseases'
+    ];
+
+    protected $searchable = [
+        'columns' => [
+            'code' => 1,
+        ]
     ];
 
     public function allergies(){
         return $this->hasMany(AllergyHealthInformation::class, 'health_information_id');
     }
 
-    public function observations(){
-        return $this->hasMany(Observation::class, 'health_information_id');
+    public function interventions(){
+        return $this->hasMany(Intervention::class, 'health_information_id');
     }
 
     public function healthstatus(){
-        return $this->observations()->where('observation_class_id','=',config('observations.healthstatus'));
+        return $this->interventions()->where('intervention_class_id','=',config('interventions.healthstatus'));
     }
 
     public function incidents(){
-        return $this->observations()->where('observation_class_id', '=', config('observations.incident'));
+        return $this->interventions()->where('intervention_class_id', '=', config('interventions.incident'));
     }
 
     public function measures(){
-        return $this->observations()->where('observation_class_id', '=', config('observations.measure'));
+        return $this->interventions()->where('intervention_class_id', '=', config('interventions.measure'));
     }
 
     public function medications(){
-        return $this->observations()->where('observation_class_id', '=', config('observations.medication'));
+        return $this->interventions()->where('intervention_class_id', '=', config('interventions.medication'));
     }
 
     public function monitorings(){
-        return $this->observations()->where('observation_class_id', '=', config('observations.monitoring'));
+        return $this->interventions()->where('intervention_class_id', '=', config('interventions.monitoring'));
     }
 
     public function surveillances(){
-        return $this->observations()->where('observation_class_id', '=', config('observations.surveillance'));
+        return $this->interventions()->where('intervention_class_id', '=', config('interventions.surveillance'));
     }
 
     public function getRouteKeyName()
