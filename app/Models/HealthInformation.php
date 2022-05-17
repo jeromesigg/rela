@@ -6,9 +6,11 @@ use Illuminate\Contracts\Queue\Monitor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class HealthInformation extends Model
+class HealthInformation extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
     use SearchableTrait;
 

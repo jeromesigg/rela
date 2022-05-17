@@ -20,7 +20,6 @@
                 <thead>
                     <tr>
                         <th scope="col" width="9%">Code</th>
-                        <th scope="col" width="13%"># Allergien</th>
                         <th scope="col" width="13%"># Patientenüberwachung</th>
                         <th scope="col" width="13%"># Verabreichte Medikationen</th>
                         <th scope="col" width="13%"># Durchgeführte Massnahmen</th>
@@ -49,7 +48,6 @@
                 order: [[ 0, "asc" ]],
                 columns: [
                     { data: 'code', name: 'code' },
-                    { data: 'allergies', name: 'allergies' },
                     { data: 'monitorings', name: 'monitorings' },
                     { data: 'medications', name: 'medications' },
                     { data: 'measures', name: 'measures' },

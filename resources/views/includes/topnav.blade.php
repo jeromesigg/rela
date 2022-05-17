@@ -24,6 +24,11 @@
                                 Admin <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="AdminDropdown">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a class="nav-link" href="{{route('dashboard.audits')}}">Audit-Trail</a>
+                                    </li>
+                                </ul>
                             </div>
                         </li>
                     @endif

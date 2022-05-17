@@ -23,16 +23,16 @@
                 {
                     data: {
                         _: 'date.display',
-                        sort: 'date'
+                        sort: 'date.sort'
                     },
-                    name: 'date.sort'
+                    name: 'date'
                 },
                 {
                     data: {
                         _: 'time.display',
-                        sort: 'time'
+                        sort: 'time.sort'
                     },
-                    name: 'time.sort'
+                    name: 'time'
                 },
                 { data: 'code', name: 'code' },
                 { data: 'intervention', name: 'intervention' },

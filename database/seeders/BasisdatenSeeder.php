@@ -54,7 +54,7 @@ class BasisdatenSeeder extends Seeder
             'value_name' => 'Dosis',
         ]);
         InterventionClass::create([
-            'id' => config('interventions.measures'),
+            'id' => config('interventions.measure'),
             'name' => 'Durchgeführte Massnahmen',
             'short_name' => 'Massnahme',
             'parameter_name' => 'Massnahme',
@@ -74,7 +74,7 @@ class BasisdatenSeeder extends Seeder
             'value_name' => 'Wert',
         ]);
         InterventionClass::create([
-            'id' => config('interventions.incidents'),
+            'id' => config('interventions.incident'),
             'name' => 'Allgemeine Geschehnisse',
             'short_name' => 'Geschehen',
             'parameter_name' => 'Geschehen',

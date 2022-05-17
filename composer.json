@@ -21,6 +21,7 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.1",
         "nicolaslopezj/searchable": "^1.13",
+        "owen-it/laravel-auditing": "^13.0",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {

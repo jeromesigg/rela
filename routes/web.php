@@ -63,6 +63,10 @@ Route::group(['middleware' => 'verified'], function() {
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
         Route::get('healthinformation/print/{healthinformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
     });
+
+    Route::group(['middleware' => 'admin'], function() {
+        Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
+    });
 });
 
 Route::get('admin/run-migrations', function () {
