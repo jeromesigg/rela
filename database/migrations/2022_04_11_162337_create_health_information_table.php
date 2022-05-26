@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('drugs_only_contact')->default(false);
             $table->boolean('ointment_only_contact')->default(false);
             $table->string('chronicle_diseases')->nullable();
+            $table->string('file_protocol')->nullable();
         });
     }
 

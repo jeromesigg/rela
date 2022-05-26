@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\HealthForm;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -37,6 +38,9 @@ return new class extends Migration
             $table->string('liability_insurance_contact')->nullable();
             $table->boolean('swimmer')->default(false);
             $table->boolean('finish')->default(false);
+            $table->string('file_vaccination')->nullable();
+            $table->string('file_allergy')->nullable();
+            HealthForm::addSlugColumn($table);
         });
     }
 

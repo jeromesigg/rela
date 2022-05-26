@@ -118,7 +118,7 @@ class HealthFormController extends Controller
                     }
                     $code = $this->generateUniqueCode();
                     $insertData = array(
-                        'id' => $participant->id,
+//                        'id' => $participant->id,
                         'code' => Crypt::encryptString($code),
                         'nickname' =>  $participant->nickname ? $participant->nickname : $participant->first_name,
                         'last_name' => $participant->last_name,
@@ -282,13 +282,13 @@ class HealthFormController extends Controller
     public function downloadVaccination(HealthForm $healthform)
     {
         //
-        return response()->download(storage_path($healthform['file_vaccination']));
+        return response()->download(storage_path('app/'.$healthform['file_vaccination']));
     }
 
     public function downloadAllergy(HealthForm $healthform)
     {
         //
-        return response()->download(storage_path($healthform['file_allergy']));
+        return response()->download(storage_path('app/'.$healthform['file_allergy']));
     }
 
 

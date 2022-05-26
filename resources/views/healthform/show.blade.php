@@ -196,8 +196,7 @@
     <div class="healthform--text">
 
 
-{{--        {!! Html::link(Storage::url($healthform['file_allergies']), 'Allergiepass', ['target' => 'blank']) !!}--}}
-        Kopie <a href={{$healthform['file_allergy'] ? route('downloadVaccination',$healthform) : '#'}}>Impfausweis</a> und evtl. <a href={{$healthform['file_allergy'] ? route('downloadAllergy',$healthform) : '#'}}>Impfausweis</a> beilegen!
+        Kopie <a href={{$healthform['file_vaccination'] ? route('downloadVaccination',$healthform) : '#'}}>Impfausweis</a> und evtl. <a href={{$healthform['file_allergy'] ? route('downloadAllergy',$healthform) : '#'}}>Impfausweis</a> beilegen!
     </div>
     <div class="healthform--label">
     Versicherung ist Sache der Teilnehmenden.

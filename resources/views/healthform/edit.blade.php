@@ -13,7 +13,7 @@
                 </ul>
             </div>
         @endif
-        {!! Form::model($healthform, ['method' => 'Patch', 'action'=>['HealthFormController@update',$healthform->id], 'files' => true]) !!}
+        {!! Form::model($healthform, ['method' => 'Patch', 'action'=>['HealthFormController@update',$healthform], 'files' => true]) !!}
         <h4>1. Personalie</h4>
         <hr>
         <div class="form-row">
