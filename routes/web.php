@@ -19,11 +19,13 @@ Route::get('/', function () {
 });
 
 
-Route::post('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
+Route::get('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
 Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'uses'=>'HealthFormController@update']);
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
+Route::get('healthform/downloadVaccination/{healthform}', ['as'=>'downloadVaccination','uses'=>'HealthFormController@downloadVaccination']);
+Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
 
 Route::get('/email/verify', function () {
@@ -62,6 +64,9 @@ Route::group(['middleware' => 'verified'], function() {
         Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
         Route::get('healthinformation/print/{healthinformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
+        Route::post('dashboard/healthinformation/uploadProtocol/{healthinformation}', ['as'=>'uploadProtocol','uses'=>'HealthInformationController@uploadProtocol']);
+        Route::get('healthinformation/downloadProtocol/{healthinformation}', ['as'=>'downloadProtocol','uses'=>'HealthInformationController@downloadProtocol']);
+        Route::post('healthforms/{healthform}/open', ['as'=>'healthforms.open','uses'=>'HealthFormController@open']);
     });
 
     Route::group(['middleware' => 'admin'], function() {
@@ -79,5 +84,9 @@ Route::get('admin/run-deployment', function () {
 });
 
 Route::get('admin/run-migrations-seed', function () {
-    return Artisan::call('migrate:refresh', ["--seed" => true ]);
+    return Artisan::call('migrate:refresh', ["--seed" => true , "--force" => true ]);
+});
+
+Route::get('admin/run-seeding', function () {
+    return Artisan::call('db:seed', ["--class" => "InterventionSeeder" , "--force" => true ]);
 });

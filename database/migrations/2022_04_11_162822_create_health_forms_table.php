@@ -14,7 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('mysql_info')->create('health_forms', function (Blueprint $table) {
-            $db = DB::connection('mysql')->getDatabaseName();
 
             $table->id();
             $table->timestamps();

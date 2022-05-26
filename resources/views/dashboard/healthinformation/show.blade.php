@@ -57,6 +57,30 @@
                 </div>
                 <div class="col-md-2">
                     {!! Html::link('files/Notfallblatt.pdf', 'J+S-Notfallblatt herunterladen', ['target' => 'blank', 'class' =>'btn btn-primary']) !!}
+                    @if(Auth::user()->isManager())
+                        <br>
+                        <br>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        {!! Form::model($healthinformation, ['method' => 'POST', 'action'=>['HealthInformationController@uploadProtocol', $healthinformation], 'files' => true]) !!}
+
+                        <div class="form-group">
+                            {!! Form::file('file_protocol', null, ['class' => 'form-control']) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::submit('J+S-Notfallblatt hochladen', ['class' => 'btn btn-primary'])!!}
+                        </div>
+                        {!! Form::close()!!}
+                        <br>
+                        <a href={{$healthinformation['file_protocol'] ? route('downloadProtocol',$healthinformation) : '#'}}>Protokoll herunterladen</a>
+                    @endif
                 </div>
             </div>
             <br>

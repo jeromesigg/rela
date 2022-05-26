@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Response;
 use Ixudra\Curl\Facades\Curl;
 use Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -57,7 +58,16 @@ class HealthFormController extends Controller
             })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
-            ->rawColumns(['nickname', 'code'])
+
+            ->addColumn('Actions', function(HealthForm $healthForm) {
+                $buttons = '<form action="'.\URL::route('healthforms.open', $healthForm).'" method="post">' . csrf_field();
+                if($healthForm['finish']){
+                    $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Öffnen</button>';
+                };
+                $buttons .= '</form>';
+                return $buttons;
+            })
+            ->rawColumns(['nickname', 'code', 'Actions'])
             ->make(true);
     }
     /**
@@ -152,6 +162,13 @@ class HealthFormController extends Controller
         return view('healthform.print', compact('healthform', 'healthinfo', 'allergies'));
     }
 
+    public function open(HealthForm $healthform)
+    {
+        $input['finish'] = false;
+        $healthform->update($input);
+        return redirect('/dashboard/healthforms');
+    }
+
     public function edit(Request $request)
     {
         //
@@ -189,20 +206,49 @@ class HealthFormController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Health_Form  $health_Form
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, HealthForm $healthform)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'healthform.file_vaccination' => 'mimes:pdf|max:2000',
+            'healthform.file_allergies' => 'mimes:pdf|max:2000',
+        ], [
+            'healthform.file_vaccination.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+            'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+            'healthform.file_vaccination.mimes' => 'Nur PDF-Dateien sind erlaubt.',
+            'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+
+        if ($validator->fails()) {
+            return redirect()->to(url()->previous())
+                ->withErrors($validator)
+                ->withInput();
+        }
         $input = $request->all();
         $input_healthform = $input['healthform'];
         $input_healthinfo = $input['healthinfo'];
         $input_allergies = $input['allergies'];
+
+        if($file_vaccination = $request->file('healthform.file_vaccination')) {
+            $save_path = 'files/' . $healthform['code'];
+            if (!file_exists(storage_path('app/'.$save_path))) {
+                mkdir(storage_path('app/'.$save_path), 0755, true);
+            }
+            $name = 'Impfausweis.' . $file_vaccination->getClientOriginalExtension();
+
+            $file_vaccination->move(storage_path('app/'.$save_path), $name);
+            $input_healthform['file_vaccination'] = $save_path . '/' . $name;
+        }
+
+        if($file_allergies = $request->file('healthform.file_allergies')) {
+            $save_path = 'app/files/' . $healthform['code'];
+            if (!file_exists(storage_path($save_path))) {
+                mkdir(storage_path($save_path), 0755, true);
+            }
+            $name = 'Allergiepass.' . $file_allergies->getClientOriginalExtension();
+
+            $file_allergies->move(storage_path($save_path), $name);
+            $input_healthform['file_allergies'] = $save_path . '/' . $name;
+        }
 
         $healthinfo = Helper::getHealthInfo($healthform['code']);
 
@@ -232,6 +278,19 @@ class HealthFormController extends Controller
             return redirect()->to('/')->with('success', $message);
         }
     }
+
+    public function downloadVaccination(HealthForm $healthform)
+    {
+        //
+        return response()->download(storage_path($healthform['file_vaccination']));
+    }
+
+    public function downloadAllergy(HealthForm $healthform)
+    {
+        //
+        return response()->download(storage_path($healthform['file_allergy']));
+    }
+
 
     /**
      * Remove the specified resource from storage.

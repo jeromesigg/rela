@@ -25,7 +25,7 @@
                             @foreach($audit->old_values as $attribute => $value)
                                 <tr>
                                     <td><b>{{ $attribute }}</b></td>
-                                    <td>{{ $value }}</td>
+                                    <td>{{ is_array($value) ? json_encode($value) : $value }}</td>
                                 </tr>
                             @endforeach
                         </table>
@@ -35,7 +35,7 @@
                             @foreach($audit->new_values as $attribute => $value)
                                 <tr>
                                     <td><b>{{ $attribute }}</b></td>
-                                    <td>{{ $value }}</td>
+                                    <td>{{ is_array($value) ? json_encode($value) : $value }}</td>
                                 </tr>
                             @endforeach
                         </table>

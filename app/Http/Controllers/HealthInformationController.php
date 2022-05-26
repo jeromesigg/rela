@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
 use Yajra\DataTables\Facades\DataTables;
+use Validator;
 
 class HealthInformationController extends Controller
 {
@@ -118,6 +119,40 @@ class HealthInformationController extends Controller
         }
         return redirect()->route('healthinformation.show',[$healthinfo]);
 
+    }
+
+    public function uploadProtocol(Request $request, HealthInformation $healthinformation)
+    {
+        //
+        $validator = Validator::make($request->all(), [
+            'file_protocol' => 'mimes:pdf|max:2000',
+        ], [
+            'file_protocol.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+            'file_protocol.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+
+        if ($validator->fails()) {
+            return redirect()->to(url()->previous())
+                ->withErrors($validator)
+                ->withInput();
+        }
+        if($file_protocol = $request->file('file_protocol')) {
+            $save_path = 'app/files/' .  $healthinformation['code'];
+            if (!file_exists(storage_path($save_path))) {
+                mkdir(storage_path($save_path), 0755, true);
+            }
+            $name = 'Notfallblatt.' . $file_protocol->getClientOriginalExtension();
+
+            $file_protocol->move(storage_path($save_path), $name);
+            $input_healthform['file_protocol'] = $save_path . '/' . $name;
+            $healthinformation->update(['file_protocol' => $input_healthform['file_protocol']]);
+        }
+        return redirect()->route('healthinformation.show',[$healthinformation]);
+    }
+
+    public function downloadProtocol(HealthInformation $healthinformation)
+    {
+        //
+        return response()->download(storage_path($healthinformation['file_protocol']));
     }
 
     /**

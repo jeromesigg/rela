@@ -40,6 +40,7 @@
                         <th scope="col">Abteilung</th>
                         <th scope="col">Ort</th>
                         <th scope="col">Ausgefüllt</th>
+                        <th scope="col">Öffnen</th>
                     </tr>
                 </thead>
             </table>
@@ -89,8 +90,9 @@
                     { data: 'group', name: 'group' },
                     { data: 'city', name: 'city' },
                     { data: 'finish', name: 'finish' },
+                    { data: 'Actions', name: 'Actions', orderable:false,serachable:false,sClass:'text-center'},
 
-                    ]
+                ]
             });
         });
         $('#showImport').on('click', function () {

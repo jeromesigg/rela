@@ -15,7 +15,7 @@ class HealthInformation extends Model implements Auditable
     use SearchableTrait;
 
     protected $fillable = [
-        'code', 'recent_issues', 'recent_issues_doctor', 'drugs', 'drugs_only_contact', 'ointment_only_contact', 'chronicle_diseases'
+        'code', 'recent_issues', 'recent_issues_doctor', 'drugs', 'drugs_only_contact', 'ointment_only_contact', 'chronicle_diseases', 'file_protocol'
     ];
 
     protected $searchable = [

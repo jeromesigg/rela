@@ -17,8 +17,8 @@
       <!-- SERVICES SECTION-->
       <section class="py-5">
         <div class="container py-4">
-          {!! Form::open(['method' => 'POST', 'action'=>'HealthFormController@edit']) !!}
-          <div class="card-body">
+          {!! Form::open(['method' => 'GET', 'action'=>'HealthFormController@edit']) !!}
+            <div class="card-body">
               @if ($errors->any())
                   <div class="alert alert-danger">
                       <ul>
@@ -48,10 +48,10 @@
                       {!! Form::number('zip_code', null, ['class' => 'form-control'], 'required') !!}
                   </div>
               </div>
-          </div>
-          <div class="text-right">
+            </div>
+            <div class="text-right">
               {!! Form::submit('Suchen', ['class' => 'btn btn-primary'])!!}
-          </div>
+            </div>
           {!! Form::close()!!}
         </div>
       </section>

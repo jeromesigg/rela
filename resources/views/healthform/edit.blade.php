@@ -4,7 +4,16 @@
     <div class="wide" id="all">
         <h3>Hallo {{$healthform->nickname}}</h3>
         <br>
-        {!! Form::model($healthform, ['method' => 'Patch', 'action'=>['HealthFormController@update',$healthform->id]]) !!}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        {!! Form::model($healthform, ['method' => 'Patch', 'action'=>['HealthFormController@update',$healthform->id], 'files' => true]) !!}
         <h4>1. Personalie</h4>
         <hr>
         <div class="form-row">
@@ -153,7 +162,26 @@ Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten u
             {!! Form::textarea('healthinfo[chronicle_diseases]', $healthinfo['chronicle_diseases'], ['class' => 'form-control', 'rows' => 4]) !!}
         </div>
         <br>
-        <h4>7. Abschluss</h4>
+        <h4>7. Dateien</h4>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                @if(isset($healthform['file_vaccination']))
+                    Impfausweis schon hochgeladen <br>
+                @endif
+                {!! Form::label('healthform[file_vaccination]', 'Impfausweis:') !!}
+                {!! Form::file('healthform[file_vaccination]', null, ['class' => 'form-control']) !!}
+            </div>
+            <div class="form-group col-md-6">
+                @if(isset($healthform['file_allergies']))
+                    Allergiepass schon hochgeladen <br>
+                @endif
+                {!! Form::label('healthform[file_allergies]', 'Allergiepass:') !!}
+                {!! Form::file('healthform[file_allergies]', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+        <br>
+        <h4>8. Abschluss</h4>
         <hr>
         <div class="form-row">
             <div class="form-group col-md-6">
