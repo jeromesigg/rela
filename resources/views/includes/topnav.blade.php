@@ -28,6 +28,9 @@
                                     <li>
                                         <a class="nav-link" href="{{route('dashboard.audits')}}">Audit-Trail</a>
                                     </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('interventionclasses.index')}}">Kategorien</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

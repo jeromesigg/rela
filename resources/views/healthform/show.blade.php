@@ -62,10 +62,10 @@
     <h3>2. Eltern (im Notfall zu erreichende Person)</h3>
     <hr>
     <div class="row">
-        <div class="col-md-1 healthform--label">
+        <div class="col-md-2 healthform--label">
            Name:
         </div>
-        <div class="col-md-8 healthform--text">
+        <div class="col-md-7 healthform--text">
             {{$healthform['emergency_contact_name']}}
         </div>
         <div class="col-md-1 healthform--label">
@@ -76,10 +76,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-1 healthform--label">
-            Adresse:
+        <div class="col-md-2 healthform--label">
+            Wohnadresse während ReLa:
         </div>
-        <div class="col-md-11 healthform--text">
+        <div class="col-md-10 healthform--text">
             {{$healthform['emergency_contact_address']}}
         </div>
     </div>
@@ -96,15 +96,7 @@
     </div>
     <div class="row">
         <div class="col-md-4 healthform--label">
-            Unfallversicherung: Name, Hotline:
-        </div>
-        <div class="col-md-8 healthform--text">
-            {{$healthform['accident_insurance_contact']}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 healthform--label">
-            Krankenkasse: Name, Hotline:
+            Krankenkasse: Name, Versichertennummer:
         </div>
         <div class="col-md-8 healthform--text">
             {{$healthform['health_insurance_contact']}}
@@ -112,52 +104,63 @@
     </div>
     <div class="row">
         <div class="col-md-4 healthform--label">
-            Haftpflichtversicherung: Name, Hotline:
+            Unfallversicherung: Name, Versichertennummer:
         </div>
         <div class="col-md-8 healthform--text">
-            {{$healthform['liability_insurance_contact']}}
+            {{$healthform['accident_insurance_contact']}}
         </div>
     </div>
     <br>
     <h3>4. Gesundheitszustand</h3>
     <hr>
     <div class="row">
-        <div class="col-md-6 healthform--label">
+        <div class="col-md-4 healthform--label">
             kürzliche Unfälle / Krankheiten? abgeschlossen?
         </div>
-        <div class="col-md-6 healthform--text">
+        <div class="col-md-8 healthform--text">
             {{$healthinfo['recent_issues']}}
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 healthform--label">
+        <div class="col-md-4 healthform--label">
            behandelnder Arzt: Name, Telefon:
         </div>
-        <div class="col-md-6 healthform--text">
+        <div class="col-md-8 healthform--text">
             {{$healthinfo['recent_issues_doctor']}}
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 healthform--label">
-            Medikamente (mitgeben!) und Dosis:
+        <div class="col-md-4 healthform--label">
+            Dauermedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:
         </div>
-        <div class="col-md-6 healthform--text">
-            {{$healthinfo['drugs']}}
+        <div class="col-md-8 healthform--text">
+            {{$healthinfo['drug_longterm']}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 healthform--label">
+            Bei Bedarf: Medikament (mitgeben!), Dosis:
+        </div>
+        <div class="col-md-8 healthform--text">
+            {{$healthinfo['drug_demand']}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 healthform--label">
+            Notfallmedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:
+        </div>
+        <div class="col-md-8 healthform--text">
+            {{$healthinfo['drug_emergency']}}
         </div>
     </div>
     <br>
-    <h4>5. Allergien (Folgen / Medikament / Bemerkungen)</h4>
+    <h4>5. Allergien</h4>
     <hr>
-        @foreach($allergies as $allergy)
-            <div class="row">
-                <div class="col-md-3 healthform--label">
-                    {{$allergy->allergy['name']}}
-                </div>
-                <div class="col-md-9 healthform--text">
-                    {{$allergy['comment']}}
-                </div>
+        <div class="row">
+            <div class="col-md-12 healthform--label">
+                {!! nl2br(e($healthinfo['allergy'])) !!}
             </div>
-        @endforeach
+        </div>
     <br>
     <h4>6. Ergänzungen</h4>
     <hr>
@@ -173,7 +176,7 @@
         <div class="col-md-1 healthform--text">
             {{$healthinfo['ointment_only_contact'] ? 'Ja' : 'Nein'}}
         </div>
-        <div class="col-md-11 healthform--label">
+        <div class="col-md-11 healthform--label"  style="{{$healthinfo['ointment_only_contact'] ? '' : 'color:red'}}">
             Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Sablen selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
         </div>
     </div>
@@ -181,22 +184,31 @@
         <div class="col-md-1 healthform--text">
             {{$healthinfo['drugs_only_contact'] ? 'Ja' : 'Nein'}}
         </div>
-        <div class="col-md-11 healthform--label">
+        <div class="col-md-11 healthform--label" style="{{$healthinfo['drugs_only_contact'] ? '' : 'color:red'}}">
             Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Medikamente (z.B.
             Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
         </div>
     </div>
-    <div class="healthform--label">
-        Bemerkungen (chronische Leiden, Bettnässer usw.)
-    </div>
-    <div class="healthform--text">
-        {{$healthinfo['chronicle_diseases']}}
+
+    <div class="row">
+        <div class="col-md-2 healthform--label">
+            Bemerkungen (chronische Leiden, Bettnässer usw.)
+        </div>
+        <div class="col-md-10 healthform--text">
+            {!! nl2br(e($healthinfo['chronicle_diseases'])) !!}
+        </div>
     </div>
     <br>
+    <div class="row">
+        <div class="col-md-2 healthform--label">
+            Letzte Tetanus-Impfung:
+        </div>
+        <div class="col-md-10 healthform--text">
+            {{$healthform['vaccination']}}
+        </div>
+    </div>
     <div class="healthform--text">
-
-
-        Kopie <a href={{$healthform['file_vaccination'] ? route('downloadVaccination',$healthform) : '#'}}>Impfausweis</a> und evtl. <a href={{$healthform['file_allergy'] ? route('downloadAllergy',$healthform) : '#'}}>Impfausweis</a> beilegen!
+        Evtl. <a href={{$healthform['file_allergy'] ? route('downloadAllergy',$healthform) : '#'}}>Allergiepass</a> beilegen!
     </div>
     <div class="healthform--label">
     Versicherung ist Sache der Teilnehmenden.

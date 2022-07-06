@@ -5449,3 +5449,7 @@ img {
         padding-left: 10px;
     }
 }
+
+.healthform__checkbox:not(:checked) + label {
+    color: red;
+}

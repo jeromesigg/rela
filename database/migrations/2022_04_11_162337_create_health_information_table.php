@@ -19,11 +19,15 @@ return new class extends Migration
             $table->integer('code');
             $table->string('recent_issues')->nullable();
             $table->string('recent_issues_doctor')->nullable();
-            $table->string('drugs')->nullable();
+            $table->text('drug_longterm')->nullable();
+            $table->text('drug_demand')->nullable();
+            $table->text('drug_emergency')->nullable();
             $table->boolean('drugs_only_contact')->default(false);
             $table->boolean('ointment_only_contact')->default(false);
             $table->string('chronicle_diseases')->nullable();
             $table->string('file_protocol')->nullable();
+            $table->text('allergy')->nullable();
+
         });
     }
 

@@ -8,6 +8,7 @@ use App\Models\InterventionClass;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class InterventionController extends Controller
@@ -20,7 +21,7 @@ class InterventionController extends Controller
     public function index()
     {
         //
-        $intervention_classes = interventionClass::pluck('short_name');
+        $intervention_classes = interventionClass::where('show',true)->pluck('short_name');
         $healthinformation = [];
         return view('dashboard.interventions.index', compact('intervention_classes', 'healthinformation'));
     }
@@ -29,7 +30,7 @@ class InterventionController extends Controller
     {
         //
         $input = $request->all();
-        $intervention_class = interventionClass::where('short_name','=',$input['filter'])->first();
+        $intervention_class = interventionClass::where('show',true)->where('short_name','=',$input['filter'])->first();
         $healthinfo = HealthInformation::where('id','=',$input['info'])->first();
         $interventions = intervention::
             when($intervention_class, function($query, $intervention_class){
@@ -46,6 +47,15 @@ class InterventionController extends Controller
             ->addColumn('user', function (intervention $intervention) {
                 return $intervention->user['name'];
             })
+            ->addColumn('picture', function (intervention $intervention) {
+//                return Storage::url($intervention['file']);
+                if ($intervention['file']) {
+                    return '<a href="#" class="intervention_image"><img src="' . Storage::url($intervention['file']) . '" alt="" width="250px"></a>';
+                }
+                else{
+                    return '';
+                }
+            })
             ->editColumn('date', function (intervention $intervention) {
                 return [
                     'display' => Carbon::parse($intervention['date'])->format('d.m.Y'),
@@ -61,7 +71,7 @@ class InterventionController extends Controller
             ->addColumn('intervention', function (intervention $intervention) {
                 return $intervention->intervention_class['name'];
             })
-            ->rawColumns(['code'])
+            ->rawColumns(['code', 'picture'])
             ->make(true);
 
     }
@@ -70,7 +80,7 @@ class InterventionController extends Controller
     {
         //
         $input = $request->all();
-        $intervention_class = InterventionClass::where('id', '=', $input['intervention_class_id'])->first();
+        $intervention_class = InterventionClass::where('show',true)->where('id', '=', $input['intervention_class_id'])->first();
         if($input['code']) {
             $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
             if ($healthinfo == null) {
@@ -82,17 +92,19 @@ class InterventionController extends Controller
                 'health_information_id' => $healthinfo['id'],
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
+                'user_erf' => Auth::user()->name,
             ]);
         }
         else{
             $intervention = new intervention([
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
+                'user_erf' => Auth::user()->name,
             ]);
         }
         $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
-        $intervention_classes_all = InterventionClass::get();
-        $intervention_classes = InterventionClass::pluck('short_name','id');
+        $intervention_classes_all = InterventionClass::where('show',true)->get();
+        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
         return view('dashboard.interventions.create', compact('intervention', 'healthinfos', 'intervention_class', 'intervention_classes', 'intervention_classes_all'));
     }
 
@@ -108,6 +120,18 @@ class InterventionController extends Controller
         $input = $request->all();
         $user = Auth::user();
         $input['user_id'] = $user['id'];
+        if($file = $request->file('file')) {
+            $health_information = HealthInformation::findOrFail($input['health_information_id']);
+            $save_path = 'app/public/files/' .  $health_information['code'];
+            if (!file_exists(storage_path($save_path))) {
+                mkdir(storage_path($save_path), 0755, true);
+            }
+            $name = $file->getClientOriginalName();
+
+            $file->move(storage_path($save_path), $name);
+            $input['file'] = 'files/' .  $health_information['code'] . '/' . $name;
+        }
+
         intervention::create($input);
 
         return redirect()->back();

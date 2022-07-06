@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Allergy;
 use App\Models\InterventionClass;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -32,19 +31,13 @@ class BasisdatenSeeder extends Seeder
         ]);
 
 
-        Allergy::create(['name' => 'Heuschnupfen']);
-        Allergy::create(['name' => 'Bienen- / Wespenstiche']);
-        Allergy::create(['name' => 'Asthma bei / nach']);
-        Allergy::create(['name' => 'Lebensmittel']);
-        Allergy::create(['name' => 'Medikament (Wirkstoff)']);
-        Allergy::create(['name' => 'Andere']);
-
         InterventionClass::create([
             'id' => config('interventions.monitoring'),
             'name' => 'Patientenüberwachung',
             'short_name' => 'Patientenüberwachung',
             'parameter_name' => 'Symptom',
             'value_name' => 'Wert',
+            'file' => '/files/Patientenueberwachung.jpg',
         ]);
         InterventionClass::create([
             'id' => config('interventions.medication'),
@@ -55,29 +48,25 @@ class BasisdatenSeeder extends Seeder
         ]);
         InterventionClass::create([
             'id' => config('interventions.measure'),
-            'name' => 'Durchgeführte Massnahmen',
-            'short_name' => 'Massnahme',
+            'name' => '1.Hilfe Leistungen',
+            'short_name' => '1.Hilfe Leistungen',
             'parameter_name' => 'Massnahme',
+            'value_name' => 'Intervention',
+            'with_picture' => true,
         ]);
         InterventionClass::create([
             'id' => config('interventions.surveillance'),
-            'name' => 'Zustand des Patienten',
-            'short_name' => 'Zustand',
-            'parameter_name' => 'Messwert',
-            'value_name' => 'Wert',
-        ]);
-        InterventionClass::create([
-            'id' => config('interventions.healthstatus'),
-            'name' => 'Überwachung der Vitalfunktionen',
-            'short_name' => 'Überwachung',
+            'name' => 'Krankheiten des Patienten',
+            'short_name' => 'Krankheit',
             'parameter_name' => 'Symptom',
             'value_name' => 'Wert',
         ]);
         InterventionClass::create([
             'id' => config('interventions.incident'),
-            'name' => 'Allgemeine Geschehnisse',
-            'short_name' => 'Geschehen',
+            'name' => 'Sicherheitsrelevante Ereignisse',
+            'short_name' => 'Sicherheitsrelevante Ereignisse',
             'parameter_name' => 'Geschehen',
+            'value_name' => 'Intervention',
         ]);
     }
 }

@@ -23,8 +23,16 @@
                     <a href="{{route('healthforms.create')}}" class="btn btn-primary" role="button">Gesundsheitsblatt erstellen</a>
                 </div>
                 @if (Auth::user()->isAdmin())
+{{--                    <div class="col-lg-4">--}}
+{{--                        <button id="showImport" class="btn btn-primary btn-sm">Gesundsheitsblätter aus Cevi-DB importieren</button>--}}
+{{--                    </div>--}}
                     <div class="col-lg-4">
-                        <button id="showImport" class="btn btn-primary btn-sm">Gesundsheitsblätter aus Cevi-DB importieren</button>
+                        {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                            <div class="form-group">
+                                {{ Form::file('file',)}}
+                            </div>
+                            {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
+                        {!! Form::close() !!}
                     </div>
                 @endif
             </div>

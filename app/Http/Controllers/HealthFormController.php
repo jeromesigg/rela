@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Helper;
-use App\Models\Allergy;
-use App\Models\AllergyHealthInformation;
+use App\Imports\HealthFormsImport;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\HealthForm;
@@ -100,6 +99,56 @@ class HealthFormController extends Controller
         return view('dashboard.healthform.index');
     }
 
+    public function uploadFile(Request $request){
+        if($request->hasFile('file')){
+
+            $array = (new HealthFormsImport)->toArray(request()->file('file'));
+            $importData_arr = $array[0];
+            foreach($importData_arr as &$importData){
+                if(is_numeric($importData['geburtstag'])) {
+                    $dayCarbon = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($importData['geburtstag']));
+                    $day = Carbon::parse($dayCarbon)->format('Y-m-d');
+                    $importData['geburtstag'] = $day;
+                }
+                else{
+                    $day = Carbon::parse($importData['geburtstag'])->format('Y-m-d');
+                    $importData['geburtstag'] = $day;
+
+                }
+                $importData['ceviname'] = $importData['ceviname'] ? $importData['ceviname'] : $importData['vorname'];
+
+            }
+
+//            return $importData_arr ;
+            // Insert to MySQL database
+            foreach($importData_arr as $importData){
+
+                $group = Group::where('short_name','=',$importData['abteilung'])->first();
+                $code = $this->generateUniqueCode();
+                $insertData = array(
+
+                    'code' => Crypt::encryptString($code),
+                    'first_name' => $importData['vorname'],
+                    'last_name' => $importData['nachname'],
+                    'nickname' => $importData['ceviname'],
+                    'street' => $importData['strasse'],
+                    'zip_code' => $importData['plz'],
+                    'city' => $importData['ort'],
+                    'birthday' => $importData['geburtstag'],
+                    'ahv' => $importData['ahv_nr'],
+                    'group_id' => $group ? $group['id'] : null,
+                );
+
+                HealthForm::firstOrCreate(['ahv' => $importData['ahv_nr']], $insertData);
+                HealthInformation::create(['code' => $code]);
+            }
+        }
+
+        return redirect()->action('HealthFormController@index');
+
+
+    }
+
     public function import(){
             $response = Curl::to('https://db.cevi.ch/groups/' . config('app.group_id'). '/events/' . config('app.event_id'). '/participations.json')
                 ->withData(array('token' => config('app.token')))
@@ -149,17 +198,15 @@ class HealthFormController extends Controller
     {
         //
         $healthinfo = Helper::getHealthInfo($healthform['code']);
-        $allergies = $healthinfo->allergies;
 
-        return view('healthform.show', compact('healthform', 'healthinfo', 'allergies'));
+        return view('healthform.show', compact('healthform', 'healthinfo'));
 
     }
 
     public function downloadPDF(HealthForm $healthform)
     {
         $healthinfo = Helper::getHealthInfo($healthform['code']);
-        $allergies = $healthinfo->allergies;
-        return view('healthform.print', compact('healthform', 'healthinfo', 'allergies'));
+        return view('healthform.print', compact('healthform', 'healthinfo'));
     }
 
     public function open(HealthForm $healthform)
@@ -173,36 +220,28 @@ class HealthFormController extends Controller
     {
         //
         $input = $request->all();
-        $healthforms = HealthForm::where('zip_code','=',$input['zip_code'])->get();
+        $healthforms = HealthForm::where('birthday','=',$input['birthday'])->get();
         $healthform = null;
         foreach ($healthforms as $act_healthform){
-            if($input['code'] == $act_healthform['code']){
+            if($input['ahv'] == $act_healthform['ahv']){
                 $healthform = $act_healthform;
+                $code = $healthform['code'];
                 break;
             }
         }
-        $healthinfo = Helper::getHealthInfo($healthform['code']);
-        $allergyHealthInformation = $healthinfo->allergies;
-        if (count($allergyHealthInformation)==0){
-            $allergies = Allergy::get();
-            foreach ($allergies as $allergy){
-                AllergyHealthInformation::create([
-                    'health_information_id' => $healthinfo['id'],
-                    'allergy_id' => $allergy['id']]);
-            }
-        }
-        $allergies = AllergyHealthInformation::where('health_information_id','=',$healthinfo['id'])->get();
-//
+
         if ($healthform == null) {
             return redirect()->to(url()->previous())
                 ->withErrors('Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.')
                 ->withInput();
         }
-        elseif($healthform['finish']) {
-            return view('healthform.show', compact('healthform', 'healthinfo', 'allergies'));
+        $healthinfo = Helper::getHealthInfo($code);
+//
+        if($healthform['finish']) {
+            return view('healthform.show', compact('healthform', 'healthinfo'));
         }
         else{
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'allergies'));
+            return view('healthform.edit', compact('healthform', 'healthinfo'));
         }
     }
 
@@ -210,12 +249,9 @@ class HealthFormController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'healthform.file_vaccination' => 'mimes:pdf|max:2000',
             'healthform.file_allergies' => 'mimes:pdf|max:2000',
         ], [
-            'healthform.file_vaccination.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
             'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
-            'healthform.file_vaccination.mimes' => 'Nur PDF-Dateien sind erlaubt.',
             'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
 
         if ($validator->fails()) {
@@ -226,18 +262,6 @@ class HealthFormController extends Controller
         $input = $request->all();
         $input_healthform = $input['healthform'];
         $input_healthinfo = $input['healthinfo'];
-        $input_allergies = $input['allergies'];
-
-        if($file_vaccination = $request->file('healthform.file_vaccination')) {
-            $save_path = 'files/' . $healthform['code'];
-            if (!file_exists(storage_path('app/'.$save_path))) {
-                mkdir(storage_path('app/'.$save_path), 0755, true);
-            }
-            $name = 'Impfausweis.' . $file_vaccination->getClientOriginalExtension();
-
-            $file_vaccination->move(storage_path('app/'.$save_path), $name);
-            $input_healthform['file_vaccination'] = $save_path . '/' . $name;
-        }
 
         if($file_allergies = $request->file('healthform.file_allergies')) {
             $save_path = 'app/files/' . $healthform['code'];
@@ -266,23 +290,12 @@ class HealthFormController extends Controller
         $input_healthinfo['ointment_only_contact'] = isset($input_healthinfo['ointment_only_contact']);
         $healthform->update($input_healthform);
         $healthinfo->update($input_healthinfo);
-        $allergies = $healthinfo->allergies;
-
-        foreach ($allergies as $index => $allergy){
-            $allergy->update(['comment' => $input_allergies[$index]]);
-        }
         if($finish){
             return redirect()->route('healthform.show', $healthform);
         }
         else {
             return redirect()->to('/')->with('success', $message);
         }
-    }
-
-    public function downloadVaccination(HealthForm $healthform)
-    {
-        //
-        return response()->download(storage_path('app/'.$healthform['file_vaccination']));
     }
 
     public function downloadAllergy(HealthForm $healthform)

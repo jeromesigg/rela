@@ -24,13 +24,12 @@ Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'use
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
-Route::get('healthform/downloadVaccination/{healthform}', ['as'=>'downloadVaccination','uses'=>'HealthFormController@downloadVaccination']);
 Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
-
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+//
+//Route::get('/email/verify', function () {
+//    return view('auth.verify-email');
+//})->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -71,6 +70,8 @@ Route::group(['middleware' => 'verified'], function() {
 
     Route::group(['middleware' => 'admin'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
+        Route::resource('dashboard/interventionclasses', 'InterventionClassController');
+        Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
     });
 });
 

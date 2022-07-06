@@ -20,34 +20,43 @@
             <div class="row">
                 <div class="col-md-10">
                     <h3>Intervention erfassen</h3>
-                    {!! Form::model($intervention, ['method' => 'POST', 'action'=>'InterventionController@store']) !!}
+                    {!! Form::model($intervention, ['method' => 'POST', 'action'=>'InterventionController@store', 'files' => true]) !!}
                         <div class="form-row">
-                            <div class="form-group col-xl-2">
+                            <div class="form-group col-xl-2 col-lg-12">
                                 {!! Form::label('intervention_class_id', 'Code:') !!}
                                 {!! Form::select('intervention_class_id', $intervention_classes, null, ['class' => 'form-control', 'required', 'id' => 'intervention_class_id', 'onchange' => "Change_Intervention()"]) !!}
                                 {!! Form::hidden('health_information_id', $intervention['health_information_id'], null) !!}
-                            </div>
-                            <div class="form-group col-xl-6">
-                                {!! Form::label('parameter', $intervention_class['parameter_name'].':', ['id'=>'parameter_label']) !!}
-                                {!! Form::text('parameter', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group col-xl-4" id="value_div" style="display:{{$intervention_class['value_name']<>'' ? "block": "none"}}">
-                                {!! Form::label('value', $intervention_class['value_name'].':', ['id'=>'value_label']) !!}
-                                {!! Form::text('value', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-xl-2 col-6">
+                                <br>
                                 {!! Form::label('date', 'Datum:') !!}
                                 {!! Form::date('date', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group col-xl-2 col-6">
+                                <br>
                                 {!! Form::label('time', 'Zeit:') !!}
                                 {!! Form::time('time', null, ['class' => 'form-control', 'required']) !!}
+                                <br>
+                                {!! Form::label('user_erf', 'Erfasser:') !!}
+                                {!! Form::text('user_erf', null, ['class' => 'form-control', 'required']) !!}
                             </div>
                             <div class="form-group col-xl-8 col-lg-12">
-                                {!! Form::label('comment', 'Bemerkung:') !!}
-                                {!! Form::text('comment', null, ['class' => 'form-control']) !!}
+                                <div class="form-group">
+                                {!! Form::label('parameter', $intervention_class['parameter_name'].':', ['id'=>'parameter_label']) !!}
+                                {!! Form::textarea('parameter', null, ['class' => 'form-control', 'required', 'rows'=> 3, 'id'=>'parameter_value']) !!}
+                                </div>
+                                <div class="form-group" id="value_div" style="display:{{$intervention_class['value_name']<>'' ? "block": "none"}}">
+                                    {!! Form::label('value', $intervention_class['value_name'].':', ['id'=>'value_label']) !!}
+                                    {!! Form::textarea('value', null, ['class' => 'form-control', 'required', 'rows'=> 2]) !!}
+                                </div>
+                                <div class="form-group">
+                                    {!! Form::label('comment', 'Bemerkung:') !!}
+                                    {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows'=> 3]) !!}
+                                </div>
+                            </div>
+                            <div class="form-group col-xl-2 col-lg-12">
+                                <a href="#" class="intervention_image"> <img src="{{$intervention_class['file']}}" alt="" id="intervention_file"></a>
+
+                                <div class="form-group" id="intervention_picture">
+                                    {!! Form::label('file', 'Bild:') !!}
+                                    {!! Form::file('file', ['accept' => 'image/*', 'capture'=>'camera']) !!}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -105,14 +114,26 @@
                                 <td>{{$healthinformation['recent_issues_doctor']}}</td>
                             </tr>
                             <tr>
-                                <td style="width:30%">Medikamente und Dosis</td>
-                                <td>{{$healthinformation['drugs']}}</td>
+                                <td style="width:30%">Dauermedikation: Medikament, Dosis, Zeitpunkt</td>
+                                <td>{{$healthinformation['drug_longterm']}}</td>
                             </tr>
                             <tr>
+                                <td style="width:30%">Bei Bedarf: Medikament, Dosis</td>
+                                <td>{{$healthinformation['drug']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">Notfallmedikation: Medikament, Dosis, Zeitpunkt</td>
+                                <td>{{$healthinformation['drug_emergency']}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:30%">Bemerkungen (chronische Leiden, Bettnässer usw.)</td>
+                                <td>{!! nl2br(e($healthinformation['chronicle_diseases'])) !!}</td>
+                            </tr>
+                            <tr style="{{$healthinformation['ointment_only_contact'] ? '' : 'color:red'}}">
                                 <td style="width:30%">Salben ohne Rückfragen?</td>
                                 <td>{{$healthinformation['ointment_only_contact'] ? 'Ja' : 'Nein'}}</td>
                             </tr>
-                            <tr>
+                            <tr style="{{$healthinformation['drugs_only_contact'] ? '' : 'color:red'}}">
                                 <td style="width:30%">Medikamente ohne Rückfragen?</td>
                                 <td>{{$healthinformation['drugs_only_contact'] ? 'Ja' : 'Nein'}}</td>
                             </tr>
@@ -121,22 +142,7 @@
                 </div>
                 <div class="col-md-6">
                     <h3>Allergien</h3>
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                    <th scope="col" style="width:30%">Allergie</th>
-                                    <th scope="col" style="width:70%">Kommentar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($healthinformation->allergies as $allergy)
-                                <tr>
-                                    <td>{{$allergy->allergy['name']}}</td>
-                                    <td>{{$allergy['comment']}}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <p>{!! nl2br(e($healthinformation['allergy'])) !!}</p>
                 </div>
             </div>
             <hr>
@@ -169,6 +175,25 @@
                 document.getElementById("value_div").style.display = "block";
                 document.getElementById("value_div").setAttribute("required", true);
             }
+            if(act_intervention_class['default_text']) {
+                document.getElementById("parameter_value").value = act_intervention_class['default_text'];
+            }
+            else{
+                document.getElementById("parameter_value").value = '';
+            }
+            if(act_intervention_class['file']) {
+                document.getElementById("intervention_file").style.display = "block";
+            }
+            else{
+                document.getElementById("intervention_file").style.display = "none";
+            }
+            if(act_intervention_class['with_picture']) {
+                document.getElementById("intervention_picture").style.display = "block";
+            }
+            else{
+                document.getElementById("intervention_picture").style.display = "none";
+            }
+
             $('#submit_btn').val(act_intervention_class['short_name'] + ' erstellen' );
             $('#title').text(act_intervention_class['short_name']);
             $('#parameter_label').text(act_intervention_class['parameter_name'] +':');

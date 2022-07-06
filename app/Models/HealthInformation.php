@@ -15,7 +15,7 @@ class HealthInformation extends Model implements Auditable
     use SearchableTrait;
 
     protected $fillable = [
-        'code', 'recent_issues', 'recent_issues_doctor', 'drugs', 'drugs_only_contact', 'ointment_only_contact', 'chronicle_diseases', 'file_protocol'
+        'code', 'recent_issues', 'recent_issues_doctor', 'drug_longterm', 'drug_demand', 'drug_emergency', 'drugs_only_contact', 'ointment_only_contact', 'chronicle_diseases', 'file_protocol', 'allergy'
     ];
 
     protected $searchable = [
@@ -24,16 +24,8 @@ class HealthInformation extends Model implements Auditable
         ]
     ];
 
-    public function allergies(){
-        return $this->hasMany(AllergyHealthInformation::class, 'health_information_id');
-    }
-
     public function interventions(){
         return $this->hasMany(Intervention::class, 'health_information_id');
-    }
-
-    public function healthstatus(){
-        return $this->interventions()->where('intervention_class_id','=',config('interventions.healthstatus'));
     }
 
     public function incidents(){

@@ -41,6 +41,8 @@ class UsersController extends Controller
             $request->validate([
                 'password' => ['required', 'confirmed'],
             ]);
+            $input['is_Manager'] = isset($input['is_Manager']);
+            $input['is_Helper'] = isset($input['is_Helper']);
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
             $input['password_change_at'] = now();

@@ -1,6 +1,16 @@
 
 <script>
+
     $(function () {
+        $(document).on("click",".intervention_image",function(e){
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            console.log('Hallo');
+            $('.imagepreview').attr('src', $(this).find('img').attr('src'));
+            $('#imagemodal').modal('show');
+        });
+
+
         var $healthinformation = @json($healthinformation);
         var $healthinfo_id = $healthinformation ? $healthinformation['id'] : null;
         var table = $('#datatable').DataTable({
@@ -37,6 +47,7 @@
                 { data: 'code', name: 'code' },
                 { data: 'intervention', name: 'intervention' },
                 { data: 'parameter', name: 'parameter' },
+                { data: 'picture', name: 'picture' },
                 { data: 'value', name: 'value' },
                 { data: 'comment', name: 'comment' },
                 { data: 'user', name: 'user' },

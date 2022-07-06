@@ -25,11 +25,11 @@
                 </div>
                 <div class="form-group col-md-4">
                     {!! Form::label('parameter', $intervention_class['parameter_name'].':', ['id'=>'parameter_label']) !!}
-                    {!! Form::text('parameter', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::textarea('parameter', null, ['class' => 'form-control', 'required', 'rows' => 2]) !!}
                 </div>
                 <div class="form-group col-md-4" id="value_div" style="display:{{$intervention_class['value_name']<>'' ? "block": "none"}}">
                     {!! Form::label('value', $intervention_class['value_name'].':', ['id'=>'value_label']) !!}
-                    {!! Form::text('value', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::textarea('value', null, ['class' => 'form-control', 'required', 'rows' => 2]) !!}
                 </div>
             </div>
             <div class="form-row">

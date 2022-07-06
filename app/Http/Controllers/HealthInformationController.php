@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Helper\Helper;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
-use App\Models\HealthStatus;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
+use Auth;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,9 +38,6 @@ class HealthInformationController extends Controller
             ->addColumn('code', function (HealthInformation $act_healthinfo) {
                 return '<a href='.\URL::route('healthinformation.show',$act_healthinfo).'>'.$act_healthinfo['code'].'</a>';
             })
-            ->addColumn('allergies', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->allergies);
-            })
             ->addColumn('monitorings', function (HealthInformation $act_healthinfo) {
                 return count($act_healthinfo->monitorings);
             })
@@ -52,9 +49,6 @@ class HealthInformationController extends Controller
             })
             ->addColumn('surveillances', function (HealthInformation $act_healthinfo) {
                 return count($act_healthinfo->surveillances);
-            })
-            ->addColumn('healthstatus', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->healthstatus);
             })
             ->addColumn('incidents', function (HealthInformation $act_healthinfo) {
                 return count($act_healthinfo->incidents);
@@ -96,10 +90,11 @@ class HealthInformationController extends Controller
             'health_information_id' => $healthinformation['id'],
             'date' => Carbon::now()->toDateString(),
             'time' => Carbon::now()->toTimeString(),
+            'user_erf' => Auth::user()->name,
         ]);
         $intervention_class = InterventionClass::first();
-        $intervention_classes_all = InterventionClass::get();
-        $intervention_classes = InterventionClass::pluck('short_name','id');
+        $intervention_classes_all = InterventionClass::where('show',true)->get();
+        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
         return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class'));
 
     }

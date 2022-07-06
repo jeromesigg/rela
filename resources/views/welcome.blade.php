@@ -40,12 +40,12 @@
               @endif
               <div class="form-row">
                   <div class="form-group col-md-6">
-                      {!! Form::label('code', 'Persönliche Nummer:') !!}
-                      {!! Form::number('code', null, ['class' => 'form-control', 'required']) !!}
+                      {!! Form::label('ahv', 'AHV Nummer:') !!}
+                      {!! Form::text('ahv', null, ['class' => 'form-control', 'placeholder' => '756.1234.1234.12', 'required']) !!}
                   </div>
                   <div class="form-group col-md-6">
-                      {!! Form::label('zip_code', 'Postleitzahl:') !!}
-                      {!! Form::number('zip_code', null, ['class' => 'form-control'], 'required') !!}
+                      {!! Form::label('birthday', 'Geburtstag:') !!}
+                      {!! Form::date('birthday', null, ['class' => 'form-control'], 'required') !!}
                   </div>
               </div>
             </div>

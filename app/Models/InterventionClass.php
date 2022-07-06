@@ -10,6 +10,6 @@ class InterventionClass extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'Short_name', 'parameter_name', 'value_name'
+        'name', 'Short_name', 'parameter_name', 'value_name', 'file', 'default_text', 'show', 'with_picture'
     ];
 }

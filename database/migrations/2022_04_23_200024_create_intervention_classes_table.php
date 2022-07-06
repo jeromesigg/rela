@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('short_name');
             $table->string('parameter_name');
             $table->string('value_name')->nullable();
+            $table->string('file')->nullable();
+            $table->text('default_text')->nullable();
+            $table->boolean('show')->default(true);
+            $table->boolean('with_picture')->default(false);
         });
     }
 

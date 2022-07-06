@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('nickname');
             $table->string('last_name');
             $table->string('first_name');
+            $table->string('ahv');
             $table->string('street');
             $table->integer('zip_code');
             $table->string('city');
@@ -38,7 +39,7 @@ return new class extends Migration
             $table->string('liability_insurance_contact')->nullable();
             $table->boolean('swimmer')->default(false);
             $table->boolean('finish')->default(false);
-            $table->string('file_vaccination')->nullable();
+            $table->string('vaccination')->nullable();
             $table->string('file_allergy')->nullable();
             HealthForm::addSlugColumn($table);
         });

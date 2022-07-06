@@ -49,7 +49,7 @@
             </div>
             {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
             <div class="form-group col-md-3">
-                {!! Form::label('healthform[phone_number]', 'Telefon:') !!}
+                {!! Form::label('healthform[phone_number]', 'Telefon (Bei Leitungspersonen):') !!}
                 {!! Form::text('healthform[phone_number]', $healthform['phone_number'], ['class' => 'form-control']) !!}
             </div>
         </div>
@@ -62,7 +62,7 @@
                 {!! Form::text('healthform[emergency_contact_name]', $healthform['emergency_contact_name'], ['class' => 'form-control']) !!}
             </div>
             <div class="form-group col-md-5">
-                {!! Form::label('healthform[emergency_contact_address]', 'Adresse:') !!}
+                {!! Form::label('healthform[emergency_contact_address]', 'Wohnadresse während der Lagerwoche:') !!}
                 {!! Form::text('healthform[emergency_contact_address]', $healthform['emergency_contact_address'], ['class' => 'form-control']) !!}
             </div>
             <div class="form-group col-md-3">
@@ -79,98 +79,83 @@
                 {!! Form::text('healthform[doctor_contact]', $healthform['doctor_contact'], ['class' => 'form-control']) !!}
             </div>
             <div class="form-group col-md-6">
-                {!! Form::label('healthform[accident_insurance_contact]', 'Unfallversicherung: Name, Hotline:') !!}
-                {!! Form::text('healthform[accident_insurance_contact]', $healthform['accident_insurance_contact'], ['class' => 'form-control']) !!}
+                {!! Form::label('healthform[health_insurance_contact]', 'Krankenkasse: Name, Versichertennummer:') !!}
+                {!! Form::text('healthform[health_insurance_contact]', $healthform['health_insurance_contact'], ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                {!! Form::label('healthform[health_insurance_contact]', 'Krankenkasse: Name, Hotline:') !!}
-                {!! Form::text('healthform[health_insurance_contact]', $healthform['health_insurance_contact'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('healthform[liability_insurance_contact]', 'Haftpflichtversicherung: Name, Hotline:') !!}
-                {!! Form::text('healthform[liability_insurance_contact]', $healthform['liability_insurance_contact'], ['class' => 'form-control']) !!}
+                {!! Form::label('healthform[accident_insurance_contact]', 'Unfallversicherung: Name, Versichertennummer:') !!}
+                {!! Form::text('healthform[accident_insurance_contact]', $healthform['accident_insurance_contact'], ['class' => 'form-control']) !!}
             </div>
         </div>
         <br>
-        <h4>4. Gesundheitszustand</h4>
+        <h4>4. Allergien</h4>
+        <hr>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {!! Form::label('healthinfo[allergy]', 'Allergische Substanz - Wie zeigt sich die Allergie?') !!}
+                {!! Form::textarea('healthinfo[allergy]', $healthinfo['allergy'], ['class' => 'form-control', 'rows' => 3]) !!}
+            </div>
+
+        </div>
+        <br>
+        <h4>5. Gesundheitszustand</h4>
         <hr>
         <div class="form-row">
             <div class="form-group col-md-6">
                 {!! Form::label('healthinfo[recent_issues]', 'kürzliche Unfälle / Krankheiten abgeschlossen?') !!}
-                {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 4]) !!}
+                {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 1]) !!}
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('healthinfo[recent_issues_doctor]', 'behandelnder Arzt: Name, Telefon:') !!}
                     {!! Form::text('healthinfo[recent_issues_doctor]', $healthinfo['recent_issues_doctor'], ['class' => 'form-control']) !!}
                 </div>
-                <div class="form-group">
-                    {!! Form::label('healthinfo[drugs]', 'Medikamente (mitgeben!) und Dosis:') !!}
-                    {!! Form::text('healthinfo[drugs]', $healthinfo['drugs'], ['class' => 'form-control']) !!}
-                </div>
             </div>
         </div>
-        <br>
-        <h4>5. Allergien (Folgen / Medikament / Bemerkungen)</h4>
-        <hr>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[0]', 'Heuschnupfen') !!}
-                {!! Form::text('allergies[0]', $allergies[0]['comment'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[1]', 'Bienen- / Wespenstiche') !!}
-                {!! Form::text('allergies[1]', $allergies[1]['comment'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[2]', 'Asthma bei / nach') !!}
-                {!! Form::text('allergies[2]', $allergies[2]['comment'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[3]', 'Lebensmittel') !!}
-                {!! Form::text('allergies[3]', $allergies[3]['comment'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[4]', 'Medikament (Wirkstoff)') !!}
-                {!! Form::text('allergies[4]', $allergies[4]['comment'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('allergies[5]', 'anderes') !!}
-                {!! Form::text('allergies[5]', $allergies[5]['comment'], ['class' => 'form-control']) !!}
-            </div>
+        <div class="form-group">
+            {!! Form::label('healthinfo[drug_longterm]', 'Dauermedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
+            {!! Form::text('healthinfo[drug_longterm]', $healthinfo['drug_longterm'], ['class' => 'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('healthinfo[drug_demand]', 'Bei Bedarf: Medikament (mitgeben!), Dosis:') !!}
+            {!! Form::text('healthinfo[drug_demand]', $healthinfo['drug_demand'], ['class' => 'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::label('healthinfo[drug_emergency]', 'Notfallmedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
+            {!! Form::text('healthinfo[drug_emergency]', $healthinfo['drug_emergency'], ['class' => 'form-control']) !!}
         </div>
         <br>
         <h4>6. Ergänzungen</h4>
         <hr>
         <div class="form-row">
-            <div class="form-group col-md-2">
-                {!! Form::checkbox('healthform[swimmer]', '1', $healthform['swimmer']) !!}
-                {!! Form::label('healthform[swimmer]', 'Teilnehmer/-in kann schwimmen') !!}
+            <div class="col-md-6">
+                <div class="form-group">
+                    {!! Form::checkbox('healthform[swimmer]', '1', $healthform['swimmer']) !!}
+                    {!! Form::label('healthform[swimmer]', 'Teilnehmer/-in kann schwimmen') !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::checkbox('healthinfo[ointment_only_contact]', '1', $healthinfo['ointment_only_contact'], ['class'=>'healthform__checkbox']) !!}
+                    {!! Form::label('healthinfo[ointment_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie lokale Medikamente (Desinfektionsspray, Salber, Augentropfen, etc.) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::checkbox('healthinfo[drugs_only_contact]', '1', $healthinfo['drugs_only_contact'], ['class'=>'healthform__checkbox']) !!}
+                    {!! Form::label('healthinfo[drugs_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie orale Medikamente (z.B. Halslutschtabletten, orale Schmerzmedikamente) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+                </div>
             </div>
-            <div class="form-group col-md-5">
-                {!! Form::checkbox('healthinfo[ointment_only_contact]', '1', $healthinfo['ointment_only_contact']) !!}{!! Form::label('healthinfo[ointment_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Salben selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+            <div class="form-group col-md-6">
+                {!! Form::label('healthinfo[chronicle_diseases]', 'Bemerkungen (chronische Leiden, Bettnässer usw.)') !!}
+                {!! Form::textarea('healthinfo[chronicle_diseases]', $healthinfo['chronicle_diseases'], ['class' => 'form-control', 'rows' => 9]) !!}
             </div>
-            <div class="form-group col-md-5">
-                {!! Form::checkbox('healthinfo[drugs_only_contact]', '1', $healthinfo['drugs_only_contact']) !!}{!! Form::label('healthinfo[drugs_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Medikamente (z.B.
-Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
-            </div>
-        </div>
-        <div class="form-group">
-            {!! Form::label('healthinfo[chronicle_diseases]', 'Bemerkungen (chronische Leiden, Bettnässer usw.)') !!}
-            {!! Form::textarea('healthinfo[chronicle_diseases]', $healthinfo['chronicle_diseases'], ['class' => 'form-control', 'rows' => 4]) !!}
         </div>
         <br>
-        <h4>7. Dateien</h4>
+        <h4>7. Impfungen und Allergiepass</h4>
         <hr>
         <div class="form-row">
             <div class="form-group col-md-6">
-                @if(isset($healthform['file_vaccination']))
-                    Impfausweis schon hochgeladen <br>
-                @endif
-                {!! Form::label('healthform[file_vaccination]', 'Impfausweis:') !!}
-                {!! Form::file('healthform[file_vaccination]', null, ['class' => 'form-control']) !!}
+                {!! Form::label('healthform[vaccination]', 'Letzte Tetanus Impfung erfolgt am:') !!}
+                {!! Form::text('healthform[vaccination]', $healthform['vaccination'], ['class' => 'form-control' , 'placeholder' => 'Datum bzw Keine']) !!}
             </div>
             <div class="form-group col-md-6">
                 @if(isset($healthform['file_allergies']))
@@ -200,7 +185,6 @@ Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten u
 
 @section('scripts')
     <script type="text/javascript">
-
         //autocomplete script
         $(document).on('focus','.autocomplete_txt',function(){
             type = $(this).attr('name');

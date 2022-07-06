@@ -22,10 +22,9 @@
                         <th scope="col" width="9%">Code</th>
                         <th scope="col" width="13%"># Patientenüberwachung</th>
                         <th scope="col" width="13%"># Verabreichte Medikationen</th>
-                        <th scope="col" width="13%"># Durchgeführte Massnahmen</th>
-                        <th scope="col" width="13%"># Zustand des Patienten</th>
-                        <th scope="col" width="13%"># Überwachung der Vitalfunktionen</th>
-                        <th scope="col" width="13%"># Allgemeine Geschehnisse</th>
+                        <th scope="col" width="13%"># 1. Hilfe Leistungen</th>
+                        <th scope="col" width="13%"># Krankheiten</th>
+                        <th scope="col" width="13%"># Sicherheitsrelevante Ereignisse</th>
                     </tr>
                 </thead>
             </table>
@@ -52,7 +51,6 @@
                     { data: 'medications', name: 'medications' },
                     { data: 'measures', name: 'measures' },
                     { data: 'surveillances', name: 'surveillances' },
-                    { data: 'healthstatus', name: 'healthstatus' },
                     { data: 'incidents', name: 'incidents' },
 
                     ]

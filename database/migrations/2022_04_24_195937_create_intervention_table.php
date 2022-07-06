@@ -22,11 +22,13 @@ return new class extends Migration
             $table->foreign('health_information_id')->references('id')->on('health_information');
             $table->bigInteger('user_id')->index()->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('user_erf');
             $table->date('date');
             $table->time('time');
-            $table->mediumText('comment')->nullable();
-            $table->string('parameter');
-            $table->string('value')->nullable();
+            $table->text('comment')->nullable();
+            $table->text('parameter');
+            $table->text('value')->nullable();
+            $table->string('file')->nullable();
         });
     }
 
