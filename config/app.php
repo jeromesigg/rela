@@ -19,6 +19,7 @@ return [
     'token' => env('TOKEN', null),
     'event_id' => env('EVENT_ID', null),
     'group_id' => env('GROUP_ID', null),
+    'form_filling' => env('FORM_FILLING', true),
 
     /*
     |--------------------------------------------------------------------------

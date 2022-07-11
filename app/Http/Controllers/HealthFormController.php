@@ -219,29 +219,34 @@ class HealthFormController extends Controller
     public function edit(Request $request)
     {
         //
-        $input = $request->all();
-        $healthforms = HealthForm::where('birthday','=',$input['birthday'])->get();
-        $healthform = null;
-        foreach ($healthforms as $act_healthform){
-            if($input['ahv'] == $act_healthform['ahv']){
-                $healthform = $act_healthform;
-                $code = $healthform['code'];
-                break;
+        if(config('app.form_filling')) {
+            $input = $request->all();
+            $healthforms = HealthForm::where('birthday', '=', $input['birthday'])->get();
+            $healthform = null;
+            foreach ($healthforms as $act_healthform) {
+                if ($input['ahv'] == $act_healthform['ahv']) {
+                    $healthform = $act_healthform;
+                    $code = $healthform['code'];
+                    break;
+                }
+            }
+
+            if ($healthform == null) {
+                return redirect()->to(url()->previous())
+                    ->withErrors('Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.')
+                    ->withInput();
+            }
+            $healthinfo = Helper::getHealthInfo($code);
+//
+            if ($healthform['finish']) {
+                return view('healthform.show', compact('healthform', 'healthinfo'));
+            } else {
+                return view('healthform.edit', compact('healthform', 'healthinfo'));
             }
         }
-
-        if ($healthform == null) {
-            return redirect()->to(url()->previous())
-                ->withErrors('Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.')
-                ->withInput();
-        }
-        $healthinfo = Helper::getHealthInfo($code);
-//
-        if($healthform['finish']) {
-            return view('healthform.show', compact('healthform', 'healthinfo'));
-        }
         else{
-            return view('healthform.edit', compact('healthform', 'healthinfo'));
+            return redirect()->to(url()->previous())
+                ->withErrors('Eingaben können nicht mehr getätigt werden.');
         }
     }
 
