@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\HealthFormsExport;
 use App\Helper\Helper;
 use App\Imports\HealthFormsImport;
 use App\Models\City;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Response;
 use Ixudra\Curl\Facades\Curl;
+use Maatwebsite\Excel\Facades\Excel;
 use Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -81,6 +83,12 @@ class HealthFormController extends Controller
         return view('dashboard.healthform.create', compact('groups'));
     }
 
+    public function createNew(Request $request)
+    {
+        //
+       return $request;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -105,42 +113,44 @@ class HealthFormController extends Controller
             $array = (new HealthFormsImport)->toArray(request()->file('file'));
             $importData_arr = $array[0];
             foreach($importData_arr as &$importData){
-                if(is_numeric($importData['geburtstag'])) {
-                    $dayCarbon = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($importData['geburtstag']));
-                    $day = Carbon::parse($dayCarbon)->format('Y-m-d');
-                    $importData['geburtstag'] = $day;
-                }
-                else{
-                    $day = Carbon::parse($importData['geburtstag'])->format('Y-m-d');
-                    $importData['geburtstag'] = $day;
+                if(!empty($importData['geburtstag'])) {
+                    if(is_numeric($importData['geburtstag'])) {
+                        $dayCarbon = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($importData['geburtstag']));
+                        $day = Carbon::parse($dayCarbon)->format('Y-m-d');
+                        $importData['geburtstag'] = $day;
+                    } else {
+                        $importData['geburtstag'] = trim($importData['geburtstag']);
+                        $day = Carbon::parse($importData['geburtstag'])->format('Y-m-d');
+                        $importData['geburtstag'] = $day;
 
+                    }
                 }
                 $importData['ceviname'] = $importData['ceviname'] ? $importData['ceviname'] : $importData['vorname'];
 
             }
 
-//            return $importData_arr ;
             // Insert to MySQL database
             foreach($importData_arr as $importData){
+                if (!empty(trim($importData['ahv_nr'])) && !empty(trim($importData['geburtstag']))) {
+                    $group = Group::where('short_name', '=', $importData['abteilung'])->first();
+                    $code = $this->generateUniqueCode();
+                    $insertData = array(
 
-                $group = Group::where('short_name','=',$importData['abteilung'])->first();
-                $code = $this->generateUniqueCode();
-                $insertData = array(
+                        'code' => Crypt::encryptString($code),
+                        'first_name' => trim($importData['vorname']),
+                        'last_name' => trim($importData['nachname']),
+                        'nickname' => trim($importData['ceviname']),
+                        'street' => trim($importData['strasse']),
+                        'zip_code' => trim($importData['plz']),
+                        'city' => trim($importData['ort']),
+                        'birthday' => trim($importData['geburtstag']),
+                        'ahv' => trim($importData['ahv_nr']),
+                        'group_id' => $group ? $group['id'] : null,
+                    );
 
-                    'code' => Crypt::encryptString($code),
-                    'first_name' => $importData['vorname'],
-                    'last_name' => $importData['nachname'],
-                    'nickname' => $importData['ceviname'],
-                    'street' => $importData['strasse'],
-                    'zip_code' => $importData['plz'],
-                    'city' => $importData['ort'],
-                    'birthday' => $importData['geburtstag'],
-                    'ahv' => $importData['ahv_nr'],
-                    'group_id' => $group ? $group['id'] : null,
-                );
-
-                HealthForm::firstOrCreate(['ahv' => $importData['ahv_nr']], $insertData);
-                HealthInformation::create(['code' => $code]);
+                    HealthForm::firstOrCreate(['ahv' => $importData['ahv_nr']], $insertData);
+                    HealthInformation::firstOrCreate(['code' => $code]);
+                }
             }
         }
 
@@ -194,6 +204,11 @@ class HealthFormController extends Controller
         return $code;
     }
 
+    public function downloadFile()
+    {
+        return Excel::download(new HealthFormsExport(), 'Teilnehmerliste.xlsx');
+    }
+
     public function show(HealthForm $healthform)
     {
         //
@@ -219,6 +234,7 @@ class HealthFormController extends Controller
     public function edit(Request $request)
     {
         //
+
         if(config('app.form_filling')) {
             $input = $request->all();
             $healthforms = HealthForm::where('birthday', '=', $input['birthday'])->get();
@@ -230,18 +246,32 @@ class HealthFormController extends Controller
                     break;
                 }
             }
-
-            if ($healthform == null) {
-                return redirect()->to(url()->previous())
-                    ->withErrors('Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.')
-                    ->withInput();
+            if($input['submit']==="Suchen"){
+                if ($healthform == null) {
+                    return redirect()->to(url()->previous())
+                        ->withErrors("Fehler")
+                        ->withInput();
+                }
+                $healthinfo = Helper::getHealthInfo($code);
+    //
+                if ($healthform['finish']) {
+                    return view('healthform.show', compact('healthform', 'healthinfo'));
+                } else {
+                    return view('healthform.edit', compact('healthform', 'healthinfo'));
+                }
             }
-            $healthinfo = Helper::getHealthInfo($code);
-//
-            if ($healthform['finish']) {
-                return view('healthform.show', compact('healthform', 'healthinfo'));
-            } else {
+            else{
+                $code = $this->generateUniqueCode();
+                $insertData = array(
+//                        'id' => $participant->id,
+                    'code' => Crypt::encryptString($code),
+                    'ahv' => $input['ahv'],
+                    'birthday' => $input['birthday'],
+                );
+                $healthform = HealthForm::create($insertData);
+                $healthinfo = HealthInformation::create(['code' => $code]);
                 return view('healthform.edit', compact('healthform', 'healthinfo'));
+
             }
         }
         else{

@@ -33,6 +33,8 @@
                             </div>
                             {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
                         {!! Form::close() !!}
+                        <br>
+                        <a href="{{route('healthforms.downloadFile')}}" class="btn btn-primary" role="button">Gesundsheitsblätter herunterladen</a>
                     </div>
                 @endif
             </div>

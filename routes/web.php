@@ -20,6 +20,7 @@ Route::get('/', function () {
 
 
 Route::get('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
+Route::get('/healthform/createNew', ['as'=>'healthform.createNew', 'uses'=>'HealthFormController@createNew']);
 Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'uses'=>'HealthFormController@update']);
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
@@ -72,6 +73,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
         Route::resource('dashboard/interventionclasses', 'InterventionClassController');
         Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
+        Route::get('dashboard/healthform/downloadFile', ['as'=>'healthforms.downloadFile', 'uses'=>'HealthFormController@downloadFile']);
     });
 });
 

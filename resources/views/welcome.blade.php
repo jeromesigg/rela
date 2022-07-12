@@ -23,7 +23,11 @@
                   <div class="alert alert-danger">
                       <ul>
                           @foreach ($errors->all() as $error)
-                              <li>{{ $error }}</li>
+                              @if($error === "Fehler" )
+                                  <li>Es konnte kein Gesundheitsblatt mit diesen Angaben gefunden werden.  {!! Form::submit('Neues erstellen?', ['class' => 'btn btn-link', 'value'=>'create', 'name'=>'submit' ])!!}</li>
+                              @else
+                                  <li>{{ $error }}</li>
+                              @endif
                           @endforeach
                       </ul>
                   </div>
@@ -45,12 +49,12 @@
                   </div>
                   <div class="form-group col-md-6">
                       {!! Form::label('birthday', 'Geburtstag:') !!}
-                      {!! Form::date('birthday', null, ['class' => 'form-control'], 'required') !!}
+                      {!! Form::date('birthday', null, ['class' => 'form-control', 'required']) !!}
                   </div>
               </div>
             </div>
             <div class="text-right">
-              {!! Form::submit('Suchen', ['class' => 'btn btn-primary'])!!}
+              {!! Form::submit('Suchen', ['class' => 'btn btn-primary', 'value'=>'open', 'name'=>'submit'])!!}
             </div>
           {!! Form::close()!!}
         </div>
