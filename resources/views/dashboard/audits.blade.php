@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{ $audit->auditable_type }} (id: {{ $audit->auditable_id }})</td>
                     <td>{{ $audit->event }}</td>
-                    <td>{{ $audit->user->name }}</td>
+                    <td>{{ $audit->user ? $audit->user->name :'' }}</td>
                     <td>{{ $audit->created_at }}</td>
                     <td>
                         <table class="table">

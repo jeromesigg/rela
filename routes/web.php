@@ -74,6 +74,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::resource('dashboard/interventionclasses', 'InterventionClassController');
         Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
         Route::get('dashboard/healthform/downloadFile', ['as'=>'healthforms.downloadFile', 'uses'=>'HealthFormController@downloadFile']);
+        Route::post('healthforms/{healthform}/newCode', ['as'=>'healthforms.newCode','uses'=>'HealthFormController@newCode']);
     });
 });
 

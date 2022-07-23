@@ -48,15 +48,6 @@ class HealthFormController extends Controller
                 $nickname = $healthForm->nickname;
                 return '<a href='.\URL::route('healthform.show',$healthForm).'>'.$nickname.'</a>';
             })
-            ->editColumn('code', function (HealthForm $healthForm) {
-                if(Auth::user()->isAdmin()) {
-                    $healthinfo = Helper::getHealthInfo($healthForm['code']);
-                    return '<a href='.\URL::route('healthinformation.show',$healthinfo).'>'. $healthForm->code.'</a>';
-                }
-                else{
-                    return '';
-                }
-            })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
 
@@ -65,6 +56,9 @@ class HealthFormController extends Controller
                 if($healthForm['finish']){
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Öffnen</button>';
                 };
+                $buttons .= '</form>';
+                $buttons .= '<form action="'.\URL::route('healthforms.newCode', $healthForm).'" method="post">' . csrf_field();
+                $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Neuer Code</button>';
                 $buttons .= '</form>';
                 return $buttons;
             })
@@ -195,11 +189,18 @@ class HealthFormController extends Controller
             return true;
     }
 
+    public function NewCode(HealthForm $healthform)
+    {
+        $code = $this->generateUniqueCode();
+        $healthform->update(['code' => Crypt::encryptString($code)]);
+        return redirect('/dashboard/healthforms');
+    }
+
     public function generateUniqueCode(): int
     {
         do {
             $code = random_int(1000, 9999);
-        } while (HealthForm::where('code', "=", $code)->first());
+        } while (HealthInformation::where('code', "=", $code)->first());
 
         return $code;
     }

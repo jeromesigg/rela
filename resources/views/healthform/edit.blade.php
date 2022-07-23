@@ -105,7 +105,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 {!! Form::label('healthinfo[recent_issues]', 'kürzliche Unfälle / Krankheiten abgeschlossen?') !!}
-                {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 1]) !!}
+                {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 2]) !!}
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -116,15 +116,15 @@
         </div>
         <div class="form-group">
             {!! Form::label('healthinfo[drug_longterm]', 'Dauermedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
-            {!! Form::text('healthinfo[drug_longterm]', $healthinfo['drug_longterm'], ['class' => 'form-control']) !!}
+            {!! Form::textarea('healthinfo[drug_longterm]', $healthinfo['drug_longterm'], ['class' => 'form-control', 'rows' => 2]) !!}
         </div>
         <div class="form-group">
             {!! Form::label('healthinfo[drug_demand]', 'Bei Bedarf: Medikament (mitgeben!), Dosis:') !!}
-            {!! Form::text('healthinfo[drug_demand]', $healthinfo['drug_demand'], ['class' => 'form-control']) !!}
+            {!! Form::textarea('healthinfo[drug_demand]', $healthinfo['drug_demand'], ['class' => 'form-control', 'rows' => 2]) !!}
         </div>
         <div class="form-group">
             {!! Form::label('healthinfo[drug_emergency]', 'Notfallmedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
-            {!! Form::text('healthinfo[drug_emergency]', $healthinfo['drug_emergency'], ['class' => 'form-control']) !!}
+            {!! Form::textarea('healthinfo[drug_emergency]', $healthinfo['drug_emergency'], ['class' => 'form-control', 'rows' => 2]) !!}
         </div>
         <br>
         <h4>6. Ergänzungen</h4>
