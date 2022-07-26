@@ -57,9 +57,9 @@ class HealthFormController extends Controller
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Öffnen</button>';
                 };
                 $buttons .= '</form>';
-                $buttons .= '<form action="'.\URL::route('healthforms.newCode', $healthForm).'" method="post">' . csrf_field();
-                $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Neuer Code</button>';
-                $buttons .= '</form>';
+//                $buttons .= '<form action="'.\URL::route('healthforms.newCode', $healthForm).'" method="post">' . csrf_field();
+//                $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Neuer Code</button>';
+//                $buttons .= '</form>';
                 return $buttons;
             })
             ->rawColumns(['nickname', 'code', 'Actions'])
