@@ -208,7 +208,7 @@
         </div>
     </div>
     <div class="healthform--text">
-        Evtl. <a href={{$healthform['file_allergy'] ? route('downloadAllergy',$healthform) : '#'}}>Allergiepass</a> beilegen!
+        Evtl. <a href={{$healthform['file_allergies'] ? route('downloadAllergy',$healthform) : '#'}}>Allergiepass</a> beilegen!
     </div>
     <div class="healthform--label">
     Versicherung ist Sache der Teilnehmenden.

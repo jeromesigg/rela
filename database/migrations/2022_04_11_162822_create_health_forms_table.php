@@ -40,7 +40,7 @@ return new class extends Migration
             $table->boolean('swimmer')->default(false);
             $table->boolean('finish')->default(false);
             $table->string('vaccination')->nullable();
-            $table->string('file_allergy')->nullable();
+            $table->string('file_allergies')->nullable();
             HealthForm::addSlugColumn($table);
         });
     }
