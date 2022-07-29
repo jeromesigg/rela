@@ -337,7 +337,7 @@ class HealthFormController extends Controller
     public function downloadAllergy(HealthForm $healthform)
     {
         //
-        return response()->download(storage_path('app/'.$healthform['file_allergies']));
+        return response()->download(storage_path($healthform['file_allergies']));
     }
 
 

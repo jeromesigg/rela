@@ -28,6 +28,7 @@ class HealthFormsExport implements FromCollection, WithMapping, WithHeadings
             $healthform->first_name,
             $healthform->ahv,
             Carbon::parse($healthform->birthday)->format('d.m.Y'),
+            $healthform->finish ? 'Ja' : 'Nein',
         ];
     }
 
@@ -42,6 +43,7 @@ class HealthFormsExport implements FromCollection, WithMapping, WithHeadings
             'Vorname',
             'AHV',
             'Geburtstag',
+            'Ausgefüllt',
         ];
     }
 }
