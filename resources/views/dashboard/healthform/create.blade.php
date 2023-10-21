@@ -30,30 +30,34 @@
                 </div>
                 <div class="form-group col-md-2">
                     {!! Form::label('birthday', 'Geburtstag:') !!}
-                    {!! Form::date('birthday', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::date('birthday', null, ['class' => 'form-control']) !!}
                 </div>
 
                 <div class="form-group col-md-2">
                     {!! Form::label('group_id', 'Abteilung:') !!}
-                    {!! Form::select('group_id', $groups, null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::select('group_id', $groups, null, ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
                     {!! Form::label('street', 'Strasse:') !!}
-                    {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::text('street', null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="form-group col-md-2">
                     {!! Form::label('zip_code', 'Postleitzahl:') !!}
-                    {!! Form::number('zip_code', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::number('zip_code', null, ['class' => 'form-control']) !!}
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     {!! Form::label('city', 'Ortschaft:') !!}
-                    {!! Form::text('city', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::text('city', null, ['class' => 'form-control']) !!}
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     {!! Form::label('phone_number', 'Telefon:') !!}
-                    {!! Form::text('phone_number', null, ['class' => 'form-control', 'required']) !!}
+                    {!! Form::text('phone_number', null, ['class' => 'form-control']) !!}
+                </div>
+                <div class="form-group col-md-2">
+                    {!! Form::label('auv', 'AHV-Nummer') !!}
+                    {!! Form::text('ahv', null, ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">

@@ -50,7 +50,7 @@
                 { data: 'picture', name: 'picture' },
                 { data: 'value', name: 'value' },
                 { data: 'comment', name: 'comment' },
-                { data: 'user', name: 'user' },
+                { data: 'user_erf', name: 'user_erf' },
 
             ]
         });

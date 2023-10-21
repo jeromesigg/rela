@@ -16,9 +16,12 @@ mix.styles([
     'resources/css/datatables.css',
     'resources/css/jquery-ui.css',
     'resources/css/jquery.mCustomScrollbar.css',
+    'resources/css/style.default.premium.css',
     'resources/css/custom.css',
     'resources/css/welcome.css',
-], 'public/css/app.css');
+], 'public/css/libs.css')
+    .postCss("resources/css/app.css", "public/css", [
+        require("tailwindcss")]);
 mix.scripts([
     'resources/js/jquery.js',
     'resources/js/jquery-ui.js',
@@ -27,6 +30,7 @@ mix.scripts([
     'resources/js/jquery.mCustomScrollbar.js',
     'resources/js/front.js',
     'resources/js/jqBootstrapValidation.js',
+    'resources/js/sweetalert.min.js',
     'resources/js/custom.js',
 ], 'public/js/app.js');
 

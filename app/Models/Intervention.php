@@ -12,7 +12,8 @@ class Intervention extends Model implements Auditable
     use HasFactory;
 
     protected $fillable = [
-        'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id', 'intervention_class_id', 'user_erf', 'file'
+        'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id', 'intervention_class_id', 'user_erf', 'file',
+        'further_treatment', 'user_close', 'date_close', 'time_close', 'comment_close'
     ];
 
     public function user(){

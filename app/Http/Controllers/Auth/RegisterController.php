@@ -32,11 +32,11 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
     // protected function redirectTo()
     // {
-        
-    
+
+
     // }
 
     /**
@@ -71,7 +71,7 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {   
+    {
         $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],

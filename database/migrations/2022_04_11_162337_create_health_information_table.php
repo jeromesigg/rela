@@ -14,8 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('health_information', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->uuid('id')->primary();
             $table->integer('code');
             $table->string('recent_issues')->nullable();
             $table->string('recent_issues_doctor')->nullable();
@@ -27,6 +26,8 @@ return new class extends Migration
             $table->string('chronicle_diseases')->nullable();
             $table->string('file_protocol')->nullable();
             $table->text('allergy')->nullable();
+            $table->bigInteger('camp_id')->index()->unsigned()->nullable();
+            $table->foreign('camp_id')->references('id')->on('camps')->onDelete('cascade');
 
         });
     }

@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -18,11 +18,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
-        'is_Admin', 'is_Manager', 'is_Helper', 'slug'
-
+        'is_Admin', 'is_Manager', 'is_Helper', 'slug',
+        'role_id', 'camp_id'
     ];
 
     /**
@@ -48,19 +48,34 @@ class User extends Authenticatable
     ];
 
     public function isAdmin(){
-        return ($this['is_Admin'] == 1);
+        return ($this->role['is_admin']);
     }
 
     public function isManager(){
-        return (($this['is_Manager'] == 1 )|| $this->isAdmin());
+        return (($this->role['is_manager'] )|| $this->isAdmin());
     }
 
     public function isHelper(){
-        return (($this['is_Helper'] == 1) || $this->isManager());
+        return (($this->role['is_helper']) || $this->isManager());
     }
 
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role');
+    }
+
+    public function camp()
+    {
+        return $this->belongsTo('App\Models\Camp');
+    }
+
+    public function camps()
+    {
+        return $this->belongsToMany('App\Models\Camp', 'camp_users')->where('finish', '=', false);
     }
 }

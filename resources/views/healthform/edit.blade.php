@@ -37,15 +37,15 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 {!! Form::label('healthform[street]', 'Strasse:') !!}
-                {!! Form::text('healthform[street]', $healthform['street'], ['class' => 'form-control', 'required']) !!}
+                {!! Form::text('healthform[street]', $healthform['street'], ['class' => 'form-control']) !!}
             </div>
             <div class="form-group col-md-2">
                 {!! Form::label('healthform[zip_code]', 'Postleitzahl:') !!}
-                {!! Form::number('healthform[zip_code]', $healthform['zip_code'], ['class' => 'form-control autocomplete_txt', 'required']) !!}
+                {!! Form::number('healthform[zip_code]', $healthform['zip_code'], ['class' => 'form-control autocomplete_txt']) !!}
             </div>
             <div class="form-group col-md-3">
                 {!! Form::label('healthform[city]', 'Ortschaft:') !!}
-                {!! Form::text('healthform[city]', $healthform['city'], ['class' => 'form-control autocomplete_txt', 'required']) !!}
+                {!! Form::text('healthform[city]', $healthform['city'], ['class' => 'form-control autocomplete_txt']) !!}
             </div>
             {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
             <div class="form-group col-md-3">
@@ -166,14 +166,37 @@
             </div>
         </div>
         <br>
-        <h4>8. Abschluss</h4>
+        <h4>8. Kursspezifische Fragen</h4>
+        <hr>
+        @if(isset($health_questions))
+
+            <div class="form-row">
+                @foreach($health_questions as $health_question)
+                    <div class="form-group col-md-6">
+                        {!! Form::label('health_question['. $health_question->id.']', $health_question->question['name']) !!}
+                        {!! Form::text('health_question['. $health_question->id.']', $health_question['answer'], ['class' => 'form-control']) !!}
+                    </div>
+                @endforeach
+            </div>
+            <br>
+        @endif
+        <h4>9. Abschluss</h4>
         <hr>
         <div class="form-row">
-            <div class="form-group col-md-6">
+            @if(Auth::user()->isManager())
+                <div class="form-group col-md-2">
+                    {!! Form::label('healthinfo[health_status_id]', 'Beurteilung:') !!}
+                    {!! Form::select('healthinfo[health_status_id]', $health_statuses, $healthinfo['health_status_id'], ['class' => 'form-control']) !!}
+                </div>
+            @endif
+            <div class="form-group col-md-4">
                 {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
             </div>
             <div class="form-group col-md-6">
-                Ich bestätige, dass alle Angaben vollständig sind und der Wahrheit entsprechen:
+                {!! Form::checkbox('healthinfo[accept_privacy_agreement]', '1', $healthinfo['accept_privacy_agreement']) !!}
+                Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Kurses gesammelt werden dürfen.
+                <br>
+
                 {!! Form::submit('Gesundheitsblatt abschliessen', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'close'])!!}
             </div>
         </div>

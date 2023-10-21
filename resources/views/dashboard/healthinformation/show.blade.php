@@ -25,7 +25,8 @@
                             <div class="form-group col-xl-2 col-lg-12">
                                 {!! Form::label('intervention_class_id', 'Code:') !!}
                                 {!! Form::select('intervention_class_id', $intervention_classes, null, ['class' => 'form-control', 'required', 'id' => 'intervention_class_id', 'onchange' => "Change_Intervention()"]) !!}
-                                {!! Form::hidden('health_information_id', $intervention['health_information_id'], null) !!}
+                                {!! Form::hidden('health_information_id', $intervention['health_information_id']) !!}
+                                {!! Form::hidden('intervention_id', $intervention['id']) !!}
                                 <br>
                                 {!! Form::label('date', 'Datum:') !!}
                                 {!! Form::date('date', null, ['class' => 'form-control', 'required']) !!}
@@ -39,7 +40,7 @@
                             <div class="form-group col-xl-8 col-lg-12">
                                 <div class="form-group">
                                 {!! Form::label('parameter', $intervention_class['parameter_name'].':', ['id'=>'parameter_label']) !!}
-                                {!! Form::textarea('parameter', null, ['class' => 'form-control', 'required', 'rows'=> 3, 'id'=>'parameter_value']) !!}
+                                {!! Form::textarea('parameter', null, ['class' => 'form-control', 'required', 'rows'=> 4, 'id'=>'parameter_value']) !!}
                                 </div>
                                 <div class="form-group" id="value_div" style="display:{{$intervention_class['value_name']<>'' ? "block": "none"}}">
                                     {!! Form::label('value', $intervention_class['value_name'].':', ['id'=>'value_label']) !!}
@@ -56,6 +57,31 @@
                                 <div class="form-group" id="intervention_picture">
                                     {!! Form::label('file', 'Bild:') !!}
                                     {!! Form::file('file', ['accept' => 'image/*', 'capture'=>'camera']) !!}
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <hr>
+                        <br>
+                        <div class="form-row">
+                            <div class="form-group col-xl-2 col-lg-12">
+                                {!! Form::label('date_close', 'Datum Ende Behandlung:') !!}
+                                {!! Form::date('date_close', null, ['class' => 'form-control']) !!}
+                                <br>
+                                {!! Form::label('time_close', 'Zeit Ende Behandlung:') !!}
+                                {!! Form::time('time_close', null, ['class' => 'form-control']) !!}
+                                <br>
+                                {!! Form::label('user_close', 'Erfasser Ende Behandlung:') !!}
+                                {!! Form::text('user_close', null, ['class' => 'form-control']) !!}
+                            </div>
+                            <div class="form-group col-xl-8 col-lg-12">
+                                <div class="form-group">
+                                    {!! Form::label('further_treatment', 'Weiteres Prozedere:') !!}
+                                    {!! Form::textarea('further_treatment', null, ['class' => 'form-control', 'rows'=> 3]) !!}
+                                </div>
+                                <div class="form-group">
+                                    {!! Form::label('comment_close', 'Bemerkung Ende Behandlung:') !!}
+                                    {!! Form::textarea('comment_close', null, ['class' => 'form-control', 'rows'=> 3]) !!}
                                 </div>
                             </div>
                         </div>
@@ -177,9 +203,6 @@
             }
             if(act_intervention_class['default_text']) {
                 document.getElementById("parameter_value").value = act_intervention_class['default_text'];
-            }
-            else{
-                document.getElementById("parameter_value").value = '';
             }
             if(act_intervention_class['file']) {
                 document.getElementById("intervention_file").style.display = "block";

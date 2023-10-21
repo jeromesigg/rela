@@ -27,10 +27,6 @@ Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF',
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
 Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
-//
-//Route::get('/email/verify', function () {
-//    return view('auth.verify-email');
-//})->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -38,17 +34,20 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Auth::routes([
-    'register' => false, // Registration Routes...
-    'reset' => false, // Password Reset Routes...
-    'verify' => false, // Email Verification Routes...
+    'register' => true, // Registration Routes...
+    'reset' => true, // Password Reset Routes...
+    'verify' => true, // Email Verification Routes...
 ]);
 
 Route::group(['middleware' => 'verified'], function() {
 
     Route::get('/dashboard', [HomeController::class, 'index']);
 
+
     Route::get('/user/{user}', ['as'=>'dashboard.user', 'uses'=>'UsersController@edit']);
     Route::patch('/user/{user}', ['as'=>'dashboard.update', 'uses'=>'UsersController@update']);
+
+    Route::resource('/camps', 'CampController', ['as' => 'dashboard'])->only(['create', 'store', 'update']);
 
     Route::resource('dashboard/healthinformation', 'HealthInformationController');
     Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
@@ -60,20 +59,25 @@ Route::group(['middleware' => 'verified'], function() {
     Route::group(['middleware' => 'manager'], function() {
         Route::resource('dashboard/users', 'AdminUsersController', ['as' => 'dashboard']);
         Route::get('users/createDataTables', ['as'=>'users.CreateDataTables','uses'=>'AdminUsersController@createDataTables']);
+        Route::resource('dashboard/questions', 'QuestionController', ['as' => 'dashboard']);
+        Route::get('questions/createDataTables', ['as'=>'questions.CreateDataTables','uses'=>'QuestionController@createDataTables']);
         Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
         Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
+        Route::get('dashboard/healthforms/showOrEdit/{healthform}',  ['as'=>'healthforms.showOrEdit', 'uses'=>'HealthFormController@showOrEdit']);
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
         Route::get('healthinformation/print/{healthinformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
         Route::post('dashboard/healthinformation/uploadProtocol/{healthinformation}', ['as'=>'uploadProtocol','uses'=>'HealthInformationController@uploadProtocol']);
         Route::get('healthinformation/downloadProtocol/{healthinformation}', ['as'=>'downloadProtocol','uses'=>'HealthInformationController@downloadProtocol']);
         Route::post('healthforms/{healthform}/open', ['as'=>'healthforms.open','uses'=>'HealthFormController@open']);
+        Route::get('dashboard/healthform/downloadFile', ['as'=>'healthforms.downloadFile', 'uses'=>'HealthFormController@downloadFile']);
+        Route::resource('dashboard/camps', 'AdminCampController', ['as' => 'dashboard']);
+
     });
 
     Route::group(['middleware' => 'admin'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
         Route::resource('dashboard/interventionclasses', 'InterventionClassController');
         Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
-        Route::get('dashboard/healthform/downloadFile', ['as'=>'healthforms.downloadFile', 'uses'=>'HealthFormController@downloadFile']);
         Route::post('healthforms/{healthform}/newCode', ['as'=>'healthforms.newCode','uses'=>'HealthFormController@newCode']);
     });
 });
