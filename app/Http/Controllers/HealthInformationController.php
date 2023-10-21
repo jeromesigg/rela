@@ -32,7 +32,8 @@ class HealthInformationController extends Controller
     public function createDataTables()
     {
         //
-        $healthinfo = HealthInformation::get();
+        $camp = Auth::user()->camp;
+        $healthinfo = HealthInformation::where('camp_id', '=', $camp['id'])->get();
 
         return DataTables::of($healthinfo)
             ->addColumn('code', function (HealthInformation $act_healthinfo) {
@@ -52,6 +53,9 @@ class HealthInformationController extends Controller
             })
             ->addColumn('incidents', function (HealthInformation $act_healthinfo) {
                 return count($act_healthinfo->incidents);
+            })
+            ->addColumn('status', function (HealthInformation $act_healthinfo) {
+                return $act_healthinfo->health_status ? $act_healthinfo->health_status['name'] : '';
             })
             ->rawColumns(['code'])
             ->make(true);
@@ -89,7 +93,7 @@ class HealthInformationController extends Controller
         $intervention = new Intervention([
             'health_information_id' => $healthinformation['id'],
             'date' => Carbon::now()->toDateString(),
-            'time' => Carbon::now()->toTimeString()
+            'time' => Carbon::now()->format('H:i')
         ]);
         $intervention_class = InterventionClass::first();
         $intervention_classes_all = InterventionClass::where('show',true)->get();
@@ -103,8 +107,9 @@ class HealthInformationController extends Controller
         //
         $input = $request->all();
         $healthinfo = null;
+        $camp = Auth::user()->camp;
         if($input['code']) {
-            $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
+            $healthinfo = HealthInformation::where('code', '=', $input['code'])->where('camp_id', '=', $camp['id'])->first();
         }
         if ($healthinfo == null) {
             return redirect()->to(url()->previous())
@@ -157,7 +162,7 @@ class HealthInformationController extends Controller
      */
     public function edit(HealthInformation $healthinformation)
     {
-        //
+
     }
 
     /**
@@ -185,7 +190,6 @@ class HealthInformationController extends Controller
 
     public function searchResponseCode(Request $request)
     {
-        // $query = $request->get('term','');
         $healthinformations = HealthInformation::search($request->get('term'))->get();
         return $healthinformations;
     }

@@ -9,6 +9,8 @@ use App\Models\City;
 use App\Models\Group;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
+use App\Models\HealthInformationQuestion;
+use App\Models\HealthStatus;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -36,20 +38,24 @@ class HealthFormController extends Controller
     public function createDataTables()
     {
         //
-        $healthForm = HealthForm::get();
+        $camp = Auth::user()->camp;
+        $healthForm = HealthForm::where('camp_id', '=', $camp['id'])->get();
 
         return DataTables::of($healthForm)
             ->editColumn('group', function (HealthForm $healthForm) {
                 return $healthForm->group ? $healthForm->group['name'] : '';})
             ->editColumn('birthday', function (HealthForm $healthForm) {
-                return Carbon::parse($healthForm['birthday'])->format('d.m.Y');
+                return $healthForm['birthday'] ? Carbon::parse($healthForm['birthday'])->format('d.m.Y') : '';
             })
             ->editColumn('nickname', function (HealthForm $healthForm) {
                 $nickname = $healthForm->nickname;
-                return '<a href='.\URL::route('healthform.show',$healthForm).'>'.$nickname.'</a>';
+                return '<a href='.\URL::route('healthforms.showOrEdit',$healthForm).'>'.$nickname.'</a>';
             })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
+            ->addColumn('status', function (HealthForm $healthForm) {
+                $healthinfo = Helper::getHealthInfo($healthForm['code']);
+                return $healthinfo && $healthinfo->health_status ? $healthinfo->health_status['name'] : '';})
 
             ->addColumn('Actions', function(HealthForm $healthForm) {
                 $buttons = '<form action="'.\URL::route('healthforms.open', $healthForm).'" method="post">' . csrf_field();
@@ -93,12 +99,25 @@ class HealthFormController extends Controller
     {
         //
         $input = $request->all();
-        $code = $this->generateUniqueCode();
+        $code = Helper::generateUniqueCode();
+        $camp = Auth::user()->camp;
         $input['code'] = Crypt::encryptString($code);
-        HealthForm::create($input);
-        HealthInformation::create(['code' => Crypt::encryptString($code)]);
-
-        return view('dashboard.healthform.index');
+        $input['camp_id'] =$camp['id'];
+        $healthform = HealthForm::create($input);
+        $healthinfo = HealthInformation::create(['code' => $code, 'camp_id' => $camp['id']]);
+        $questions = $camp->questions;
+        foreach ($questions as $question) {
+            HealthInformationQuestion::create(['question_id' => $question['id'],
+                'health_information_id' => $healthinfo['id']]);
+        }
+        if($camp['independent_form_fill']) {
+            return view('dashboard.healthform.index');
+        }
+        else {
+            $health_questions = $healthinfo->questions;
+            $health_statuses = HealthStatus::pluck('name', 'id')->all();
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+        }
     }
 
     public function uploadFile(Request $request){
@@ -127,7 +146,7 @@ class HealthFormController extends Controller
             foreach($importData_arr as $importData){
                 if (!empty(trim($importData['ahv_nr'])) && !empty(trim($importData['geburtstag']))) {
                     $group = Group::where('short_name', '=', $importData['abteilung'])->first();
-                    $code = $this->generateUniqueCode();
+                    $code =  Helper::generateUniqueCode();
                     $insertData = array(
 
                         'code' => Crypt::encryptString($code),
@@ -169,7 +188,7 @@ class HealthFormController extends Controller
                     else{
                         $group_id = $group['id'];
                     }
-                    $code = $this->generateUniqueCode();
+                    $code =  Helper::generateUniqueCode();
                     $insertData = array(
 //                        'id' => $participant->id,
                         'code' => Crypt::encryptString($code),
@@ -191,19 +210,15 @@ class HealthFormController extends Controller
 
     public function NewCode(HealthForm $healthform)
     {
-        $code = $this->generateUniqueCode();
+        $code =  Helper::generateUniqueCode();
         $healthform->update(['code' => Crypt::encryptString($code)]);
+        HealthInformation::create(['code' => $code,
+            'drugs_only_contact' => true,
+            'ointment_only_contact' => true]);
         return redirect('/dashboard/healthforms');
     }
 
-    public function generateUniqueCode(): int
-    {
-        do {
-            $code = random_int(1000, 9999);
-        } while (HealthInformation::where('code', "=", $code)->first());
 
-        return $code;
-    }
 
     public function downloadFile()
     {
@@ -216,6 +231,26 @@ class HealthFormController extends Controller
         $healthinfo = Helper::getHealthInfo($healthform['code']);
 
         return view('healthform.show', compact('healthform', 'healthinfo'));
+
+    }
+
+    public function showOrEdit(HealthForm $healthform)
+    {
+        //
+        $camp = Auth::user()->camp;
+        $healthinfo = Helper::getHealthInfo($healthform['code']);
+        if($camp['independent_form_fill'] || $healthform['finish']) {
+            return view('healthform.show', compact('healthform', 'healthinfo'));
+        }
+        else {
+            $health_questions = null;
+            if($healthinfo) {
+                $health_questions = $healthinfo->questions;
+            }
+            $health_statuses = HealthStatus::pluck('name', 'id')->all();
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+        }
+
 
     }
 
@@ -254,24 +289,26 @@ class HealthFormController extends Controller
                         ->withInput();
                 }
                 $healthinfo = Helper::getHealthInfo($code);
-    //
                 if ($healthform['finish']) {
                     return view('healthform.show', compact('healthform', 'healthinfo'));
                 } else {
-                    return view('healthform.edit', compact('healthform', 'healthinfo'));
+                    $health_questions = $healthinfo->questions;
+                    $health_statuses = HealthStatus::pluck('name', 'id')->all();
+                    return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
                 }
             }
             else{
-                $code = $this->generateUniqueCode();
+                $code =  Helper::generateUniqueCode();
                 $insertData = array(
-//                        'id' => $participant->id,
                     'code' => Crypt::encryptString($code),
                     'ahv' => $input['ahv'],
                     'birthday' => $input['birthday'],
                 );
                 $healthform = HealthForm::create($insertData);
                 $healthinfo = HealthInformation::create(['code' => $code]);
-                return view('healthform.edit', compact('healthform', 'healthinfo'));
+                $health_questions = $healthinfo->questions;
+                $health_statuses = HealthStatus::pluck('name', 'id')->all();
+                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
 
             }
         }
@@ -284,11 +321,24 @@ class HealthFormController extends Controller
     public function update(Request $request, HealthForm $healthform)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'healthform.file_allergies' => 'mimes:pdf|max:2000',
-        ], [
-            'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
-            'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+        $input = $request->all();
+        if($input['submit_btn'] == 'Gesundheitsblatt abschliessen') {
+            $validator = Validator::make($request->all(), [
+                'healthform.file_allergies' => 'mimes:pdf|max:2000',
+                'healthinfo.accept_privacy_agreement' => 'required',
+            ], [
+                'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+                'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',
+                'healthinfo.accept_privacy_agreement.required' => 'Für den Abschluss brauchen wir deine Bestätigung.',]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'healthform.file_allergies' => 'mimes:pdf|max:2000',
+            ], [
+                'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+                'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+
+        }
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous())
@@ -296,8 +346,9 @@ class HealthFormController extends Controller
                 ->withInput();
         }
         $input = $request->all();
-        $input_healthform = $input['healthform'];
         $input_healthinfo = $input['healthinfo'];
+        $input_healthform = $input['healthform'];
+        $input_health_questions = $input['health_question'];
 
         if($file_allergies = $request->file('healthform.file_allergies')) {
             $save_path = 'app/files/' . $healthform['code'];
@@ -324,13 +375,21 @@ class HealthFormController extends Controller
         $input_healthform['finish'] = $finish;
         $input_healthinfo['drugs_only_contact'] = isset($input_healthinfo['drugs_only_contact']);
         $input_healthinfo['ointment_only_contact'] = isset($input_healthinfo['ointment_only_contact']);
+        $input_healthinfo['accept_privacy_agreement'] = isset($input_healthinfo['accept_privacy_agreement']);
         $healthform->update($input_healthform);
         $healthinfo->update($input_healthinfo);
-        if($finish){
-            return redirect()->route('healthform.show', $healthform);
+        foreach ($input_health_questions as $key => $input_health_question){
+            HealthInformationQuestion::where('id', $key)->update(['answer' => $input_health_question]);
+        }
+        if(Auth::user()){
+            return view('dashboard.healthform.index');
         }
         else {
-            return redirect()->to('/')->with('success', $message);
+            if ($finish) {
+                return redirect()->route('healthform.show', $healthform);
+            } else {
+                return redirect()->to('/')->with('success', $message);
+            }
         }
     }
 

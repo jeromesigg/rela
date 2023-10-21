@@ -15,18 +15,28 @@
         <div class="card">
             <div class="container">
                 <h4><b>Patient</b></h4>
-                {!! Form::open(['method' => 'GET', 'action'=>'HealthInformationController@search']) !!}
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        {!! Form::label('code', 'Persönliche Nummer:') !!}
-                        {!! Form::text('code', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
+                <div class="row">
+                    <div class="col-lg-6">
+                        {!! Form::open(['method' => 'GET', 'action'=>'HealthInformationController@search']) !!}
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {!! Form::label('code', 'Persönliche Nummer:') !!}
+                                {!! Form::text('code', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
+                            </div>
+                            {!! Form::hidden('healthinformation_id', null, ['class' => 'form-control autocomplete_txt']) !!}
+                        </div>
+                        {!! Form::submit('Patientenakte öffnen', ['class' => 'btn btn-primary'])!!}
+                        {!! Form::close()!!}
                     </div>
-                    {!! Form::hidden('healthinformation_id', null, ['class' => 'form-control autocomplete_txt']) !!}
+                    <div class="col-lg-6">
+                        @if(!$camp['independent_form_fill'])
+                            <a href="{{route('healthforms.create')}}" class="btn btn-primary" role="button">Gesundsheitsblatt erstellen</a>
+                            <br>
+                            <br>
+                        @endif
+                        {!! Html::link('files/Notfallblatt.pdf', 'J+S-Notfallblatt herunterladen', ['target' => 'blank', 'class' =>'btn btn-primary']) !!}
+                    </div>
                 </div>
-                {!! Form::submit('Patientenakte öffnen', ['class' => 'btn btn-primary'])!!}
-                {!! Form::close()!!}
-                <br>
-                {!! Html::link('files/Notfallblatt.pdf', 'J+S-Notfallblatt herunterladen', ['target' => 'blank', 'class' =>'btn btn-primary']) !!}
             </div>
         </div>
     </div>

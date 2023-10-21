@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\HealthStatus;
 use App\Models\InterventionClass;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,55 +19,56 @@ class BasisdatenSeeder extends Seeder
     public function run()
     {
         //
-        User::create( [
-            'id' => 1,
-            'name' => 'Administrator',
-            'email' => 'Admin@Cevi',
-            'slug' => 'Administrator',
-            'password' => Hash::make(env('ADMIN_PASSWORD')),
-            'is_Admin' => true,
-            'is_Manager' => false,
-            'is_Helper' => false,
-            'email_verified_at' => now(),
-        ]);
 
 
-        InterventionClass::create([
-            'id' => config('interventions.monitoring'),
-            'name' => 'Patientenüberwachung',
-            'short_name' => 'Patientenüberwachung',
-            'parameter_name' => 'Symptom',
-            'value_name' => 'Wert',
-            'file' => '/files/Patientenueberwachung.jpg',
+        InterventionClass::firstOrCreate(['id' => config('interventions.monitoring')],
+            [
+                'name' => 'Patientenüberwachung',
+                'short_name' => 'Patientenüberwachung',
+                'parameter_name' => 'Symptom',
+                'value_name' => 'Wert',
+                'file' => '/files/Patientenueberwachung.jpg',
         ]);
-        InterventionClass::create([
-            'id' => config('interventions.medication'),
-            'name' => 'Verabreichte Medikation',
-            'short_name' => 'Medikation',
-            'parameter_name' => 'Medikament',
-            'value_name' => 'Dosis',
+        InterventionClass::firstOrCreate(['id' => config('interventions.medication')],
+            [
+                'name' => 'Verabreichte Medikation',
+                'short_name' => 'Medikation',
+                'parameter_name' => 'Medikament',
+                'value_name' => 'Dosis',
         ]);
-        InterventionClass::create([
-            'id' => config('interventions.measure'),
-            'name' => '1.Hilfe Leistungen',
-            'short_name' => '1.Hilfe Leistungen',
-            'parameter_name' => 'Massnahme',
-            'value_name' => 'Intervention',
-            'with_picture' => true,
+        InterventionClass::firstOrCreate(['id' => config('interventions.measure')],
+            [
+                'name' => '1.Hilfe Leistungen',
+                'short_name' => '1.Hilfe Leistungen',
+                'parameter_name' => 'Massnahme',
+                'value_name' => 'Intervention',
+                'with_picture' => true,
         ]);
-        InterventionClass::create([
-            'id' => config('interventions.surveillance'),
-            'name' => 'Krankheiten des Patienten',
-            'short_name' => 'Krankheit',
-            'parameter_name' => 'Symptom',
-            'value_name' => 'Wert',
+        InterventionClass::firstOrCreate(['id' => config('interventions.surveillance')],
+            [
+                'name' => 'Krankheiten des Patienten',
+                'short_name' => 'Krankheit',
+                'parameter_name' => 'Symptom',
+                'value_name' => 'Wert',
         ]);
-        InterventionClass::create([
-            'id' => config('interventions.incident'),
-            'name' => 'Sicherheitsrelevante Ereignisse',
-            'short_name' => 'Sicherheitsrelevante Ereignisse',
-            'parameter_name' => 'Geschehen',
-            'value_name' => 'Intervention',
+        InterventionClass::firstOrCreate(['id' => config('interventions.incident')],
+            [
+                'name' => 'Sicherheitsrelevante Ereignisse',
+                'short_name' => 'Sicherheitsrelevante Ereignisse',
+                'parameter_name' => 'Geschehen',
+                'value_name' => 'Intervention',
         ]);
+        HealthStatus::firstOrCreate(['id' => config('status.health_green')],
+            [
+                'name' => 'Grün',
+            ]);
+        HealthStatus::firstOrCreate(['id' => config('status.health_yellow')],
+            [
+                'name' => 'Gelb',
+            ]);
+        HealthStatus::firstOrCreate(['id' => config('status.health_red')],
+            [
+                'name' => 'Rot',
+            ]);
     }
 }

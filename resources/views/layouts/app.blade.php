@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ config('app.name', 'Rela Notfall-App') }}">
+    <meta name="description" content="{{ config('app.name', 'E-Health App') }}">
     <meta name="author" content="Jérôme Sigg v/o Amigo">
     <meta name="robots" content="all,follow">
 
@@ -20,16 +20,29 @@
     <meta name="msapplication-TileColor" content="#00a300">
     <meta name="theme-color" content="#ffffff">
 
-    <title>{{ config('app.name', 'Rela Notfall-App') }}</title>
+    <title>{{isset($title) ? $title . ' - ' : ''}}{{config('app.name')}}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
     <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
     <!-- Styles -->
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.4/dist/flowbite.min.css"/>
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
+    <link href="{{asset('css/libs.css')}}" rel="stylesheet">
+    <script>
+        // It's best to inline this in `head` to avoid FOUC (flash of unstyled content) when changing pages or themes
+        if (localStorage.getItem('color-theme') === 'dark' ||
+            (!('color-theme' in localStorage) &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            // document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    @yield('styles')
 </head>
-<body>
+<body class="text-dark__black">
     <div id="app" class="page mainpage">
         @include('includes/topnav')
 
@@ -52,6 +65,7 @@
     </div>
    <!-- jQuery -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://unpkg.com/flowbite@1.5.4/dist/flowbite.js"></script>
     @yield('scripts')
 </body>
 </html>

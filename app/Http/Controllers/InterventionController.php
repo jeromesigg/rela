@@ -29,11 +29,12 @@ class InterventionController extends Controller
     public function createDataTables(Request $request)
     {
         //
+        $camp = Auth::user()->camp;
         $input = $request->all();
         $intervention_class = interventionClass::where('show',true)->where('short_name','=',$input['filter'])->first();
         $healthinfo = HealthInformation::where('id','=',$input['info'])->first();
-        $interventions = intervention::
-            when($intervention_class, function($query, $intervention_class){
+        $interventions = $camp->interventions()
+            ->when($intervention_class, function($query, $intervention_class){
                 $query->where('intervention_class_id','=',$intervention_class['id']);})
             ->when($healthinfo, function($query, $healthinfo){
                 $query->where('health_information_id','=',$healthinfo['id']);})
@@ -69,9 +70,9 @@ class InterventionController extends Controller
                 ];
             })
             ->addColumn('intervention', function (intervention $intervention) {
-                return $intervention->intervention_class['name'];
+                return '<a href='.\URL::route('interventions.edit',$intervention).'>'.$intervention->intervention_class['name'].'</a>';
             })
-            ->rawColumns(['code', 'picture'])
+            ->rawColumns(['code', 'picture', 'intervention'])
             ->make(true);
 
     }
@@ -112,7 +113,7 @@ class InterventionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -120,8 +121,8 @@ class InterventionController extends Controller
         $input = $request->all();
         $user = Auth::user();
         $input['user_id'] = $user['id'];
+        $health_information = HealthInformation::findOrFail($input['health_information_id']);
         if($file = $request->file('file')) {
-            $health_information = HealthInformation::findOrFail($input['health_information_id']);
             $save_path = 'app/public/files/' .  $health_information['code'];
             if (!file_exists(storage_path($save_path))) {
                 mkdir(storage_path($save_path), 0755, true);
@@ -132,9 +133,15 @@ class InterventionController extends Controller
             $input['file'] = 'files/' .  $health_information['code'] . '/' . $name;
         }
 
-        intervention::create($input);
+        if (isset($input['intervention_id'])){
+            $intervention = Intervention::findOrFail($input['intervention_id']);
+            $intervention->update($input);
+        }
+        else{
+            Intervention::create($input);
+        }
 
-        return redirect()->back();
+        return to_route('healthinformation.show',$health_information);
 
     }
 
@@ -156,9 +163,15 @@ class InterventionController extends Controller
      * @param  \App\Models\HealthInformation  $healthInformation
      * @return \Illuminate\Http\Response
      */
-    public function edit(HealthInformation $healthinformation)
+    public function edit(Intervention $intervention)
     {
         //
+        $intervention_class = InterventionClass::first();
+        $intervention_classes_all = InterventionClass::where('show',true)->get();
+        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
+        $healthinformation = $intervention->health_information;
+        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class'));
+
     }
 
     /**

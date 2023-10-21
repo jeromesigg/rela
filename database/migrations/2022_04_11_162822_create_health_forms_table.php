@@ -15,14 +15,12 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('mysql_info')->create('health_forms', function (Blueprint $table) {
-
-            $table->id();
-            $table->timestamps();
+            $table->uuid('id')->primary();
             $table->longText('code');
-            $table->string('nickname')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('ahv');
+            $table->string('nickname');
+            $table->string('last_name');
+            $table->string('first_name');
+            $table->string('ahv')->nullable();
             $table->string('street')->nullable();
             $table->integer('zip_code')->nullable();
             $table->string('city')->nullable();
@@ -41,6 +39,8 @@ return new class extends Migration
             $table->boolean('finish')->default(false);
             $table->string('vaccination')->nullable();
             $table->string('file_allergies')->nullable();
+            $table->bigInteger('camp_id')->index()->unsigned()->nullable();
+            $table->foreign('camp_id')->references('id')->on('camps')->onDelete('cascade');
             HealthForm::addSlugColumn($table);
         });
     }
