@@ -28,6 +28,7 @@ class HealthInformation extends Model implements Auditable
     ];
 
     public $incrementing = false;
+    public $timestamps = false;
 
     public function interventions(){
         return $this->hasMany(Intervention::class, 'health_information_id');

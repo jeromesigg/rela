@@ -12,6 +12,7 @@
         "andcarpi/laravel-popper": "^0.9.4",
         "doctrine/dbal": "^3.0",
         "fzaninotto/faker": "^1.9",
+        "intervention/image": "^2.7",
         "ixudra/curl": "^6.21",
         "khalyomede/laravel-eloquent-uuid-slug": "^0.4.0",
         "laravel-lang/lang": "~7.0",

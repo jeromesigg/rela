@@ -33,7 +33,7 @@ class CampController extends Controller
         //
 
         $users = [];
-        $title = 'Kurs erstellen';
+        $title = 'Lager erstellen';
         return view('dashboard.camps.create', compact('users',  'title'));
     }
 
@@ -64,11 +64,11 @@ class CampController extends Controller
                     $input['code'] = Helper::generateUniqueCampCode();
                     $camp = Camp::create($input);
                     CampCreated::dispatch($camp);
-                    $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Kursleiter')]);
+                    $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Lagerleiter')]);
                     CampUser::create([
                         'user_id' => $user->id,
                         'camp_id' => $camp->id,
-                        'role_id' => config('status.role_Kursleiter'),]);
+                        'role_id' => config('status.role_Lagerleiter'),]);
                 }
 
                 return redirect('dashboard');

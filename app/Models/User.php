@@ -6,11 +6,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
+    use SearchableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -20,9 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'username',
         'email',
-        'password',
-        'is_Admin', 'is_Manager', 'is_Helper', 'slug',
-        'role_id', 'camp_id'
+        'password', 'slug',
+        'role_id', 'camp_id', 'demo'
     ];
 
     /**
@@ -42,9 +44,15 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_Admin' => 'boolean',
-        'is_Manager' => 'boolean',
-        'is_Helper' => 'boolean',
+        'last_login_at' => 'datetime',
+        'demo' => 'boolean',
+    ];
+
+
+    protected $searchable = [
+        'columns' => [
+            'username' => 1,
+        ]
     ];
 
     public function isAdmin(){
@@ -58,6 +66,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isHelper(){
         return (($this->role['is_helper']) || $this->isManager());
     }
+
+
+    public function camp_user()
+    {
+        $camp = Auth::user()->camp;
+        return CampUser::where('camp_id', '=', $camp['id'])->where('user_id', '=', $this['id']);
+    }
+
+    public function camp_users()
+    {
+        return $this->hasMany(CampUser::class)
+            ->where('camp_users.role_id', '<>', config('status.role_Administrator'))
+            ->where('camp_users.active', '=', true);
+    }
+
 
     public function getRouteKeyName()
     {

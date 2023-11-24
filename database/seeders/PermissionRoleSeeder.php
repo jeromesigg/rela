@@ -21,7 +21,7 @@ class PermissionRoleSeeder extends Seeder
 
         // Insert some stuff
         Role::create(['id' => config('status.role_Administrator'), 'name' => 'Administrator', 'is_admin' => true, 'is_manager' => false, 'is_helper' => false]);
-        Role::create(['id' => config('status.role_Kursleiter'),    'name' => 'Kursleitende',  'is_admin' => false, 'is_manager' => true, 'is_helper' => false]);
+        Role::create(['id' => config('status.role_Lagerleiter'),    'name' => 'Lagerleitende',  'is_admin' => false, 'is_manager' => true, 'is_helper' => false]);
         Role::create(['id' => config('status.role_Helfer'),        'name' => 'Helfer',        'is_admin' => false, 'is_manager' => false, 'is_helper' => true]);
         Role::create(['id' => config('status.role_Teilnehmer'),    'name' => 'Teilnehmende',  'is_admin' => false, 'is_manager' => false, 'is_helper' => false]);
 

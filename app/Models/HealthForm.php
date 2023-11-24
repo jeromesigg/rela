@@ -13,7 +13,6 @@ class HealthForm extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
-    use Sluggable;
     use HasUuid;
 
     protected $fillable = [
@@ -23,6 +22,7 @@ class HealthForm extends Model implements Auditable
     ];
 
     protected $connection = 'mysql_info';
+    public $timestamps = false;
 
     public $incrementing = false;
 

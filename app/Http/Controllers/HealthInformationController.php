@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Helper;
+use App\Models\Camp;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
 use App\Models\Intervention;
@@ -93,7 +94,8 @@ class HealthInformationController extends Controller
         $intervention = new Intervention([
             'health_information_id' => $healthinformation['id'],
             'date' => Carbon::now()->toDateString(),
-            'time' => Carbon::now()->format('H:i')
+            'time' => Carbon::now()->format('H:i'),
+            'user_erf' => Auth::user()->username,
         ]);
         $intervention_class = InterventionClass::first();
         $intervention_classes_all = InterventionClass::where('show',true)->get();
@@ -134,8 +136,9 @@ class HealthInformationController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        if($file_protocol = $request->file('file_protocol')) {
-            $save_path = 'app/files/' .  $healthinformation['code'];
+        $camp = Camp::where('id', $healthinformation['camp_id'])->first();
+        if(!$camp['demo'] && $file_protocol = $request->file('file_protocol')) {
+            $save_path = 'app/files/' . $camp['code'] .'/' . $healthinformation['code'];
             if (!file_exists(storage_path($save_path))) {
                 mkdir(storage_path($save_path), 0755, true);
             }

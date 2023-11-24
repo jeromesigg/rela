@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Camp extends Model
 {
     use HasFactory;
+
     public static function boot()
     {
         parent::boot();
@@ -24,7 +25,7 @@ class Camp extends Model
     }
 
     protected $fillable = [
-        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date'
+        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter'
     ];
 
     protected $casts = [
@@ -40,12 +41,14 @@ class Camp extends Model
     }
     public function allUsers()
     {
-        return $this->belongsToMany('App\Models\User', 'camp_users')->where('camp_users.role_id', '<>', config('status.role_Administrator'));
+        return $this->belongsToMany('App\Models\User', 'camp_users')
+            ->where('camp_users.role_id', '<>', config('status.role_Administrator'));
     }
 
     public function camp_users_all()
     {
-        return $this->hasMany(CampUser::class)->where('camp_users.role_id', '<>', config('status.role_Administrator'));
+        return $this->hasMany(CampUser::class)
+                ->where('camp_users.role_id', '<>', config('status.role_Administrator'));
     }
 
     public function questions()
@@ -56,6 +59,15 @@ class Camp extends Model
     public function interventions()
     {
         return $this->hasManyThrough(Intervention::class, HealthInformation::class);
+    }
+
+    public function health_infos()
+    {
+        return $this->hasMany( HealthInformation::class);
+    }
+    public function health_forms()
+    {
+        return HealthForm::where('camp_id',$this['id']);
     }
 
 }

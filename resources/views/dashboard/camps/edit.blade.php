@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="/admin/camps">Kurs</a></li>
+            <li class="breadcrumb-item"><a href="/admin/camps">Lager</a></li>
             <li class="breadcrumb-item active">Bearbeiten</li>
             </ul>
         </div>
@@ -14,7 +14,7 @@
         <div class="container-fluid">
             <!-- Page Header-->
             <header>
-                <h1 class="h3 display">Kurs</h1>
+                <h1 class="h3 display">Lager</h1>
             </header>
             <div class="row">
                 <div class="col-sm-6">
@@ -24,7 +24,7 @@
                         {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('user_id', 'Kursleiter:') !!}
+                        {!! Form::label('user_id', 'Lagerleiter:') !!}
                         {!! Form::select('user_id', $users, null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
@@ -37,7 +37,7 @@
                     {!! Form::close()!!}
                     {!! Form::model($camp, ['method' => 'DELETE', 'action'=>['AdminCampController@destroy',$camp->id], 'id'=> "DeleteForm"]) !!}
                     <div class="form-group">
-                        {!! Form::submit('Kurs löschen', ['class' => 'btn btn-danger confirm'])!!}
+                        {!! Form::submit('Lager löschen', ['class' => 'btn btn-danger confirm'])!!}
                     </div>
                     {!! Form::close()!!}
                  </div>
@@ -53,8 +53,8 @@
                 e.preventDefault(); //cancel default action
 
                 swal({
-                    title: 'Kurs löschen?',
-                    text: 'Beim Kurs löschen werden alle Qualifikationen und hochgeladenen Dokumente gelöscht.',
+                    title: 'Lager löschen?',
+                    text: 'Beim Lager löschen werden alle Qualifikationen und hochgeladenen Dokumente gelöscht.',
                     icon: 'warning',
                     buttons: ["Abbrechen", "Ja!"],
                 }).then((willDelete) => {

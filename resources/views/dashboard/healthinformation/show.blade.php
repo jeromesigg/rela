@@ -114,7 +114,9 @@
                         </div>
                         {!! Form::close()!!}
                         <br>
-                        <a href={{$healthinformation['file_protocol'] ? route('downloadProtocol',$healthinformation) : '#'}}>Protokoll herunterladen</a>
+                        @if ($healthinformation['file_protocol'])
+                            <a href={{$healthinformation['file_protocol'] ? route('downloadProtocol',$healthinformation) : '#'}}>Protokoll herunterladen</a>
+                        @endif
                     @endif
                 </div>
             </div>

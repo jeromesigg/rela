@@ -13,12 +13,9 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Cevi Qualifizierungen'),
+    'name' => env('APP_NAME', 'Cevi Gesundheits-DB'),
 
-    'version' => env('VERSION', 'V1.0'),
-    'token' => env('TOKEN', null),
-    'event_id' => env('EVENT_ID', null),
-    'group_id' => env('GROUP_ID', null),
+    'version' => 'V2.0',
     'form_filling' => env('FORM_FILLING', true),
 
     /*

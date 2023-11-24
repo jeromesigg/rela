@@ -5,6 +5,8 @@ namespace App\Listeners;
 use App\Events\CampCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class SendCampMail
 {
@@ -27,5 +29,6 @@ class SendCampMail
     public function handle(CampCreated $event)
     {
         //
+        Mail::send(new \App\Mail\CampCreated(Auth::user(), $event->camp));
     }
 }

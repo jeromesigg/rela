@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Camp;
 use App\Models\InterventionClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InterventionClassController extends Controller
 {
@@ -44,8 +46,9 @@ class InterventionClassController extends Controller
         $input = $request->all();
         $input['show'] = isset($input['show']);
         $input['with_picture'] = isset($input['with_picture']);
+        $camp = Auth::user()->camp;
 
-        if($file = $request->file('file')) {
+        if(!$camp['demo'] && $file = $request->file('file')) {
             $name =  $input['name']. '.' . $file->getClientOriginalExtension();
 
             $file->move('files/', $name);

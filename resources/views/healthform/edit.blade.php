@@ -166,10 +166,10 @@
             </div>
         </div>
         <br>
-        <h4>8. Kursspezifische Fragen</h4>
-        <hr>
-        @if(isset($health_questions))
+        @if($health_questions->count()>0)
 
+            <h4>8. Lagerspezifische Fragen</h4>
+            <hr>
             <div class="form-row">
                 @foreach($health_questions as $health_question)
                     <div class="form-group col-md-6">
@@ -180,21 +180,28 @@
             </div>
             <br>
         @endif
-        <h4>9. Abschluss</h4>
+        <h4> @if($health_questions->count()>0)
+                9.
+            @else
+                8.
+            @endif
+            Abschluss</h4>
         <hr>
         <div class="form-row">
-            @if(Auth::user()->isManager())
-                <div class="form-group col-md-2">
-                    {!! Form::label('healthinfo[health_status_id]', 'Beurteilung:') !!}
-                    {!! Form::select('healthinfo[health_status_id]', $health_statuses, $healthinfo['health_status_id'], ['class' => 'form-control']) !!}
-                </div>
-            @endif
+            @auth
+                @if(Auth::user()->isManager())
+                    <div class="form-group col-md-2">
+                        {!! Form::label('healthinfo[health_status_id]', 'Beurteilung:') !!}
+                        {!! Form::select('healthinfo[health_status_id]', $health_statuses, $healthinfo['health_status_id'], ['class' => 'form-control']) !!}
+                    </div>
+                @endif
+            @endauth
             <div class="form-group col-md-4">
                 {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
             </div>
             <div class="form-group col-md-6">
                 {!! Form::checkbox('healthinfo[accept_privacy_agreement]', '1', $healthinfo['accept_privacy_agreement']) !!}
-                Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Kurses gesammelt werden dürfen.
+                Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Lagers gesammelt werden dürfen.
                 <br>
 
                 {!! Form::submit('Gesundheitsblatt abschliessen', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'close'])!!}

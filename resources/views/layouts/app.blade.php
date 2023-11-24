@@ -50,18 +50,7 @@
         <main class="py-4">
             @yield('content')
         </main>
-        <footer class="main-footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-4 text-left">
-                        <p>Finde weitere Lösungen auf <a href="http://www.cevi.tools">cevi.tools</a></p>
-                    </div>
-                    <div class="col-sm-4 text-center">
-                        <p>Made by Amirli, {{config('app.version')}}</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <x-footer/>
     </div>
    <!-- jQuery -->
     <script src="{{ asset('js/app.js') }}"></script>

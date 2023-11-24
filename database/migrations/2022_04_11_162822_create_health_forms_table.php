@@ -40,8 +40,6 @@ return new class extends Migration
             $table->string('vaccination')->nullable();
             $table->string('file_allergies')->nullable();
             $table->bigInteger('camp_id')->index()->unsigned()->nullable();
-            $table->foreign('camp_id')->references('id')->on('camps')->onDelete('cascade');
-            HealthForm::addSlugColumn($table);
         });
     }
 

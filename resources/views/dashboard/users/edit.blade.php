@@ -5,7 +5,7 @@
             <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="/dashboard/users">Personen</a></li>
-                <li class="breadcrumb-item active">Erfassen</li>
+                <li class="breadcrumb-item active">Aktualisieren</li>
             </ul>
         </div>
     </div>
@@ -13,44 +13,57 @@
     <div class="container-fluid">
         <!-- Page Header-->
         <header>
-            <h1 class="h3 display">Leiter</h1>
+            <h1 class="h3 display">Personen</h1>
         </header>
         <div class="row">
 
             <div class="col-sm-6">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                {!! Form::model($user, ['method' => 'PATCH', 'action'=>['AdminUsersController@update' , $user->id]]) !!}
+                {!! Form::model($user, ['method' => 'PATCH', 'action'=>['AdminUsersController@update' , $user]]) !!}
                 <div class="form-group">
-                    {!! Form::label('name', 'Name:') !!}
-                    {!! Form::text('name', null, ['class' => 'form-control']) !!}
+                    {!! Form::label('username', 'Name:') !!}
+                    {!! Form::text('username', null, ['class' => 'form-control', 'placeholder' => 'name@abt', 'autocomplete' => 'username',  'required']) !!}
+                </div>
+                <div id="user_information_form">
+                    <div class="form-group">
+                        {!! Form::label('email', 'E-Mail:') !!}
+                        {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'name@abt.ch', 'autocomplete' => 'email', 'required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('role_id', 'Rolle:') !!}
+                        {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control', 'required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('active', 'Aktiv:') !!}
+                        {!! Form::checkbox('active', '1', $camp_user['active']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('password', 'Passwort:') !!}
+                        {!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'autocomplete' => 'new-password']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('password_confirmation', __('Passwort bestätigen')) !!}
+                        {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password-confirm', 'autocomplete' => 'new-password']) !!}
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    {!! Form::label('email', 'E-Mail:') !!}
-                    {!! Form::text('email', null, ['class' => 'form-control', 'placeholder' => 'name@abt.ch', 'required']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::checkbox('is_Manager', '1', null) !!}
-                    {!! Form::label('is_Manager', 'Hauptleitung') !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::checkbox('is_Helper', '1', null) !!}
-                    {!! Form::label('is_Helper', 'Helfer') !!}
-                </div>
-
-                <div class="form-group">
-                {!! Form::label('password', 'Password:') !!}
-                {!! Form::password('password', ['class' => 'form-control']) !!}
-                </div>
-
-                <div class="form-group">
-                    {!! Form::submit('Update Leiter', ['class' => 'btn btn-primary'])!!}
+                    {!! Form::submit('Person aktualisieren', ['class' => 'btn btn-primary'])!!}
                 </div>
                 {!! Form::close()!!}
 
-                {!! Form::open(['method' => 'DELETE', 'action'=>['AdminUsersController@destroy', $user->id]]) !!}
+                {!! Form::open(['method' => 'DELETE', 'action'=>['AdminUsersController@destroy', $user]]) !!}
                 <div class="form-group">
-                {!! Form::submit('Lösche Leiter', ['class' => 'btn btn-danger'])!!}
+                {!! Form::submit('Personen löschen', ['class' => 'btn btn-danger'])!!}
                 </div>
                 {!! Form::close()!!}
             </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +16,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $camp_counter = \App\Models\Camp::where('finish', '=', true)->where('counter', '>', 0)->get()->count();
+    $healhform_counter = \App\Models\Camp::where('finish', '=', true)->where('counter', '>', 0)->sum('counter');
+
+    return view('welcome', compact('camp_counter', 'healhform_counter'));
 });
 
+Route::get('/home', [HomeController::class, 'home']);
 
-Route::get('/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
+Route::match(['post','get'],'/healthform', ['as'=>'healthform.edit', 'uses'=>'HealthFormController@edit']);
 Route::get('/healthform/createNew', ['as'=>'healthform.createNew', 'uses'=>'HealthFormController@createNew']);
 Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'uses'=>'HealthFormController@update']);
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
@@ -27,6 +32,19 @@ Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF',
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
 Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
+Route::get('/loginLeiter', function () {
+    $user = User::where('username', 'leiter1@demo')->first();
+    Auth::login($user);
+
+    return redirect('dashboard');
+});
+
+Route::get('/loginLagerleiter', function () {
+    $user = User::where('username', 'lagerleiter@demo')->first();
+    Auth::login($user);
+
+    return redirect('dashboard');
+});
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -47,7 +65,7 @@ Route::group(['middleware' => 'verified'], function() {
     Route::get('/user/{user}', ['as'=>'dashboard.user', 'uses'=>'UsersController@edit']);
     Route::patch('/user/{user}', ['as'=>'dashboard.update', 'uses'=>'UsersController@update']);
 
-    Route::resource('/camps', 'CampController', ['as' => 'dashboard'])->only(['create', 'store', 'update']);
+    Route::resource('/camps', 'CampController')->only(['create', 'store', 'update']);
 
     Route::resource('dashboard/healthinformation', 'HealthInformationController');
     Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
@@ -57,6 +75,8 @@ Route::group(['middleware' => 'verified'], function() {
     Route::get('interventions/createDataTables', ['as'=>'interventions.CreateDataTables','uses'=>'InterventionController@createDataTables']);
 
     Route::group(['middleware' => 'manager'], function() {
+        Route::get('dashboard/users/searchajaxuser', ['as' => 'searchajaxuser', 'uses' => 'AdminUsersController@searchResponseUser']);
+        Route::post('dashboard/users/add', ['as' => 'users.add', 'uses' => 'AdminUsersController@add']);
         Route::resource('dashboard/users', 'AdminUsersController', ['as' => 'dashboard']);
         Route::get('users/createDataTables', ['as'=>'users.CreateDataTables','uses'=>'AdminUsersController@createDataTables']);
         Route::resource('dashboard/questions', 'QuestionController', ['as' => 'dashboard']);

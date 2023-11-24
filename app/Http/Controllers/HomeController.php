@@ -13,10 +13,6 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -28,6 +24,11 @@ class HomeController extends Controller
         $akt_User = Auth::user();
         $camp = $akt_User->camp;
         $intervention_classes = InterventionClass::pluck('name', 'id');
-        return view('home', compact('intervention_classes', 'camp'));
+        return view('dashboard', compact('intervention_classes', 'camp'));
+    }
+
+    public function home()
+    {
+        return view('home');
     }
 }
