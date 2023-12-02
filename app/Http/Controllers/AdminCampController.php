@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\CampCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
+use App\Models\Help;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class AdminCampController extends Controller
 {
@@ -33,9 +35,10 @@ class AdminCampController extends Controller
         } else {
             $camps = Camp::all();
         }
-        $title = 'Kursübersicht';
+        $title = 'Lagerübersicht';
+        $help = Help::where('title',$title)->first();
 
-        return view('dashboard.camps.index', compact('camps', 'title'));
+        return view('dashboard.camps.index', compact('camps', 'title', 'help'));
     }
 
     /**
@@ -95,9 +98,13 @@ class AdminCampController extends Controller
     public function edit(Camp $camp)
     {
         //
-        $users = User::where('role_id', config('status.role_Kursleiter'))->pluck('username', 'id')->all();
+        $users = User::where('role_id', config('status.role_Lagerleiter'))->pluck('username', 'id')->all();
 
-        return view('dashboard.camps.edit', compact('camp', 'users'));
+        $title = 'Lager aktualisieren';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Lager';
+        $help['main_route'] =  '/dashboard/camps';
+        return view('dashboard.camps.edit', compact('camp', 'users', 'title', 'help'));
     }
 
     /**
@@ -129,13 +136,24 @@ class AdminCampController extends Controller
             $users = Auth::user()->camp->allUsers;
             $camp_global = Camp::where('global_camp', true)->first();
 
+
             foreach ($users as $user) {
                 Helper::updateCamp($user, $camp_global);
             }
             foreach ($camp->camp_users_all()->get() as $camp_user) {
                 $camp_user->delete();
             }
-            $camp->update(['finish' => true]);
+            $counter = $camp->health_infos()->count();
+            foreach ($camp->health_infos()->get() as $health_info) {
+                $health_info->delete();
+            }
+            foreach ($camp->health_forms()->get() as $health_form) {
+                $health_form->delete();
+            }
+
+            File::deleteDirectory(storage_path('app/public/files/' . $camp['code']));
+            File::deleteDirectory(storage_path('app/files/' . $camp['code']));
+            $camp->update(['finish' => true, 'counter' => $counter]);
         }
 
         return redirect('/dashboard');

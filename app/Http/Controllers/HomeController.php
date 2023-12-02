@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Help;
 use App\Models\InterventionClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,10 +14,6 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -28,6 +25,15 @@ class HomeController extends Controller
         $akt_User = Auth::user();
         $camp = $akt_User->camp;
         $intervention_classes = InterventionClass::pluck('name', 'id');
-        return view('home', compact('intervention_classes', 'camp'));
+        $title = 'Dashboard';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard', compact('intervention_classes', 'camp', 'title', 'help'));
+    }
+
+    public function home()
+    {
+        $title = 'Gesundheitsblatt ausfüllen';
+        $help = Help::where('title',$title)->first();
+        return view('home', compact('title', 'help'));
     }
 }

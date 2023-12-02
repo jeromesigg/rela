@@ -21,9 +21,9 @@ class InterventionFactory extends Factory
             //
             'date' => $this->faker->dateTimeBetween('-7 days', 'now'),
             'time' => $this->faker->time(),
-            'parameter' => $this->faker->word(2, true),
-            'value' => $this->faker->word(),
-            'comment' => $this->faker->sentence(),
+            'parameter' => $this->faker->realText(50,1),
+            'value' => $this->faker->realText(50,1),
+            'comment' => $this->faker->realText(100,1),
             'user_id' => 1,
             'user_erf' => 'Admin',
             'intervention_class_id' => InterventionClass::pluck('id')[$this->faker->numberBetween(0,InterventionClass::count()-1)],

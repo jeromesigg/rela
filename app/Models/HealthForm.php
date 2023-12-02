@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use OwenIt\Auditing\Contracts\Auditable;
-use Khalyomede\EloquentUuidSlug\Sluggable;
 
 class HealthForm extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
-    use Sluggable;
     use HasUuid;
 
     protected $fillable = [
@@ -23,6 +21,7 @@ class HealthForm extends Model implements Auditable
     ];
 
     protected $connection = 'mysql_info';
+    public $timestamps = false;
 
     public $incrementing = false;
 

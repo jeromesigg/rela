@@ -1,12 +1,9 @@
 @extends('layouts.layout')
 
 @section('page')
-    <h1>Hallo {{$aktUser->name}}</h1>
+    <x-page-title :title="$title" :help="$help" :subtitle="$subtitle"/>
     {!! Form::model($aktUser, ['method' => 'PATCH', 'class' => 'card', 'action'=>['UsersController@update', $aktUser]]) !!}
 
-        <div class="card-header">
-            <h3 class="card-title">Mein Profil</h3>
-        </div>
         <div class="card-body">
             @if ($errors->any())
                 <div class="alert alert-danger">

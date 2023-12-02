@@ -6,6 +6,7 @@ use App\Events\CampCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\CampUser;
+use App\Models\Help;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,8 +34,11 @@ class CampController extends Controller
         //
 
         $users = [];
-        $title = 'Kurs erstellen';
-        return view('dashboard.camps.create', compact('users',  'title'));
+        $title = 'Lager erstellen';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Lager';
+        $help['main_route'] =  '/dashboard/camps';
+        return view('dashboard.camps.create', compact('users',  'title', 'help'));
     }
 
     /**
@@ -64,11 +68,11 @@ class CampController extends Controller
                     $input['code'] = Helper::generateUniqueCampCode();
                     $camp = Camp::create($input);
                     CampCreated::dispatch($camp);
-                    $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Kursleiter')]);
+                    $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Lagerleiter')]);
                     CampUser::create([
                         'user_id' => $user->id,
                         'camp_id' => $camp->id,
-                        'role_id' => config('status.role_Kursleiter'),]);
+                        'role_id' => config('status.role_Lagerleiter'),]);
                 }
 
                 return redirect('dashboard');

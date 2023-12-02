@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HealthInformation;
+use App\Models\Help;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
 use App\Models\Question;
@@ -23,7 +24,9 @@ class QuestionController extends Controller
         //
         $intervention_classes = interventionClass::where('show',true)->pluck('short_name');
         $healthinformation = [];
-        return view('dashboard.questions.index', compact('intervention_classes', 'healthinformation'));
+        $title = 'Individuelle Fragen';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.questions.index', compact('intervention_classes', 'healthinformation', 'title', 'help'));
     }
 
     public function createDataTables()
@@ -91,7 +94,11 @@ class QuestionController extends Controller
     public function edit(Question $question)
     {
         //
-        return view('dashboard.questions.edit', compact('question'));
+        $title = 'Individuelle Frage aktualisieren';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Individuelle Fragen';
+        $help['main_route'] =  '/dashboard/questions';
+        return view('dashboard.questions.edit', compact('question', 'title', 'help'));
     }
 
     /**

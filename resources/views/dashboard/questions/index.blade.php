@@ -1,20 +1,10 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="breadcrumb-holder">
-        <div class="container-fluid">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="dashboard/">Dashboard</a></li>
-                <li class="breadcrumb-item active">Individuelle Fragen</li>
-            </ul>
-        </div>
-    </div>
+    <x-page-title :title="$title" :help="$help"/>
     <section>
         <div class="container-fluid">
             <!-- Page Header-->
-            <header>
-                <h1 class="h3 display">Individuelle Fragen</h1>
-            </header>
             <div class="row">
                 <div class="col-6">
                     {!! Form::open(['action'=>'QuestionController@store']) !!}
@@ -25,7 +15,7 @@
                         </div>
                         <div class="form-group col-md-2">
                             {!! Form::label('sortindex', 'Sort-Index:') !!}
-                            {!! Form::number('sortindex', null, ['class' => 'form-control']) !!}
+                            {!! Form::number('sortindex', null, ['class' => 'form-control', 'required']) !!}
                         </div>
                     </div>
                     <div class="form-group">

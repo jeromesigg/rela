@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HealthForm;
+use App\Models\Help;
 use App\Models\Post;
 use App\Models\Role;
 use App\Models\User;
@@ -26,7 +27,10 @@ class UsersController extends Controller
         $aktUser = Auth::user();
         if($aktUser &&  ($aktUser->id == $user->id))
         {
-            return view('dashboard.user', compact('aktUser'));
+            $title = 'Profil';
+            $subtitle = 'von ' . $aktUser['username'];
+            $help = Help::where('title',$title)->first();
+            return view('dashboard.user', compact('aktUser', 'title', 'subtitle', 'help'));
         }
         return redirect('/dashboard');
     }
@@ -41,8 +45,6 @@ class UsersController extends Controller
             $request->validate([
                 'password' => ['required', 'confirmed'],
             ]);
-            $input['is_Manager'] = isset($input['is_Manager']);
-            $input['is_Helper'] = isset($input['is_Helper']);
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
             $input['password_change_at'] = now();

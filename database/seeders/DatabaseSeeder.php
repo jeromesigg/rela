@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PermissionRoleSeeder::class,
             CitySeeder::class,
             GroupSeeder::class,
+            DemoCampSeeder::class,
         ]);
     }
 }

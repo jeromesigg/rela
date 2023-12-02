@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Exports\HealthFormsExport;
 use App\Helper\Helper;
 use App\Imports\HealthFormsImport;
+use App\Models\Camp;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
 use App\Models\HealthInformationQuestion;
 use App\Models\HealthStatus;
+use App\Models\Help;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -32,7 +34,10 @@ class HealthFormController extends Controller
      */
     public function index()
     {
-        return view('dashboard.healthform.index');
+
+        $title = 'Gesundheitsblätter';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.healthform.index', compact('title', 'help'));
     }
 
     public function createDataTables()
@@ -80,7 +85,11 @@ class HealthFormController extends Controller
     {
         //
         $groups = Group::on('mysql_info')->pluck('name', 'id')->all();
-        return view('dashboard.healthform.create', compact('groups'));
+        $title = 'Gesundheitsblatt erstellen';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Gesundheitsblätter';
+        $help['main_route'] =  '/dashboard/healthforms';
+        return view('dashboard.healthform.create', compact('groups', 'title' , 'help'));
     }
 
     public function createNew(Request $request)
@@ -229,8 +238,12 @@ class HealthFormController extends Controller
     {
         //
         $healthinfo = Helper::getHealthInfo($healthform['code']);
+        $title = 'Gesundheitsblatt anzeigen';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Gesundheitsblätter';
+        $help['main_route'] =  '/dashboard/healthforms';
 
-        return view('healthform.show', compact('healthform', 'healthinfo'));
+        return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
 
     }
 
@@ -240,7 +253,11 @@ class HealthFormController extends Controller
         $camp = Auth::user()->camp;
         $healthinfo = Helper::getHealthInfo($healthform['code']);
         if($camp['independent_form_fill'] || $healthform['finish']) {
-            return view('healthform.show', compact('healthform', 'healthinfo'));
+            $title = 'Gesundheitsblatt anzeigen';
+            $help = Help::where('title',$title)->first();
+            $help['main_title'] = 'Gesundheitsblätter';
+            $help['main_route'] =  '/dashboard/healthforms';
+            return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
         }
         else {
             $health_questions = null;
@@ -248,7 +265,11 @@ class HealthFormController extends Controller
                 $health_questions = $healthinfo->questions;
             }
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+            $title = 'Gesundheitsblatt anzeigen';
+            $help = Help::where('title',$title)->first();
+            $help['main_title'] = 'Gesundheitsblätter';
+            $help['main_route'] =  '/dashboard/healthforms';
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title'));
         }
 
 
@@ -271,50 +292,32 @@ class HealthFormController extends Controller
     {
         //
 
-        if(config('app.form_filling')) {
-            $input = $request->all();
-            $healthforms = HealthForm::where('birthday', '=', $input['birthday'])->get();
-            $healthform = null;
-            foreach ($healthforms as $act_healthform) {
-                if ($input['ahv'] == $act_healthform['ahv']) {
-                    $healthform = $act_healthform;
-                    $code = $healthform['code'];
-                    break;
+        $input = $request->all();
+        $camp = Camp::where('code', $input['camp_code'])->first();
+        if(($camp->count() > 0) && !$camp['finish']) {
+//            $healthform = HealthForm::where('code', 'LIKE', '%' . Crypt::encrypt($input['code']) . '%')->first();
+            $code = $input['code'];
+            $healthform = HealthForm::all()->filter(function($record) use($code) {
+                if ($record->code == $code) {
+                    return $record;
                 }
+            })->first();
+            if ($healthform == null) {
+                return redirect()->to(url()->previous())
+                    ->withErrors('Kein Gesundheitsblatt mit den Eingaben gefunden.')->withInput();
             }
-            if($input['submit']==="Suchen"){
-                if ($healthform == null) {
-                    return redirect()->to(url()->previous())
-                        ->withErrors("Fehler")
-                        ->withInput();
-                }
-                $healthinfo = Helper::getHealthInfo($code);
-                if ($healthform['finish']) {
-                    return view('healthform.show', compact('healthform', 'healthinfo'));
-                } else {
-                    $health_questions = $healthinfo->questions;
-                    $health_statuses = HealthStatus::pluck('name', 'id')->all();
-                    return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
-                }
-            }
-            else{
-                $code =  Helper::generateUniqueCode();
-                $insertData = array(
-                    'code' => Crypt::encryptString($code),
-                    'ahv' => $input['ahv'],
-                    'birthday' => $input['birthday'],
-                );
-                $healthform = HealthForm::create($insertData);
-                $healthinfo = HealthInformation::create(['code' => $code]);
+            $healthinfo = Helper::getHealthInfo($healthform['code']);
+            if ($healthform['finish']) {
+                return view('healthform.show', compact('healthform', 'healthinfo'));
+            } else {
                 $health_questions = $healthinfo->questions;
                 $health_statuses = HealthStatus::pluck('name', 'id')->all();
                 return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
-
             }
         }
         else{
             return redirect()->to(url()->previous())
-                ->withErrors('Eingaben können nicht mehr getätigt werden.');
+                ->withErrors('Kein Gesundheitsblatt mit den Eingaben gefunden.')->withInput();
         }
     }
 
@@ -331,27 +334,29 @@ class HealthFormController extends Controller
                 'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',
                 'healthinfo.accept_privacy_agreement.required' => 'Für den Abschluss brauchen wir deine Bestätigung.',]);
         }
-        else{
+        else {
             $validator = Validator::make($request->all(), [
                 'healthform.file_allergies' => 'mimes:pdf|max:2000',
             ], [
                 'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
                 'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
-
         }
 
         if ($validator->fails()) {
-            return redirect()->to(url()->previous())
+            return redirect()->to(url(null, ['camp_code'=> 1234])->previous())
                 ->withErrors($validator)
                 ->withInput();
         }
-        $input = $request->all();
         $input_healthinfo = $input['healthinfo'];
         $input_healthform = $input['healthform'];
-        $input_health_questions = $input['health_question'];
+        $input_health_questions = [];
+        if(isset($input['health_question'])) {
+            $input_health_questions = $input['health_question'];
+        }
 
-        if($file_allergies = $request->file('healthform.file_allergies')) {
-            $save_path = 'app/files/' . $healthform['code'];
+        $camp = Camp::where('id', $healthform['camp_id'])->first();
+        if(!$camp['demo'] && $file_allergies = $request->file('healthform.file_allergies')) {
+            $save_path = 'app/files/' . $camp['code'] .'/' . $healthform['code'];
             if (!file_exists(storage_path($save_path))) {
                 mkdir(storage_path($save_path), 0755, true);
             }

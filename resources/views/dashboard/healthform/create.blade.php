@@ -1,17 +1,8 @@
 @extends('layouts.layout')
 
 @section('page')
+    <x-page-title :title="$title" :help="$help"/>
     <div class="wide" id="all">
-        <div class="breadcrumb-holder">
-            <div class="container-fluid">
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="/dashboard/users">Personen</a></li>
-                    <li class="breadcrumb-item active">Erfassen</li>
-                </ul>
-            </div>
-        </div>
-        <br>
         {!! Form::open(['method' => 'POST', 'action'=>'HealthFormController@store']) !!}
             <h4>1. Personalie</h4>
             <hr>

@@ -1,11 +1,9 @@
 @extends('layouts.layout')
 @section('page')
+    <x-page-title :title="$title" :help="$help"/>
     <section>
         <div class="container-fluid">
             <!-- Page Header-->
-            <header>
-                <h1 class="h3 display">Kurs</h1>
-            </header>
             @if ($errors->camps->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -31,7 +29,7 @@
 
 
                     <div class="form-group">
-                        {!! Form::submit('Kurs erstellen', ['class' => 'btn btn-primary'])!!}
+                        {!! Form::submit('Lager erstellen', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
                 </div>

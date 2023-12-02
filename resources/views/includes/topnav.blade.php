@@ -39,6 +39,9 @@
                                     <li>
                                         <a class="nav-link" href="{{route('interventionclasses.index')}}">Kategorien</a>
                                     </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('helps.index')}}">Hilfe-Artikel</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -46,7 +49,7 @@
                     @if (Auth::user()->isManager())
                         <li class="nav-item dropdown">
                             <a id="ManagerDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                Kursleitende <span class="caret"></span>
+                                Lagerleitende <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ManagerDropdown">
                                 <ul class="list-unstyled">
@@ -54,7 +57,7 @@
                                         <a class="nav-link" href="{{route('healthforms.index')}}">Gesundheitsblätter</a>
                                         <a class="nav-link" href="{{route('dashboard.users.index')}}">Leiter</a>
                                         <a class="nav-link" href="{{route('dashboard.questions.index')}}">Fragen</a>
-                                        <a class="nav-link" href="{{route('dashboard.camps.index')}}">Kurse</a>
+                                        <a class="nav-link" href="{{route('dashboard.camps.index')}}">Lager</a>
                                     </li>
                                 </ul>
                             </div>
@@ -92,26 +95,24 @@
                             @if(Auth::user()->camp && !Auth::user()->camp['global_camp'] )
                                 {{Auth::user()->camp['name']}}
                             @else
-                                Meine Kurse
+                                Meine Lager
                             @endif <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarCampDropdown">
-                            @if(!Auth::user()->demo )
-                                <a class="nav-link" href="{{ route('dashboard.camps.create') }}">
-                                    Kurs erstellen
-                                </a>
-                            @endif
-                            @foreach (Auth::user()->camps as $camp)
-                                @if(!$camp['global_camp'])
-                                    <a class="nav-link" href="{{route('dashboard.camps.update',$camp['id'])  }}"
+                            <a class="nav-link" href="{{ route('camps.create') }}">
+                                Lager erstellen
+                            </a>
+                            @foreach (Auth::user()->camp_users as $camp_user)
+                                @if(!$camp_user->camp['global_camp'] && $camp_user['active'])
+                                    <a class="nav-link" href="{{route('camps.update',$camp_user->camp['id'])  }}"
                                        onclick="event.preventDefault();
-                                                document.getElementById('camps-update-form-{{$camp['id']}}').submit();">
-                                        {{$camp['name']}}
+                                                document.getElementById('camps-update-form-{{$camp_user->camp['id']}}').submit();">
+                                        {{$camp_user->camp['name']}}
                                     </a>
 
-                                    <form id="camps-update-form-{{$camp['id']}}"
-                                          action="{{route('dashboard.camps.update',$camp['id'])  }}" method="POST"
+                                    <form id="camps-update-form-{{$camp_user->camp['id']}}"
+                                          action="{{route('camps.update',$camp_user->camp['id'])  }}" method="POST"
                                           style="display: none;">
                                         {{ method_field('PUT') }}
                                         @csrf

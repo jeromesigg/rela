@@ -2,7 +2,7 @@
 
 return [
     'role_Administrator' => 1,
-    'role_Kursleiter' => 2,
+    'role_Lagerleiter' => 2,
     'role_Helfer' => 3,
     'role_Teilnehmer' => 4,
 

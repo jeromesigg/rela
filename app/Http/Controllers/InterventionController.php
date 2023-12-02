@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Camp;
 use App\Models\HealthInformation;
+use App\Models\Help;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Yajra\DataTables\Facades\DataTables;
 
 class InterventionController extends Controller
@@ -23,7 +28,9 @@ class InterventionController extends Controller
         //
         $intervention_classes = interventionClass::where('show',true)->pluck('short_name');
         $healthinformation = [];
-        return view('dashboard.interventions.index', compact('intervention_classes', 'healthinformation'));
+        $title = 'Interventionen';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.interventions.index', compact('intervention_classes', 'healthinformation', 'title', 'help'));
     }
 
     public function createDataTables(Request $request)
@@ -93,14 +100,14 @@ class InterventionController extends Controller
                 'health_information_id' => $healthinfo['id'],
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
-                'user_erf' => Auth::user()->name,
+                'user_erf' => Auth::user()->username,
             ]);
         }
         else{
             $intervention = new intervention([
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
-                'user_erf' => Auth::user()->name,
+                'user_erf' => Auth::user()->username,
             ]);
         }
         $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
@@ -122,15 +129,17 @@ class InterventionController extends Controller
         $user = Auth::user();
         $input['user_id'] = $user['id'];
         $health_information = HealthInformation::findOrFail($input['health_information_id']);
-        if($file = $request->file('file')) {
-            $save_path = 'app/public/files/' .  $health_information['code'];
-            if (!file_exists(storage_path($save_path))) {
-                mkdir(storage_path($save_path), 0755, true);
-            }
-            $name = $file->getClientOriginalName();
+        $camp = Camp::where('id', $health_information['camp_id'])->first();
+        if(!$camp['demo'] && $file = $request->file('file')) {
 
-            $file->move(storage_path($save_path), $name);
-            $input['file'] = 'files/' .  $health_information['code'] . '/' . $name;
+            $save_path = 'files/' . $camp['code'] .'/' . $health_information['code'];
+            $directory = storage_path('app/public/'.$save_path);
+            if (!File::isDirectory($directory)) {
+                File::makeDirectory($directory, 0775, true);
+            }
+            $name =  Str::uuid() . '_' . str_replace(' ', '', $file->getClientOriginalName());
+            Image::make($input['file'])->save($directory.'/'.$name, 80);
+            $input['file'] = $save_path . '/' . $name;
         }
 
         if (isset($input['intervention_id'])){
@@ -170,7 +179,12 @@ class InterventionController extends Controller
         $intervention_classes_all = InterventionClass::where('show',true)->get();
         $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
         $healthinformation = $intervention->health_information;
-        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class'));
+        $title = 'J+S-Patientenprotokoll';
+        $subtitle = 'von ' . $healthinformation['code'];
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Teilnehmerübersicht';
+        $help['main_route'] =  '/dashboard/healthinformation';
+        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class', 'help', 'title', 'subtitle'));
 
     }
 

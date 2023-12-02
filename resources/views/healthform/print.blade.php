@@ -200,7 +200,7 @@
                         {{$healthinfo['ointment_only_contact'] ? 'Ja' : 'Nein'}}
                     </div>
                     <div class="col-md-11 healthform--label">
-                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Sablen selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
+                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Sablen selbständig vom Lagerteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
                     </div>
                 </div>
                 <div class="row">
@@ -208,7 +208,7 @@
                         {{$healthinfo['drugs_only_contact'] ? 'Ja' : 'Nein'}}
                     </div>
                     <div class="col-md-11 healthform--label">
-                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Medikamente (z.B. Schmerzmedikamente) selbständig vom Kursteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
+                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie Medikamente (z.B. Schmerzmedikamente) selbständig vom Lagerteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
                     </div>
                 </div>
 

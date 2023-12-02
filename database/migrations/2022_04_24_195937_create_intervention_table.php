@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('intervention_class_id')->index()->unsigned();
             $table->foreign('intervention_class_id')->references('id')->on('intervention_classes');
 //            $table->foreignUuid('health_information_id')->index()->unsigned();
-            $table->foreignUuid('health_information_id')->references('id')->on('health_information');
+            $table->foreignUuid('health_information_id')->references('id')->on('health_information')->onDelete('cascade');
             $table->bigInteger('user_id')->index()->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('user_erf');
