@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
+use App\Models\Help;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
 use Auth;
@@ -27,7 +28,9 @@ class HealthInformationController extends Controller
     public function index()
     {
         //
-        return view('dashboard.healthinformation.index');
+        $title = 'Teilnehmerübersicht';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.healthinformation.index', compact('title', 'help'));
     }
 
     public function createDataTables()
@@ -100,7 +103,12 @@ class HealthInformationController extends Controller
         $intervention_class = InterventionClass::first();
         $intervention_classes_all = InterventionClass::where('show',true)->get();
         $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
-        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class'));
+        $title = 'J+S-Patientenprotokoll';
+        $subtitle = 'von ' . $healthinformation['code'];
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Teilnehmerübersicht';
+        $help['main_route'] =  '/dashboard/healthinformation';
+        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class', 'title', 'help', 'subtitle'));
 
     }
 

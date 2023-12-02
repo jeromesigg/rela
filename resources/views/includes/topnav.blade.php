@@ -39,6 +39,9 @@
                                     <li>
                                         <a class="nav-link" href="{{route('interventionclasses.index')}}">Kategorien</a>
                                     </li>
+                                    <li>
+                                        <a class="nav-link" href="{{route('helps.index')}}">Hilfe-Artikel</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

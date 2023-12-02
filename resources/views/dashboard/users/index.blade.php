@@ -1,14 +1,7 @@
 @extends('layouts.layout')
 
 @section('page')
-    <div class="breadcrumb-holder">
-        <div class="container-fluid">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                <li class="breadcrumb-item active">Personen</li>
-            </ul>
-        </div>
-    </div>
+    <x-page-title :title="$title" :help="$help"/>
     @if (Session::has('deleted_user'))
         <p class="bg-danger">{{session('deleted_user')}}</p>
     @endif

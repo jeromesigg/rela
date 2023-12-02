@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\CampCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
+use App\Models\Help;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,8 +36,9 @@ class AdminCampController extends Controller
             $camps = Camp::all();
         }
         $title = 'Lagerübersicht';
+        $help = Help::where('title',$title)->first();
 
-        return view('dashboard.camps.index', compact('camps', 'title'));
+        return view('dashboard.camps.index', compact('camps', 'title', 'help'));
     }
 
     /**
@@ -98,7 +100,11 @@ class AdminCampController extends Controller
         //
         $users = User::where('role_id', config('status.role_Lagerleiter'))->pluck('username', 'id')->all();
 
-        return view('dashboard.camps.edit', compact('camp', 'users'));
+        $title = 'Lager aktualisieren';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Lager';
+        $help['main_route'] =  '/dashboard/camps';
+        return view('dashboard.camps.edit', compact('camp', 'users', 'title', 'help'));
     }
 
     /**

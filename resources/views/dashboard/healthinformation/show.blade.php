@@ -1,22 +1,10 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="breadcrumb-holder">
-        <div class="container-fluid">
-            <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="/dashboard/healthinformation">J+S-Patientenprotokoll</a></li>
-                <li class="breadcrumb-item active">Protokoll von {{$healthinformation['code']}}</li>
-            </ul>
-        </div>
-    </div>
+    <x-page-title :title="$title" :help="$help" :subtitle="$subtitle"/>
     <section>
         <div class="container-fluid">
             <!-- Page Header-->
-            <header>
-                <h1 >J+S-Patientenprotokoll von {{$healthinformation['code']}}</h1>
-            </header>
-            <br>
             <div class="row">
                 <div class="col-md-10">
                     <h3>Intervention erfassen</h3>

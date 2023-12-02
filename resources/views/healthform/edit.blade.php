@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 
 @section('page')
+    <x-page-title :title="$title" :help="$help"/>
     <div class="wide" id="all">
         <h3>Hallo {{$healthform->nickname}}</h3>
         <br>

@@ -28,18 +28,18 @@
                     d.info = $healthinfo_id
                 }
             },
-            order: [[ 0, "desc" ],[ 1, "desc" ]],
+            // order: [[ 0, "desc" ]],
             columns: [
                 {
                     data: {
-                        _: 'date.display',
+                        _: 'date.sort',
                         sort: 'date.sort'
                     },
                     name: 'date'
                 },
                 {
                     data: {
-                        _: 'time.display',
+                        _: 'time.sort',
                         sort: 'time.sort'
                     },
                     name: 'time'

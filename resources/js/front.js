@@ -1,15 +1,4 @@
 $(document).ready(function () {
-
-    // ------------------------------------------------------- //
-    // Custom Scrollbar
-    // ------------------------------------------------------ //
-
-    if ($(window).outerWidth() > 992) {
-        $("nav.side-navbar").mCustomScrollbar({
-            scrollInertia: 200
-        });
-    }
-
     // Main Template Color
     var brandPrimary = '#33b35a';
 
@@ -30,16 +19,10 @@ $(document).ready(function () {
     });
 
     // ------------------------------------------------------- //
-    // Tooltips init
-    // ------------------------------------------------------ //    
-
-    $('[data-toggle="tooltip"]').tooltip()
-
-    // ------------------------------------------------------- //
     // Universal Form Validation
     // ------------------------------------------------------ //
 
-    $('.form-validate').each(function() {  
+    $('.form-validate').each(function() {
         $(this).validate({
             errorElement: "div",
             errorClass: 'is-invalid',
@@ -51,7 +34,7 @@ $(document).ready(function () {
                 //console.log(element);
                 if (element.prop("type") === "checkbox") {
                     error.insertAfter(element.siblings("label"));
-                } 
+                }
                 else {
                     error.insertAfter(element);
                 }

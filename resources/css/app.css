@@ -1,6 +1,17 @@
-/*@tailwind base;*/
-/*@tailwind components;*/
-/*@tailwind utilities;*/
+@import './welcome.css';
+@import './bootstrap.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+/*@import "datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css";*/
+@import 'datatables.net-select-bs5/css/select.bootstrap5.css';
+
+@import './jquery-ui.css';
+@import './style.default.premium.css';
+@import './custom.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     --color-bg-primary: #F4F7FA;
@@ -36,11 +47,11 @@
     --color-border: #fafafa;
 }
 
-@media (prefers-color-scheme: dark) {
-    img {
-        filter: brightness(.8) contrast(1.2);
-    }
-}
+/*@media (prefers-color-scheme: dark) {*/
+/*    img {*/
+/*        filter: brightness(.8) contrast(1.2);*/
+/*    }*/
+/*}*/
 
 .text-dark__white {
     color: var(--color-bg-primary) !important;

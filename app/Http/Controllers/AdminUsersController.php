@@ -6,6 +6,7 @@ use App\Events\UserCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\CampUser;
+use App\Models\Help;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -31,7 +32,9 @@ class AdminUsersController extends Controller
         } else {
             $roles = Role::where('id', '>', config('status.role_Administrator'))->pluck('name', 'id')->all();
         }
-        return view('dashboard.users.index', compact('roles'));
+        $title = 'Personen';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.users.index', compact('roles', 'title', 'help'));
     }
 
     public function createDataTables()
@@ -101,8 +104,6 @@ class AdminUsersController extends Controller
     public function create()
     {
         //
-        return view('dashboard.users.create');
-
     }
 
     public function add(Request $request)
@@ -116,7 +117,6 @@ class AdminUsersController extends Controller
             CampUser::firstOrCreate(['camp_id' => $camp->id, 'user_id' => $user->id],
                 ['role_id' => $input['role_id_add']]);
         }
-
         return redirect('/dashboard/users');
     }
 
@@ -186,7 +186,11 @@ class AdminUsersController extends Controller
             $roles = Role::where('id', '>', config('status.role_Administrator'))->pluck('name', 'id')->all();
         }
         $camp_user = $user->camp_user()->first();
-        return view('dashboard.users.edit', compact('user', 'roles', 'camp_user'));
+        $title = 'Person aktualisieren';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Personen';
+        $help['main_route'] =  '/dashboard/users';
+        return view('dashboard.users.edit', compact('user', 'roles', 'camp_user', 'title', 'help'));
     }
 
     /**

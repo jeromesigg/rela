@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Models\Help;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class HelpController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,6 +15,9 @@ class RoleController extends Controller
     public function index()
     {
         //
+        $helps = Help::all();
+
+        return view('dashboard.helps.index', compact('helps'));
     }
 
     /**
@@ -36,15 +39,17 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
+        Help::create($request->all());
+        return redirect('dashboard/helps');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Role  $role
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show($id)
     {
         //
     }
@@ -52,34 +57,39 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Role  $role
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit(Help $help)
     {
         //
+        return view('dashboard.helps.edit', compact('help'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role  $role
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, Help $help)
     {
         //
+        $help->update($request->all());
+        return redirect('dashboard/helps');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Role  $role
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(Help $help)
     {
         //
+        $help->delete();
+        return redirect('dashboard/helps');
     }
 }

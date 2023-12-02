@@ -96,6 +96,7 @@ Route::group(['middleware' => 'verified'], function() {
 
     Route::group(['middleware' => 'admin'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
+        Route::resource('dashboard/helps', 'HelpController');
         Route::resource('dashboard/interventionclasses', 'InterventionClassController');
         Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
         Route::post('healthforms/{healthform}/newCode', ['as'=>'healthforms.newCode','uses'=>'HealthFormController@newCode']);

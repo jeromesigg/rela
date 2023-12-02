@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+    <x-page-title :title="$title" :help="$help" :header="false"/>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -15,7 +16,6 @@
         <div class="card">
             @if(!Auth::user()->camp['global_camp'])
                 <div class="container">
-                    <h4><b>Patient</b></h4>
                     <div class="row">
                         <div class="col-lg-6">
                             {!! Form::open(['method' => 'GET', 'action'=>'HealthInformationController@search']) !!}

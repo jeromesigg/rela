@@ -12,6 +12,7 @@ use App\Models\HealthForm;
 use App\Models\HealthInformation;
 use App\Models\HealthInformationQuestion;
 use App\Models\HealthStatus;
+use App\Models\Help;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -33,7 +34,10 @@ class HealthFormController extends Controller
      */
     public function index()
     {
-        return view('dashboard.healthform.index');
+
+        $title = 'Gesundheitsblätter';
+        $help = Help::where('title',$title)->first();
+        return view('dashboard.healthform.index', compact('title', 'help'));
     }
 
     public function createDataTables()
@@ -81,7 +85,11 @@ class HealthFormController extends Controller
     {
         //
         $groups = Group::on('mysql_info')->pluck('name', 'id')->all();
-        return view('dashboard.healthform.create', compact('groups'));
+        $title = 'Gesundheitsblatt erstellen';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Gesundheitsblätter';
+        $help['main_route'] =  '/dashboard/healthforms';
+        return view('dashboard.healthform.create', compact('groups', 'title' , 'help'));
     }
 
     public function createNew(Request $request)
@@ -230,8 +238,12 @@ class HealthFormController extends Controller
     {
         //
         $healthinfo = Helper::getHealthInfo($healthform['code']);
+        $title = 'Gesundheitsblatt anzeigen';
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Gesundheitsblätter';
+        $help['main_route'] =  '/dashboard/healthforms';
 
-        return view('healthform.show', compact('healthform', 'healthinfo'));
+        return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
 
     }
 
@@ -241,7 +253,11 @@ class HealthFormController extends Controller
         $camp = Auth::user()->camp;
         $healthinfo = Helper::getHealthInfo($healthform['code']);
         if($camp['independent_form_fill'] || $healthform['finish']) {
-            return view('healthform.show', compact('healthform', 'healthinfo'));
+            $title = 'Gesundheitsblatt anzeigen';
+            $help = Help::where('title',$title)->first();
+            $help['main_title'] = 'Gesundheitsblätter';
+            $help['main_route'] =  '/dashboard/healthforms';
+            return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
         }
         else {
             $health_questions = null;
@@ -249,7 +265,11 @@ class HealthFormController extends Controller
                 $health_questions = $healthinfo->questions;
             }
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+            $title = 'Gesundheitsblatt anzeigen';
+            $help = Help::where('title',$title)->first();
+            $help['main_title'] = 'Gesundheitsblätter';
+            $help['main_route'] =  '/dashboard/healthforms';
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title'));
         }
 
 

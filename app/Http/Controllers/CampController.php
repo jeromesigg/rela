@@ -6,6 +6,7 @@ use App\Events\CampCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\CampUser;
+use App\Models\Help;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,10 @@ class CampController extends Controller
 
         $users = [];
         $title = 'Lager erstellen';
-        return view('dashboard.camps.create', compact('users',  'title'));
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Lager';
+        $help['main_route'] =  '/dashboard/camps';
+        return view('dashboard.camps.create', compact('users',  'title', 'help'));
     }
 
     /**

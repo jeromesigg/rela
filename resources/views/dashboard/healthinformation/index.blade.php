@@ -1,21 +1,10 @@
 @extends('layouts.layout')
 
 @section('content')
-    <div class="breadcrumb-holder">
-        <div class="container-fluid">
-            <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item active">Teilnehmerübersicht</li>
-            </ul>
-        </div>
-    </div>
+    <x-page-title :title="$title" :help="$help"/>
     <section>
         <div class="container-fluid">
             <!-- Page Header-->
-            <header>
-                <h1 class="h3 display">Teilnehmerübersicht</h1>
-            </header>
-            <br>
             <table class="table table-striped table-bordered" style="width:100%" id="datatable">
                 <thead>
                     <tr>
