@@ -1,5 +1,5 @@
-<p align="center"><img src="https://ehealth.cevi.tools/img/logo.svg" width="400"></p>
-<p align="center"><img src="https://ehealth.cevi.tools/img/photogrid.jpg"></p>
+<p align="center"><img src="public/img/logo.png" width="400"></p>
+<p align="center"><img src="public/img/photogrid.jpg"></p>
 
 ## Online Gesundheits-Datenbank für J+S-Lager
 

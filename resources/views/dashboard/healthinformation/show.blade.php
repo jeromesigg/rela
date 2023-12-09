@@ -167,7 +167,7 @@
     </section>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <x-filter-buttons-javascript :healthinformation="$healthinformation"/>
     <script>
         window.onload = function() {
@@ -213,6 +213,6 @@
             $('#value_label').text(act_intervention_class['value_name'] +':');
         }
     </script>
-@endsection
+@endpush
 
 

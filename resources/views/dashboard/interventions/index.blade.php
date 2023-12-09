@@ -10,6 +10,6 @@
     </section>
 
 @endsection
-@section('scripts')
+@push('scripts')
     <x-filter-buttons-javascript :healthinformation=null/>
-@endsection
+@endpush

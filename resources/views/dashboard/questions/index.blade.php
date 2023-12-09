@@ -40,13 +40,14 @@
     </section>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
         $(document).ready(function(){
             $('#datatable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
+                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },
@@ -78,4 +79,4 @@
             });
         });
     </script>
-@endsection
+@endpush

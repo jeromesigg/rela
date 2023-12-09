@@ -63,6 +63,6 @@
     </div>
    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
-    @yield('scripts')
+    @stack('scripts')
 </body>
 </html>
