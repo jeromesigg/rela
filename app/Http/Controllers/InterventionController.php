@@ -65,16 +65,7 @@ class InterventionController extends Controller
                 }
             })
             ->editColumn('date', function (intervention $intervention) {
-                return [
-                    'display' => Carbon::parse($intervention['date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($intervention['date'])->diffInDays('01.01.2022')
-                ];
-            })
-            ->editColumn('time', function (intervention $intervention) {
-                return [
-                    'display' => Carbon::parse($intervention['time'])->format('H:i'),
-                    'sort' => Carbon::parse($intervention['time'])->diffInSeconds('01.01.2022')
-                ];
+                return Carbon::parse($intervention['date'])->format('d.m.Y');
             })
             ->addColumn('intervention', function (intervention $intervention) {
                 return '<a href='.\URL::route('interventions.edit',$intervention).'>'.$intervention->intervention_class['name'].'</a>';

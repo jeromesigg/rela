@@ -1,7 +1,6 @@
-
 <script>
 
-    $(function () {
+    $(document).ready(function() {
         $(document).on("click",".intervention_image",function(e){
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -13,6 +12,7 @@
 
         var $healthinformation = @json($healthinformation);
         var $healthinfo_id = $healthinformation ? $healthinformation['id'] : null;
+
         var table = $('#datatable').DataTable({
             responsive: true,
             processing: true,
@@ -29,22 +29,10 @@
                     d.info = $healthinfo_id
                 }
             },
-            // order: [[ 0, "desc" ]],
+            order: [[0, "desc" ],[1, "desc" ]],
             columns: [
-                {
-                    data: {
-                        _: 'date.sort',
-                        sort: 'date.sort'
-                    },
-                    name: 'date'
-                },
-                {
-                    data: {
-                        _: 'time.sort',
-                        sort: 'time.sort'
-                    },
-                    name: 'time'
-                },
+                { data: 'date', name: 'date' },
+                { data: 'time', name: 'time' },
                 { data: 'code', name: 'code' },
                 { data: 'intervention', name: 'intervention' },
                 { data: 'parameter', name: 'parameter' },
