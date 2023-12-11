@@ -214,7 +214,7 @@
 @endsection
 
 
-@section('scripts')
+@push('scripts')
     <script type="text/javascript">
         //autocomplete script
         $(document).on('focus','.autocomplete_txt',function(){
@@ -256,4 +256,4 @@
             });
         });
     </script>
-@endsection
+@endpush

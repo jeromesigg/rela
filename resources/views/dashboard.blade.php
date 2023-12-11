@@ -56,7 +56,7 @@
 
 
 
-@section('scripts')
+@push('scripts')
     <script type="text/javascript">
 
         //autocomplete script
@@ -90,4 +90,4 @@
             });
         });
     </script>
-@endsection
+@endpush

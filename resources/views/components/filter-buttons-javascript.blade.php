@@ -18,6 +18,7 @@
             processing: true,
             serverSide: true,
             pageLength: 25,
+            buttons: [],
             language: {
                 "url": "/lang/Datatables.json"
             },

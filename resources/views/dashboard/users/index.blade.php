@@ -90,15 +90,15 @@
     {{--                </div>--}}
 
                 <div class="col-lg-6">
-                    <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                    <table class="table table-striped table-bordered hover" style="width:100%" id="datatable">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Rolle</th>
-                            <th scope="col">Letztes Login</th>
-                            <th scope="col">Aktiv</th>
-                            <th>Aktionen</th>
-                        </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Rolle</th>
+                                <th scope="col">Letztes Login</th>
+                                <th scope="col">Aktiv</th>
+                                <th>Aktionen</th>
+                            </tr>
                         </thead>
                     </table>
                 </div>
@@ -132,14 +132,16 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+{{--    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}--}}
     <script>
     $(document).ready(function(){
         $('#datatable').DataTable({
             responsive: true,
             processing: true,
             serverSide: true,
+            buttons: [],
             language: {
             "url": "/lang/Datatables.json"
             },
@@ -213,4 +215,4 @@
         });
     });
     </script>
-@endsection
+@endpush

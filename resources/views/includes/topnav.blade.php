@@ -25,123 +25,18 @@
             <div id="mega-menu-full" class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1">
             <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                @auth
-                    @if (Auth::user()->isAdmin())
-                        <li class="nav-item dropdown">
-                            <a id="AdminDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                Admin <span class="caret"></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="AdminDropdown">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a class="nav-link" href="{{route('dashboard.audits')}}">Audit-Trail</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link" href="{{route('interventionclasses.index')}}">Kategorien</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link" href="{{route('helps.index')}}">Hilfe-Artikel</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    @endif
-                    @if (Auth::user()->isManager())
-                        <li class="nav-item dropdown">
-                            <a id="ManagerDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                Lagerleitende <span class="caret"></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ManagerDropdown">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a class="nav-link" href="{{route('healthforms.index')}}">Gesundheitsblätter</a>
-                                        <a class="nav-link" href="{{route('dashboard.users.index')}}">Leiter</a>
-                                        <a class="nav-link" href="{{route('dashboard.questions.index')}}">Fragen</a>
-                                        <a class="nav-link" href="{{route('dashboard.camps.index')}}">Lager</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    @endif
-                    @if (Auth::user()->isHelper())
-                        <li class="nav-item dropdown">
-                            <a id="ActionDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                Aktion <span class="caret"></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ActionDropdown">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a class="nav-link" href="{{route('healthinformation.index')}}">Teilnehmerübersicht</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link" href="{{route('interventions.index')}}">Alle Interventionen</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    @endif
-
-                @endauth
-
-            </ul>
-
+                    @auth
+                        <x-navbar-admin/>
+                        <x-navbar-manager/>
+                        <x-navbar-helper/>
+                    @endauth
+                </ul>
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 @auth
-                    <li class="nav-item dropdown">
-                        <a id="navbarCampDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            @if(Auth::user()->camp && !Auth::user()->camp['global_camp'] )
-                                {{Auth::user()->camp['name']}}
-                            @else
-                                Meine Lager
-                            @endif <span class="caret"></span>
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarCampDropdown">
-                            <a class="nav-link" href="{{ route('camps.create') }}">
-                                Lager erstellen
-                            </a>
-                            @foreach (Auth::user()->camp_users as $camp_user)
-                                @if(!$camp_user->camp['global_camp'] && $camp_user['active'])
-                                    <a class="nav-link" href="{{route('camps.update',$camp_user->camp['id'])  }}"
-                                       onclick="event.preventDefault();
-                                                document.getElementById('camps-update-form-{{$camp_user->camp['id']}}').submit();">
-                                        {{$camp_user->camp['name']}}
-                                    </a>
-
-                                    <form id="camps-update-form-{{$camp_user->camp['id']}}"
-                                          action="{{route('camps.update',$camp_user->camp['id'])  }}" method="POST"
-                                          style="display: none;">
-                                        {{ method_field('PUT') }}
-                                        @csrf
-                                    </form>
-                                @endif
-                            @endforeach
-                        </div>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->username }} <span class="caret"></span>
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('dashboard.user',Auth::user()->slug) }}">
-                                Profil
-                            </a>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                            document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
+                    <x-navbar-camp/>
+                    <x-navbar-user/>
                 @else
                     <li>
                         <a href="{{ route('login') }}" class="nav-link nav-item">Login</a>
@@ -155,4 +50,5 @@
             </ul>
         </div>
     </div>
+    <x-toggle-switch/>
 </nav>

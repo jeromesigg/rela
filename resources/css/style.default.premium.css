@@ -1286,7 +1286,7 @@ button {
 * ==========================================================
 */
 .ms-container {
-    background: transparent url("../img/multiselect-switch.png") no-repeat 50% 50%;
+    background: transparent url("../../img/multiselect-switch.png") no-repeat 50% 50%;
     width: 370px;
 }
 

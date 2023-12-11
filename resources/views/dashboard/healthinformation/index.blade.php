@@ -22,7 +22,7 @@
     </section>
 
 @endsection
-@section('scripts')
+@push('scripts')
     <script>
         $(document).ready(function(){
             $('#datatable').DataTable({
@@ -33,6 +33,7 @@
                 language: {
                     "url": "/lang/Datatables.json"
                 },
+                buttons: [],
                 ajax: "{!! route('healthinformation.CreateDataTables') !!}",
                 order: [[ 0, "asc" ]],
                 columns: [
@@ -50,4 +51,4 @@
             });
         });
     </script>
-@endsection
+@endpush

@@ -70,7 +70,7 @@
     </div>
 
 @endsection
-@section('scripts')
+@push('scripts')
     <script>
         $(document).ready(function(){
             $('#datatable').DataTable({
@@ -78,6 +78,7 @@
                 processing: true,
                 serverSide: true,
                 pageLength: 25,
+                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },
@@ -127,4 +128,4 @@
             });
         });
     </script>
-@endsection
+@endpush
