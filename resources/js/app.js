@@ -13,6 +13,7 @@ import './jqBootstrapValidation.js';
 // import './sweetalert.min.js';
 import './swiper-bundle.min.js';
 import './jquery.waypoints.min.js';
+import './datetime-moment.js';
 import './custom.js';
 
 // window.Vue = require('vue');
