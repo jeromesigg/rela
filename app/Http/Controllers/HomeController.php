@@ -26,8 +26,9 @@ class HomeController extends Controller
         $camp = $akt_User->camp;
         $intervention_classes = InterventionClass::pluck('name', 'id');
         $title = 'Dashboard';
+        $subtitle = $camp['global_camp'] ? '' : ' für Lager "' . $camp['name'] . '" (' . $camp['code'] . ')';
         $help = Help::where('title',$title)->first();
-        return view('dashboard', compact('intervention_classes', 'camp', 'title', 'help'));
+        return view('dashboard', compact('intervention_classes', 'camp', 'title', 'help', 'subtitle'));
     }
 
     public function home()

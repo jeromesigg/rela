@@ -5,6 +5,7 @@ namespace App\Helper;
 
 use App\Models\Camp;
 use App\Models\CampUser;
+use App\Models\Group;
 use App\Models\HealthInformation;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -23,6 +24,16 @@ class Helper
         }
         return $healthinfo;
     }
+
+    static function updateGroup($master, $group_text)
+    {
+        $group = Group::where('name', '=', $group_text)->first();
+        if (isset($group)) {
+            $master->update(['group_id' => $group['id']]);
+        } else {
+            $master->update(['group_id' => null]);
+        }
+}
 
     public static function updateCamp(User $user, Camp $camp)
     {

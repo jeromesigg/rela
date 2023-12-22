@@ -133,8 +133,6 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-{{--    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}--}}
     <script>
     $(document).ready(function(){
         $('#datatable').DataTable({
@@ -159,42 +157,42 @@
                 {data: 'active', name: 'active' },
                 {data: 'Actions', name: 'Actions', orderable:false,serachable:false,sClass:'text-center'},
             ]
+            });
         });
-    });
-    $(document).on('focus','.autocomplete_txt',function(){
-        autoType = $(this).attr('name');
+        $(document).on('focus','.autocomplete_txt',function(){
+            autoType = $(this).attr('name');
 
-        if(autoType =='username_add')type='username';
+            if(autoType =='username_add')type='username';
 
-        $(this).autocomplete({
-            minLength: 3,
-            highlight: true,
-            source: function( request, response ) {
-                $.ajax({
-                    url: "{{ route('searchajaxuser') }}",
-                    dataType: "json",
-                    data: {
-                        term : request.term,
-                        type : type,
-                    },
-                    success: function(data) {
-                        var array = $.map(data, function (item) {
-                            return {
-                                label: item['username'] + ' - ' +  item['email'],
-                                value: item[autoType],
-                                data : item
-                            }
-                        });
-                        response(array)
-                    }
-                });
-            },
-            select: function( event, ui ) {
-                var data = ui.item.data;
-                $("[name='username']").val(data.username);
-                $("[name='user_id']").val(data.id);
-            }
-        });
+            $(this).autocomplete({
+                minLength: 3,
+                highlight: true,
+                source: function( request, response ) {
+                    $.ajax({
+                        url: "{{ route('searchajaxuser') }}",
+                        dataType: "json",
+                        data: {
+                            term : request.term,
+                            type : type,
+                        },
+                        success: function(data) {
+                            var array = $.map(data, function (item) {
+                                return {
+                                    label: item['username'] + ' - ' +  item['email'],
+                                    value: item[autoType],
+                                    data : item
+                                }
+                            });
+                            response(array)
+                        }
+                    });
+                },
+                select: function( event, ui ) {
+                    var data = ui.item.data;
+                    $("[name='username']").val(data.username);
+                    $("[name='user_id']").val(data.id);
+                }
+            });
     });
     $('#datatable').on('click', '.link--delete[data-remote]', function (e) {
         e.preventDefault();

@@ -84,12 +84,11 @@ class HealthFormController extends Controller
     public function create()
     {
         //
-        $groups = Group::on('mysql_info')->pluck('name', 'id')->all();
         $title = 'Gesundheitsblatt erstellen';
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Gesundheitsblätter';
         $help['main_route'] =  '/dashboard/healthforms';
-        return view('dashboard.healthform.create', compact('groups', 'title' , 'help'));
+        return view('dashboard.healthform.create', compact('title' , 'help'));
     }
 
     public function createNew(Request $request)
@@ -114,6 +113,7 @@ class HealthFormController extends Controller
         $input['camp_id'] =$camp['id'];
         $healthform = HealthForm::create($input);
         $healthinfo = HealthInformation::create(['code' => $code, 'camp_id' => $camp['id']]);
+        Helper::updateGroup($healthform, $input['group_text']);
         $questions = $camp->questions;
         foreach ($questions as $question) {
             HealthInformationQuestion::create(['question_id' => $question['id'],
@@ -125,7 +125,10 @@ class HealthFormController extends Controller
         else {
             $health_questions = $healthinfo->questions;
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
+            $help = Help::where('title',$title)->first();
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'title', 'help', 'subtitle'));
         }
     }
 
@@ -255,8 +258,6 @@ class HealthFormController extends Controller
         if($camp['independent_form_fill'] || $healthform['finish']) {
             $title = 'Gesundheitsblatt anzeigen';
             $help = Help::where('title',$title)->first();
-            $help['main_title'] = 'Gesundheitsblätter';
-            $help['main_route'] =  '/dashboard/healthforms';
             return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
         }
         else {
@@ -265,11 +266,12 @@ class HealthFormController extends Controller
                 $health_questions = $healthinfo->questions;
             }
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            $title = 'Gesundheitsblatt anzeigen';
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
             $help = Help::where('title',$title)->first();
             $help['main_title'] = 'Gesundheitsblätter';
             $help['main_route'] =  '/dashboard/healthforms';
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title'));
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title', 'subtitle'));
         }
 
 
@@ -307,12 +309,15 @@ class HealthFormController extends Controller
                     ->withErrors('Kein Gesundheitsblatt mit den Eingaben gefunden.')->withInput();
             }
             $healthinfo = Helper::getHealthInfo($healthform['code']);
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
+            $help = Help::where('title',$title)->first();
             if ($healthform['finish']) {
-                return view('healthform.show', compact('healthform', 'healthinfo'));
+                return view('healthform.show', compact('healthform', 'healthinfo', 'title', 'subtitle', 'help'));
             } else {
                 $health_questions = $healthinfo->questions;
                 $health_statuses = HealthStatus::pluck('name', 'id')->all();
-                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'title', 'subtitle', 'help'));
             }
         }
         else{
@@ -387,7 +392,9 @@ class HealthFormController extends Controller
             HealthInformationQuestion::where('id', $key)->update(['answer' => $input_health_question]);
         }
         if(Auth::user()){
-            return view('dashboard.healthform.index');
+            $title = 'Gesundheitsblätter';
+            $help = Help::where('title',$title)->first();
+            return view('dashboard.healthform.index', compact('title' , 'help'));
         }
         else {
             if ($finish) {
@@ -421,5 +428,11 @@ class HealthFormController extends Controller
         // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
         return $cities;
+    }
+
+    public function searchResponseGroups(Request $request)
+    {
+        $groups = Group::on('mysql_info')->search($request->get('term'))->get();
+        return $groups;
     }
 }

@@ -26,6 +26,7 @@
                                 <tr>
                                     <th scope="col">Name</th>
                                     <th scope="col">Lagerleiter</th>
+                                    <th scope="col">Code</th>
                                     <th scope="col">End-Datum</th>
                                     <th scope="col">Abgeschlossen</th>
                                     <th>Abschliessen?</th>
@@ -36,6 +37,7 @@
                                 <tr>
                                     <td><a href="{{route('dashboard.camps.edit',$camp->id)}}">{{$camp->name}}</a></td>
                                     <td>{{$camp->user ? $camp->user['username'] : ''}}</a></td>
+                                    <td>{{$camp['code']}}</a></td>
                                     <td>{{$camp->end_date > 1 ? date('d.m.Y', strtotime($camp->end_date)) : ''}}</a></td>
                                     <td>{{$camp->finish ? 'Ja' : 'Nein'}}</td>
                                     <td>

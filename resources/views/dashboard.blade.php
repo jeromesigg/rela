@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <x-page-title :title="$title" :help="$help" :header="false"/>
+    <x-page-title :title="$title" :help="$help" :header="false" :subtitle="$subtitle"/>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

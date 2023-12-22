@@ -5,9 +5,8 @@
  */
 
 import './bootstrap';
-import './jquery-ui.js';
 import 'laravel-datatables-vite';
-// import 'flowbite';
+import './jquery-ui.js';
 import './front.js';
 import './jqBootstrapValidation.js';
 // import './sweetalert.min.js';

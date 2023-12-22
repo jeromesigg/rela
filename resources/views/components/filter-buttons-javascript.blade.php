@@ -4,7 +4,6 @@
         $(document).on("click",".intervention_image",function(e){
             event.stopPropagation();
             event.stopImmediatePropagation();
-            console.log('Hallo');
             $('.imagepreview').attr('src', $(this).find('img').attr('src'));
             $('#imagemodal').modal('show');
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\CampCreated;
 use App\Helper\Helper;
 use App\Models\Camp;
+use App\Models\Group;
 use App\Models\Help;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,6 +70,7 @@ class AdminCampController extends Controller
                 $input['user_id'] = $user->id;
             }
             $camp = Camp::create($input);
+            Helper::updateGroup($camp, $input['group_text']);
             CampCreated::dispatch($camp);
             if (!$user->isAdmin()) {
                 $user->update(['camp_id' => $camp->id]);
@@ -119,6 +121,7 @@ class AdminCampController extends Controller
         if (!Auth::user()->demo) {
             $input = $request->all();
             $camp->update($input);
+            Helper::updateGroup($camp, $input['group_text']);
         }
 
         return redirect('/dashboard/camps');

@@ -25,7 +25,7 @@ class Camp extends Model
     }
 
     protected $fillable = [
-        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter'
+        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter', 'group_id', 'group_text'
     ];
 
     protected $casts = [
@@ -68,6 +68,11 @@ class Camp extends Model
     public function health_forms()
     {
         return HealthForm::where('camp_id',$this['id']);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 
 }

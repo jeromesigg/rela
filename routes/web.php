@@ -30,6 +30,7 @@ Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'use
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
+Route::get('healthform/searchajaxgroups', ['as'=>'searchajaxgroups','uses'=>'HealthFormController@searchResponseGroups']);
 Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
 Route::get('/loginLeiter', function () {
