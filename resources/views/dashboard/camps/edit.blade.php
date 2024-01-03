@@ -26,7 +26,12 @@
 
                     <div class="form-group">
                         {!! Form::label('independent_form_fill', 'Teilnehmer füllen selber Gesundheitsblatt aus:') !!}
-                        {!! Form::checkbox('independent_form_fill', '1', null, ['class'=>'healthform__checkbox']) !!}
+                        {!! Form::checkbox('independent_form_fill', '1', $camp['independent_form_fill'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('closed_when_finished', 'Bei Abschluss des Gesundheitsblattes sind keine Änderungen mehr möglich:') !!}
+                        {!! Form::checkbox('closed_when_finished', '1', $camp['closed_when_finished'], ['class'=>'healthform__checkbox']) !!}
                     </div>
 
                     <div class="form-group">

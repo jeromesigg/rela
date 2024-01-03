@@ -64,7 +64,8 @@ class HealthFormController extends Controller
 
             ->addColumn('Actions', function(HealthForm $healthForm) {
                 $buttons = '<form action="'.\URL::route('healthforms.open', $healthForm).'" method="post">' . csrf_field();
-                if($healthForm['finish']){
+                $camp = Auth::user()->camp;
+                if($healthForm['finish'] && $camp['forms_finished']){
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Öffnen</button>';
                 };
                 $buttons .= '</form>';
@@ -120,7 +121,9 @@ class HealthFormController extends Controller
                 'health_information_id' => $healthinfo['id']]);
         }
         if($camp['independent_form_fill']) {
-            return view('dashboard.healthform.index');
+            $title = 'Gesundheitsblätter';
+            $help = Help::where('title',$title)->first();
+            return view('dashboard.healthform.index', compact('title', 'help'));
         }
         else {
             $health_questions = $healthinfo->questions;
@@ -255,7 +258,7 @@ class HealthFormController extends Controller
         //
         $camp = Auth::user()->camp;
         $healthinfo = Helper::getHealthInfo($healthform['code']);
-        if($camp['independent_form_fill'] || $healthform['finish']) {
+        if($camp['independent_form_fill'] || ($healthform['finish'] && $camp['forms_finished'])) {
             $title = 'Gesundheitsblatt anzeigen';
             $help = Help::where('title',$title)->first();
             return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
@@ -286,6 +289,7 @@ class HealthFormController extends Controller
     public function open(HealthForm $healthform)
     {
         $input['finish'] = false;
+        $input['date_finished'] = null;
         $healthform->update($input);
         return redirect('/dashboard/healthforms');
     }
@@ -296,7 +300,7 @@ class HealthFormController extends Controller
 
         $input = $request->all();
         $camp = Camp::where('code', $input['camp_code'])->first();
-        if(($camp->count() > 0) && !$camp['finish']) {
+        if(isset($camp) && ($camp->count() > 0) && !$camp['finish']) {
 //            $healthform = HealthForm::where('code', 'LIKE', '%' . Crypt::encrypt($input['code']) . '%')->first();
             $code = $input['code'];
             $healthform = HealthForm::all()->filter(function($record) use($code) {
@@ -312,7 +316,7 @@ class HealthFormController extends Controller
             $title = 'Hallo';
             $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
             $help = Help::where('title',$title)->first();
-            if ($healthform['finish']) {
+            if ($healthform['finish'] && $camp['forms_finished']) {
                 return view('healthform.show', compact('healthform', 'healthinfo', 'title', 'subtitle', 'help'));
             } else {
                 $health_questions = $healthinfo->questions;
@@ -375,14 +379,15 @@ class HealthFormController extends Controller
 
         $input_healthform['swimmer'] = isset($input_healthform['swimmer']);
         if($input['submit_btn'] == 'Gesundheitsblatt abschliessen') {
-            $finish = true;
+            $healthform['finish'] = true;
+            $healthform['date_finished'] = now();
             $message = 'Dein Gesundheitsblatt wurde übermittelt, vielen Dank.';
+            $finish = true;
         }
         else{
             $finish = false;
             $message = 'Vielen Dank für die Eingaben. Dein Gesundheitsblatt wurde aktualisiert.';
         }
-        $input_healthform['finish'] = $finish;
         $input_healthinfo['drugs_only_contact'] = isset($input_healthinfo['drugs_only_contact']);
         $input_healthinfo['ointment_only_contact'] = isset($input_healthinfo['ointment_only_contact']);
         $input_healthinfo['accept_privacy_agreement'] = isset($input_healthinfo['accept_privacy_agreement']);

@@ -32,6 +32,11 @@
                     </div>
 
                     <div class="form-group">
+                        {!! Form::label('closed_when_finished', 'Bei Abschluss des Gesundheitsblattes sind keine Änderungen mehr möglich:') !!}
+                        {!! Form::checkbox('closed_when_finished', '1', null, ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
                         {!! Form::label('group_text', 'Abteilung:') !!}
                         {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
                     </div>

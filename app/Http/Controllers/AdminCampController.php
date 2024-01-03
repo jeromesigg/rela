@@ -69,6 +69,8 @@ class AdminCampController extends Controller
             if (!$user->isAdmin()) {
                 $input['user_id'] = $user->id;
             }
+            $input['forms_finished'] = isset($input['closed_when_finished']);
+            $input['closed_when_finished'] = isset($input['closed_when_finished']);
             $camp = Camp::create($input);
             Helper::updateGroup($camp, $input['group_text']);
             CampCreated::dispatch($camp);
@@ -120,6 +122,9 @@ class AdminCampController extends Controller
     {
         if (!Auth::user()->demo) {
             $input = $request->all();
+            $input['independent_form_fill'] = isset($input['independent_form_fill']);
+            $input['forms_finished'] = isset($input['closed_when_finished']);
+            $input['closed_when_finished'] = isset($input['closed_when_finished']);
             $camp->update($input);
             Helper::updateGroup($camp, $input['group_text']);
         }

@@ -25,7 +25,7 @@ class Camp extends Model
     }
 
     protected $fillable = [
-        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter', 'group_id', 'group_text'
+        'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter', 'group_id', 'group_text', 'closed_when_finished', 'forms_finished'
     ];
 
     protected $casts = [
@@ -33,6 +33,7 @@ class Camp extends Model
         'global_camp' => 'boolean',
         'demo' => 'boolean',
         'finish' => 'boolean',
+        'closed_when_finished' => 'boolean',
     ];
 
     public function user()

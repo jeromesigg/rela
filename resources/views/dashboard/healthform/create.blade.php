@@ -26,7 +26,7 @@
 
                 <div class="form-group col-md-2">
                     {!! Form::label('group_text', 'Abteilung:') !!}
-                    {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group']) !!}
+                    {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
                 </div>
                 {!! Form::hidden('group_id', null, ['class' => 'form-control autocomplete_txt_group']) !!}
             </div>
