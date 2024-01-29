@@ -22,7 +22,7 @@
 
     <body style="background: white">
         <section>
-            <div class="container-fluid" style="page-break-inside:avoid; width:1240px">
+            <div class="container-fluid" style="page-break-inside:avoid; width:1100px">
                 <img src="/img/logo_region.svg" alt="" width="400px">
                 <div class="text-right">
                     <div class="healthform--text">

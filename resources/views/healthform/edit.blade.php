@@ -1,10 +1,8 @@
 @extends('layouts.layout')
 
 @section('page')
-    <x-page-title :title="$title" :help="$help"/>
+    <x-page-title :title="$title" :help="$help" :subtitle="$subtitle" :header="false"/>
     <div class="wide" id="all">
-        <h3>Hallo {{$healthform->nickname}}</h3>
-        <br>
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -138,11 +136,15 @@
                 </div>
                 <div class="form-group">
                     {!! Form::checkbox('healthinfo[ointment_only_contact]', '1', $healthinfo['ointment_only_contact'], ['class'=>'healthform__checkbox']) !!}
-                    {!! Form::label('healthinfo[ointment_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie lokale Medikamente (Desinfektionsspray, Salber, Augentropfen, etc.) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+                    <label for="healthinfo[ointment_only_contact]">
+                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>lokale</b> Medikamente (Desinfektionsspray, Salber, Augentropfen, etc.) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
+                    </label>
                 </div>
                 <div class="form-group">
                     {!! Form::checkbox('healthinfo[drugs_only_contact]', '1', $healthinfo['drugs_only_contact'], ['class'=>'healthform__checkbox']) !!}
-                    {!! Form::label('healthinfo[drugs_only_contact]', 'Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie orale Medikamente (z.B. Halslutschtabletten, orale Schmerzmedikamente) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.') !!}
+                    <label for="healthinfo[drugs_only_contact]">
+                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>orale</b> Medikamente (z.B. Halslutschtabletten, orale Schmerzmedikamente) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
+                    </label>
                 </div>
             </div>
             <div class="form-group col-md-6">
@@ -189,14 +191,6 @@
             Abschluss</h4>
         <hr>
         <div class="form-row">
-            @auth
-                @if(Auth::user()->isManager())
-                    <div class="form-group col-md-2">
-                        {!! Form::label('healthinfo[health_status_id]', 'Beurteilung:') !!}
-                        {!! Form::select('healthinfo[health_status_id]', $health_statuses, $healthinfo['health_status_id'], ['class' => 'form-control']) !!}
-                    </div>
-                @endif
-            @endauth
             <div class="form-group col-md-4">
                 {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
             </div>

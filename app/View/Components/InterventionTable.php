@@ -6,16 +6,10 @@ use Illuminate\View\Component;
 
 class InterventionTable extends Component
 {
-    public $intervention_classes;
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
-    public function __construct($interventionclasses)
+
+    public function __construct()
     {
         //
-        $this->intervention_classes = $interventionclasses;
     }
 
     /**

@@ -4,16 +4,16 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
 import './bootstrap';
 import './jquery-ui.js';
+import 'bootstrap';
 import 'laravel-datatables-vite';
-// import 'flowbite';
 import './front.js';
 import './jqBootstrapValidation.js';
-// import './sweetalert.min.js';
 import './swiper-bundle.min.js';
 import './jquery.waypoints.min.js';
-import './datetime-moment.js';
+// import './datetime-moment.js';
 import './custom.js';
 
 // window.Vue = require('vue');

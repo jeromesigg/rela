@@ -30,6 +30,7 @@ Route::patch('/healthform/update/{healthform}', ['as'=>'healthform.update', 'use
 Route::get('/healthform/show/{healthform}', ['as'=>'healthform.show', 'uses'=>'HealthFormController@show']);
 Route::get('/healthform/download/{healthform}', ['as'=>'healthform.downloadPDF', 'uses'=>'HealthFormController@downloadPDF']);
 Route::get('healthform/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'HealthFormController@searchResponseCity']);
+Route::get('healthform/searchajaxgroups', ['as'=>'searchajaxgroups','uses'=>'HealthFormController@searchResponseGroups']);
 Route::get('healthform/downloadAllergy/{healthform}', ['as'=>'downloadAllergy','uses'=>'HealthFormController@downloadAllergy']);
 
 Route::get('/loginLeiter', function () {
@@ -73,6 +74,7 @@ Route::group(['middleware' => 'verified'], function() {
     Route::get('healthinformation/search', ['uses'=>'HealthInformationController@search']);
     Route::resource('dashboard/interventions', 'InterventionController');
     Route::get('interventions/createDataTables', ['as'=>'interventions.CreateDataTables','uses'=>'InterventionController@createDataTables']);
+    Route::get('interventions/close/{intervention}', ['as'=>'interventions.close','uses'=>'InterventionController@close']);
 
     Route::group(['middleware' => 'manager'], function() {
         Route::get('dashboard/users/searchajaxuser', ['as' => 'searchajaxuser', 'uses' => 'AdminUsersController@searchResponseUser']);
@@ -85,7 +87,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
         Route::get('dashboard/healthforms/showOrEdit/{healthform}',  ['as'=>'healthforms.showOrEdit', 'uses'=>'HealthFormController@showOrEdit']);
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
-        Route::get('healthinformation/print/{healthinformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
+        Route::get('healthinformation/print/{healthInformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
         Route::post('dashboard/healthinformation/uploadProtocol/{healthinformation}', ['as'=>'uploadProtocol','uses'=>'HealthInformationController@uploadProtocol']);
         Route::get('healthinformation/downloadProtocol/{healthinformation}', ['as'=>'downloadProtocol','uses'=>'HealthInformationController@downloadProtocol']);
         Route::post('healthforms/{healthform}/open', ['as'=>'healthforms.open','uses'=>'HealthFormController@open']);

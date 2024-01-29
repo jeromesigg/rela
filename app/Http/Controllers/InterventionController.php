@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\HealthInformation;
+use App\Models\HealthStatus;
 use App\Models\Help;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
@@ -26,11 +28,10 @@ class InterventionController extends Controller
     public function index()
     {
         //
-        $intervention_classes = interventionClass::where('show',true)->pluck('short_name');
         $healthinformation = [];
         $title = 'Interventionen';
         $help = Help::where('title',$title)->first();
-        return view('dashboard.interventions.index', compact('intervention_classes', 'healthinformation', 'title', 'help'));
+        return view('dashboard.interventions.index', compact( 'healthinformation', 'title', 'help'));
     }
 
     public function createDataTables(Request $request)
@@ -38,11 +39,8 @@ class InterventionController extends Controller
         //
         $camp = Auth::user()->camp;
         $input = $request->all();
-        $intervention_class = interventionClass::where('show',true)->where('short_name','=',$input['filter'])->first();
         $healthinfo = HealthInformation::where('id','=',$input['info'])->first();
         $interventions = $camp->interventions()
-            ->when($intervention_class, function($query, $intervention_class){
-                $query->where('intervention_class_id','=',$intervention_class['id']);})
             ->when($healthinfo, function($query, $healthinfo){
                 $query->where('health_information_id','=',$healthinfo['id']);})
             ->get();
@@ -50,13 +48,28 @@ class InterventionController extends Controller
         return DataTables::of($interventions)
             ->addColumn('code', function (intervention $intervention) {
                 $healthinfo = $intervention->health_information;
-                return '<a href='.\URL::route('healthinformation.show',$healthinfo).'>'.$healthinfo['code'].'</a>';
+                $code = $healthinfo['code'] . Helper::getName($healthinfo);
+                return '<a href='.\URL::route('healthinformation.show',$healthinfo).'>'.$code.'</a>';
             })
             ->addColumn('user', function (intervention $intervention) {
                 return $intervention->user['name'];
             })
+            ->addColumn('status', function (intervention $intervention) {
+                $status =  Helper::getHealthStatus($intervention);
+                return $status ?? 'Abgeschlossen';
+            })
+            ->addColumn('abschluss', function (intervention $intervention) {
+                if(isset($intervention['date_close'])) {
+                    $status = Carbon::parse($intervention['date_close'])->format('d.m.Y') . ' ' . $intervention['time_close'] . ' - ' .$intervention['user_close']  .'<br>';
+                    $status .= $intervention['further_treatment'].'<br>';
+                    $status .= $intervention['comment_close'];
+                }
+                else {
+                    $status = 'Offen';
+                }
+                return $status;
+            })
             ->addColumn('picture', function (intervention $intervention) {
-//                return Storage::url($intervention['file']);
                 if ($intervention['file']) {
                     return '<a href="#" class="intervention_image"><img src="' . Storage::url($intervention['file']) . '" alt="" width="250px"></a>';
                 }
@@ -68,18 +81,41 @@ class InterventionController extends Controller
                 return Carbon::parse($intervention['date'])->format('d.m.Y');
             })
             ->addColumn('intervention', function (intervention $intervention) {
-                return '<a href='.\URL::route('interventions.edit',$intervention).'>'.$intervention->intervention_class['name'].'</a>';
+                $text = '1. '.$intervention['parameter'].'<br>';
+                $text .= '2. ' . $intervention['value'];
+                $text .= isset($intervention['medication']) ? '<br>3. ' . $intervention['medication'] : '';
+                return $text;
             })
-            ->rawColumns(['code', 'picture', 'intervention'])
+            ->addColumn('actions', function (intervention $intervention) {
+                $close = isset($intervention['date_close']) ? '' : '&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
+                return '<a href='.\URL::route('interventions.edit',$intervention).'><i class="fa-regular fa-pen-to-square fa-xl"></i></a>' . $close;
+            })
+            ->rawColumns(['code', 'picture', 'intervention', 'status', 'abschluss','actions'])
             ->make(true);
 
+    }
+
+    public function close(Intervention $intervention)
+    {
+        $healthinformation = $intervention->health_information;
+        $title = 'J+S-Patientenprotokoll';
+        $subtitle = 'von ' . $healthinformation['code'];
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Teilnehmerübersicht';
+        $help['main_route'] =  '/dashboard/healthinformation';
+        $health_status = HealthStatus::pluck('name', 'id')->all();
+
+        if(!isset($intervention['date_close'])){
+            $intervention['date_close'] = Carbon::now()->toDateString();
+            $intervention['time_close'] = Carbon::now()->toTimeString();
+        }
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status'));
     }
 
     public function create(Request $request)
     {
         //
         $input = $request->all();
-        $intervention_class = InterventionClass::where('show',true)->where('id', '=', $input['intervention_class_id'])->first();
         if($input['code']) {
             $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
             if ($healthinfo == null) {
@@ -91,20 +127,16 @@ class InterventionController extends Controller
                 'health_information_id' => $healthinfo['id'],
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
-                'user_erf' => Auth::user()->username,
             ]);
         }
         else{
             $intervention = new intervention([
                 'date' => Carbon::now()->toDateString(),
                 'time' => Carbon::now()->toTimeString(),
-                'user_erf' => Auth::user()->username,
             ]);
         }
         $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
-        $intervention_classes_all = InterventionClass::where('show',true)->get();
-        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
-        return view('dashboard.interventions.create', compact('intervention', 'healthinfos', 'intervention_class', 'intervention_classes', 'intervention_classes_all'));
+        return view('dashboard.interventions.create', compact('intervention', 'healthinfos'));
     }
 
     /**
@@ -166,16 +198,14 @@ class InterventionController extends Controller
     public function edit(Intervention $intervention)
     {
         //
-        $intervention_class = InterventionClass::first();
-        $intervention_classes_all = InterventionClass::where('show',true)->get();
-        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
         $healthinformation = $intervention->health_information;
         $title = 'J+S-Patientenprotokoll';
         $subtitle = 'von ' . $healthinformation['code'];
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Teilnehmerübersicht';
         $help['main_route'] =  '/dashboard/healthinformation';
-        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class', 'help', 'title', 'subtitle'));
+        $health_status = HealthStatus::pluck('name', 'id')->all();
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status'));
 
     }
 

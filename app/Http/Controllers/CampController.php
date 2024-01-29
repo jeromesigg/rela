@@ -66,6 +66,8 @@ class CampController extends Controller
                     $input['user_id'] = $user->id;
                     $input['global_camp'] = false;
                     $input['code'] = Helper::generateUniqueCampCode();
+                    $input['forms_finished'] = isset($input['closed_when_finished']);
+                    $input['closed_when_finished'] = isset($input['closed_when_finished']);
                     $camp = Camp::create($input);
                     CampCreated::dispatch($camp);
                     $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Lagerleiter')]);

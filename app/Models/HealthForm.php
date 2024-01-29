@@ -15,9 +15,9 @@ class HealthForm extends Model implements Auditable
     use HasUuid;
 
     protected $fillable = [
-        'id','code', 'nickname', 'last_name', 'first_name', 'street', 'zip_code', 'city', 'group_id', 'emergency_contact_name', 'emergency_contact_address', 'emergency_contact_phone', 'ahv',
+        'id','code', 'nickname', 'last_name', 'first_name', 'street', 'zip_code', 'city', 'group_text', 'group_id', 'emergency_contact_name', 'emergency_contact_address', 'emergency_contact_phone', 'ahv',
         'doctor_contact', 'health_insurance_contact', 'accident_insurance_contact',
-        'liability_insurance_contact', 'finish', 'birthday', 'phone_number', 'swimmer', 'vaccination', 'file_allergies', 'camp_id'
+        'liability_insurance_contact', 'finish', 'birthday', 'phone_number', 'swimmer', 'vaccination', 'file_allergies', 'camp_id', 'date_finished'
     ];
 
     protected $connection = 'mysql_info';

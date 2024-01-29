@@ -58,13 +58,10 @@ class HealthFormController extends Controller
             })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
-            ->addColumn('status', function (HealthForm $healthForm) {
-                $healthinfo = Helper::getHealthInfo($healthForm['code']);
-                return $healthinfo && $healthinfo->health_status ? $healthinfo->health_status['name'] : '';})
-
             ->addColumn('Actions', function(HealthForm $healthForm) {
                 $buttons = '<form action="'.\URL::route('healthforms.open', $healthForm).'" method="post">' . csrf_field();
-                if($healthForm['finish']){
+                $camp = Auth::user()->camp;
+                if($healthForm['finish'] && $camp['forms_finished']){
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Öffnen</button>';
                 };
                 $buttons .= '</form>';
@@ -84,12 +81,11 @@ class HealthFormController extends Controller
     public function create()
     {
         //
-        $groups = Group::on('mysql_info')->pluck('name', 'id')->all();
         $title = 'Gesundheitsblatt erstellen';
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Gesundheitsblätter';
         $help['main_route'] =  '/dashboard/healthforms';
-        return view('dashboard.healthform.create', compact('groups', 'title' , 'help'));
+        return view('dashboard.healthform.create', compact('title' , 'help'));
     }
 
     public function createNew(Request $request)
@@ -114,18 +110,24 @@ class HealthFormController extends Controller
         $input['camp_id'] =$camp['id'];
         $healthform = HealthForm::create($input);
         $healthinfo = HealthInformation::create(['code' => $code, 'camp_id' => $camp['id']]);
+        Helper::updateGroup($healthform, $input['group_text']);
         $questions = $camp->questions;
         foreach ($questions as $question) {
             HealthInformationQuestion::create(['question_id' => $question['id'],
                 'health_information_id' => $healthinfo['id']]);
         }
         if($camp['independent_form_fill']) {
-            return view('dashboard.healthform.index');
+            $title = 'Gesundheitsblätter';
+            $help = Help::where('title',$title)->first();
+            return view('dashboard.healthform.index', compact('title', 'help'));
         }
         else {
             $health_questions = $healthinfo->questions;
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
+            $help = Help::where('title',$title)->first();
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'title', 'help', 'subtitle'));
         }
     }
 
@@ -252,11 +254,9 @@ class HealthFormController extends Controller
         //
         $camp = Auth::user()->camp;
         $healthinfo = Helper::getHealthInfo($healthform['code']);
-        if($camp['independent_form_fill'] || $healthform['finish']) {
+        if($camp['independent_form_fill'] || ($healthform['finish'] && $camp['forms_finished'])) {
             $title = 'Gesundheitsblatt anzeigen';
             $help = Help::where('title',$title)->first();
-            $help['main_title'] = 'Gesundheitsblätter';
-            $help['main_route'] =  '/dashboard/healthforms';
             return view('healthform.show', compact('healthform', 'healthinfo', 'help', 'title'));
         }
         else {
@@ -265,11 +265,12 @@ class HealthFormController extends Controller
                 $health_questions = $healthinfo->questions;
             }
             $health_statuses = HealthStatus::pluck('name', 'id')->all();
-            $title = 'Gesundheitsblatt anzeigen';
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
             $help = Help::where('title',$title)->first();
             $help['main_title'] = 'Gesundheitsblätter';
             $help['main_route'] =  '/dashboard/healthforms';
-            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title'));
+            return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'help', 'title', 'subtitle'));
         }
 
 
@@ -284,6 +285,7 @@ class HealthFormController extends Controller
     public function open(HealthForm $healthform)
     {
         $input['finish'] = false;
+        $input['date_finished'] = null;
         $healthform->update($input);
         return redirect('/dashboard/healthforms');
     }
@@ -294,7 +296,7 @@ class HealthFormController extends Controller
 
         $input = $request->all();
         $camp = Camp::where('code', $input['camp_code'])->first();
-        if(($camp->count() > 0) && !$camp['finish']) {
+        if(isset($camp) && ($camp->count() > 0) && !$camp['finish']) {
 //            $healthform = HealthForm::where('code', 'LIKE', '%' . Crypt::encrypt($input['code']) . '%')->first();
             $code = $input['code'];
             $healthform = HealthForm::all()->filter(function($record) use($code) {
@@ -307,12 +309,15 @@ class HealthFormController extends Controller
                     ->withErrors('Kein Gesundheitsblatt mit den Eingaben gefunden.')->withInput();
             }
             $healthinfo = Helper::getHealthInfo($healthform['code']);
-            if ($healthform['finish']) {
-                return view('healthform.show', compact('healthform', 'healthinfo'));
+            $title = 'Hallo';
+            $subtitle = ' ' . $healthform['nickname'] . ' (' .$healthform['code'] . ')';
+            $help = Help::where('title',$title)->first();
+            if ($healthform['finish'] && $camp['forms_finished']) {
+                return view('healthform.show', compact('healthform', 'healthinfo', 'title', 'subtitle', 'help'));
             } else {
                 $health_questions = $healthinfo->questions;
                 $health_statuses = HealthStatus::pluck('name', 'id')->all();
-                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses'));
+                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'health_statuses', 'title', 'subtitle', 'help'));
             }
         }
         else{
@@ -370,14 +375,15 @@ class HealthFormController extends Controller
 
         $input_healthform['swimmer'] = isset($input_healthform['swimmer']);
         if($input['submit_btn'] == 'Gesundheitsblatt abschliessen') {
-            $finish = true;
+            $healthform['finish'] = true;
+            $healthform['date_finished'] = now();
             $message = 'Dein Gesundheitsblatt wurde übermittelt, vielen Dank.';
+            $finish = true;
         }
         else{
             $finish = false;
             $message = 'Vielen Dank für die Eingaben. Dein Gesundheitsblatt wurde aktualisiert.';
         }
-        $input_healthform['finish'] = $finish;
         $input_healthinfo['drugs_only_contact'] = isset($input_healthinfo['drugs_only_contact']);
         $input_healthinfo['ointment_only_contact'] = isset($input_healthinfo['ointment_only_contact']);
         $input_healthinfo['accept_privacy_agreement'] = isset($input_healthinfo['accept_privacy_agreement']);
@@ -387,7 +393,9 @@ class HealthFormController extends Controller
             HealthInformationQuestion::where('id', $key)->update(['answer' => $input_health_question]);
         }
         if(Auth::user()){
-            return view('dashboard.healthform.index');
+            $title = 'Gesundheitsblätter';
+            $help = Help::where('title',$title)->first();
+            return view('dashboard.healthform.index', compact('title' , 'help'));
         }
         else {
             if ($finish) {
@@ -421,5 +429,11 @@ class HealthFormController extends Controller
         // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
         return $cities;
+    }
+
+    public function searchResponseGroups(Request $request)
+    {
+        $groups = Group::on('mysql_info')->search($request->get('term'))->get();
+        return $groups;
     }
 }

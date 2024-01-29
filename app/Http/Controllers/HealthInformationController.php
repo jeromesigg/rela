@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Models\Camp;
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
+use App\Models\HealthStatus;
 use App\Models\Help;
 use App\Models\Intervention;
 use App\Models\InterventionClass;
@@ -37,31 +38,28 @@ class HealthInformationController extends Controller
     {
         //
         $camp = Auth::user()->camp;
-        $healthinfo = HealthInformation::where('camp_id', '=', $camp['id'])->get();
+        $healthinfo = $camp->health_infos()->get();
 
         return DataTables::of($healthinfo)
             ->addColumn('code', function (HealthInformation $act_healthinfo) {
-                return '<a href='.\URL::route('healthinformation.show',$act_healthinfo).'>'.$act_healthinfo['code'].'</a>';
-            })
-            ->addColumn('monitorings', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->monitorings);
-            })
-            ->addColumn('medications', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->medications);
-            })
-            ->addColumn('measures', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->measures);
-            })
-            ->addColumn('surveillances', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->surveillances);
-            })
-            ->addColumn('incidents', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->incidents);
+                $code = $act_healthinfo['code'] . Helper::getName($act_healthinfo);
+                return '<a href='.\URL::route('healthinformation.show',$act_healthinfo).'>'.$code.'</a>';
             })
             ->addColumn('status', function (HealthInformation $act_healthinfo) {
-                return $act_healthinfo->health_status ? $act_healthinfo->health_status['name'] : '';
+                $interventions_open = $act_healthinfo->interventions_open->sortByDesc('health_status_id')->first();
+                $status = 'Keine offene Intervention';
+                if(isset($interventions_open)) {
+                    $status = Helper::getHealthStatus($interventions_open);
+                }
+                return $status;
             })
-            ->rawColumns(['code'])
+            ->addColumn('interventions', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->interventions);
+            })
+            ->addColumn('interventions_open', function (HealthInformation $act_healthinfo) {
+                return count($act_healthinfo->interventions_open);
+            })
+            ->rawColumns(['code', 'status'])
             ->make(true);
     }
     /**
@@ -98,17 +96,15 @@ class HealthInformationController extends Controller
             'health_information_id' => $healthinformation['id'],
             'date' => Carbon::now()->toDateString(),
             'time' => Carbon::now()->format('H:i'),
-            'user_erf' => Auth::user()->username,
         ]);
-        $intervention_class = InterventionClass::first();
-        $intervention_classes_all = InterventionClass::where('show',true)->get();
-        $intervention_classes = InterventionClass::where('show',true)->pluck('short_name','id');
+        $name = Helper::getName($healthinformation);
         $title = 'J+S-Patientenprotokoll';
-        $subtitle = 'von ' . $healthinformation['code'];
+        $subtitle = 'von ' . $healthinformation['code'] . $name;
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Teilnehmerübersicht';
         $help['main_route'] =  '/dashboard/healthinformation';
-        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention_classes', 'intervention_classes_all', 'intervention', 'intervention_class', 'title', 'help', 'subtitle'));
+        $health_status = HealthStatus::pluck('name', 'id')->all();
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'title', 'help', 'subtitle','health_status'));
 
     }
 
@@ -194,9 +190,11 @@ class HealthInformationController extends Controller
      * @param  \App\Models\HealthInformation  $healthInformation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HealthInformation $healthInformation)
+    public function print(HealthInformation $healthInformation)
     {
         //
+        $healthform = Helper::getHealthForm($healthInformation['code']);
+        return view('dashboard.healthinformation.print', compact('healthform', 'healthInformation'));
     }
 
     public function searchResponseCode(Request $request)

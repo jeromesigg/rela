@@ -23,16 +23,33 @@
                         {!! Form::label('end_date', 'Schlussdatum:') !!}
                         {!! Form::date('end_date', null,  ['class' => 'form-control', 'required']) !!}
                     </div>
+
+                    <div class="form-group">
+                        {!! Form::label('independent_form_fill', 'Teilnehmer füllen selber Gesundheitsblatt aus:') !!}
+                        {!! Form::checkbox('independent_form_fill', '1', $camp['independent_form_fill'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('closed_when_finished', 'Bei Abschluss des Gesundheitsblattes sind keine Änderungen mehr möglich:') !!}
+                        {!! Form::checkbox('closed_when_finished', '1', $camp['closed_when_finished'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
+                        {!! Form::checkbox('show_names', '1', $camp['show_names'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('group_text', 'Abteilung:') !!}
+                        {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
+                    </div>
+                    {!! Form::hidden('group_id', null, ['class' => 'form-control autocomplete_txt_group']) !!}
                     <div class="form-group">
                         {!! Form::submit('Änderungen speichern', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
-                    {!! Form::model($camp, ['method' => 'DELETE', 'action'=>['AdminCampController@destroy',$camp->id], 'id'=> "DeleteForm"]) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Lager löschen', ['class' => 'btn btn-danger confirm'])!!}
-                    </div>
-                    {!! Form::close()!!}
-                 </div>cd <e></e>
+                    <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
+                </div>cd <e></e>
             </div>
         </div>
     </section>
@@ -40,22 +57,45 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+    <script type="module">
         $(document).ready(function(){
-            $('.confirm').on('click', function(e){
-                e.preventDefault(); //cancel default action
+            $(document).on('focus','.autocomplete_txt_group',function(){
+                type = $(this).attr('name');
 
-                swal({
-                    title: 'Lager löschen?',
-                    text: 'Beim Lager löschen werden alle Qualifikationen und hochgeladenen Dokumente gelöscht.',
-                    icon: 'warning',
-                    buttons: ["Abbrechen", "Ja!"],
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        document.getElementById("DeleteForm").submit();
+                if(type =='group_text')autoType='name';
+                if(type =='group_id')autoType='id';
+
+                $(this).autocomplete({
+                    minLength: 3,
+                    highlight: true,
+                    source: function( request, response ) {
+                        $.ajax({
+                            url: "{{ route('searchajaxgroups') }}",
+                            dataType: "json",
+                            data: {
+                                term : request.term,
+                                type : type,
+                            },
+                            success: function(data) {
+                                var array = $.map(data, function (item) {
+                                    return {
+                                        label: item['short_name'] + ' ' + item['name'],
+                                        value: item[autoType],
+                                        data : item
+                                    }
+                                });
+                                response(array)
+                            }
+                        });
+                    },
+                    select: function( event, ui ) {
+                        var data = ui.item.data;
+                        $("[name='group_text']").val(data.name);
+                        $("[name='group_id']").val(data.id);
                     }
                 });
             });
+
         });
     </script>
 @endpush

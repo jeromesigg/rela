@@ -31,23 +31,23 @@
                         <x-navbar-helper/>
                     @endauth
                 </ul>
-            <!-- Right Side Of Navbar -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Authentication Links -->
-                @auth
-                    <x-navbar-camp/>
-                    <x-navbar-user/>
-                @else
-                    <li>
-                        <a href="{{ route('login') }}" class="nav-link nav-item">Login</a>
-                    </li>
-                    @if (Route::has('register'))
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Authentication Links -->
+                    @auth
+                        <x-navbar-camp/>
+                        <x-navbar-user/>
+                    @else
                         <li>
-                            <a href="{{ route('register') }}" class="nav-link nav-item">Registrieren</a>
+                            <a href="{{ route('login') }}" class="nav-link nav-item">Login</a>
                         </li>
-                    @endif
-                @endauth
-            </ul>
+                        @if (Route::has('register'))
+                            <li>
+                                <a href="{{ route('register') }}" class="nav-link nav-item">Registrieren</a>
+                            </li>
+                        @endif
+                    @endauth
+                </ul>
         </div>
     </div>
     <x-toggle-switch/>

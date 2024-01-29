@@ -31,31 +31,11 @@ class HealthInformation extends Model implements Auditable
     public $timestamps = false;
 
     public function interventions(){
-        return $this->hasMany(Intervention::class, 'health_information_id');
+        return $this->hasMany(Intervention::class, 'health_information_id')->orderByDesc('date')->orderByDesc('time');
     }
 
-    public function incidents(){
-        return $this->interventions()->where('intervention_class_id', '=', config('interventions.incident'));
-    }
-
-    public function measures(){
-        return $this->interventions()->where('intervention_class_id', '=', config('interventions.measure'));
-    }
-
-    public function medications(){
-        return $this->interventions()->where('intervention_class_id', '=', config('interventions.medication'));
-    }
-
-    public function monitorings(){
-        return $this->interventions()->where('intervention_class_id', '=', config('interventions.monitoring'));
-    }
-
-    public function surveillances(){
-        return $this->interventions()->where('intervention_class_id', '=', config('interventions.surveillance'));
-    }
-
-    public function health_status(){
-        return $this->belongsTo(HealthStatus::class);
+    public function interventions_open(){
+        return $this->interventions()->where('date_close', '=',null);
     }
 
     public function questions()

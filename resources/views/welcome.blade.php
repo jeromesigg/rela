@@ -118,7 +118,7 @@
                 <!-- Counters-->
                 <div class="row gy-4 text-center" id="counterUp">
                     <div class="col-lg-6 col-sm-6">
-                        <div class="text-center text-gray-700">
+                        <div class="text-center text-gray">
                             <div class="icon-outlined border-gray-600 icon-lg mx-auto mb-3 icon-thin"><i
                                     class="fa-solid fa-campground"></i></div>
                             <h1 class="counter mb-3" data-counter="{{$camp_counter}}">0</h1>
@@ -126,7 +126,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6">
-                        <div class="text-center text-gray-700">
+                        <div class="text-center text-gray">
                             <div class="icon-outlined border-gray-600 icon-lg mx-auto mb-3 icon-thin"><i
                                     class="fa-solid fa-poll-h"></i></div>
                                  <h1 class="counter mb-3" data-counter="{{$healhform_counter}}">0</h1>

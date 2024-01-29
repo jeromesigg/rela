@@ -26,7 +26,6 @@ class InterventionFactory extends Factory
             'comment' => $this->faker->realText(100,1),
             'user_id' => 1,
             'user_erf' => 'Admin',
-            'intervention_class_id' => InterventionClass::pluck('id')[$this->faker->numberBetween(0,InterventionClass::count()-1)],
             'health_information_id' => HealthInformation::pluck('id')[$this->faker->numberBetween(0,HealthInformation::count()-1)]
         ];
     }

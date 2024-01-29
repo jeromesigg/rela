@@ -12,9 +12,9 @@
                 <div class="col-lg-4">
                     <a href="{{route('healthforms.create')}}" class="btn btn-primary" role="button">Gesundsheitsblatt erstellen</a>
                 </div>
-{{--                    <div class="col-lg-4">--}}
-{{--                        <button id="showImport" class="btn btn-primary btn-sm">Gesundsheitsblätter aus Cevi-DB importieren</button>--}}
-{{--                    </div>--}}
+                    <div class="col-lg-4">
+                        <button id="showImport" class="btn btn-primary btn-sm">Gesundsheitsblätter aus Cevi-DB importieren</button>
+                    </div>
                     <div class="col-lg-4">
                         @if (Auth::user()->isManager())
                             {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
@@ -71,7 +71,7 @@
 
 @endsection
 @push('scripts')
-    <script>
+    <script type="module">
         $(document).ready(function(){
             $('#datatable').DataTable({
                 responsive: true,

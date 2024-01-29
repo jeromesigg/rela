@@ -12,8 +12,8 @@ class Intervention extends Model implements Auditable
     use HasFactory;
 
     protected $fillable = [
-        'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id', 'intervention_class_id', 'user_erf', 'file',
-        'further_treatment', 'user_close', 'date_close', 'time_close', 'comment_close'
+        'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id', 'user_erf', 'file',
+        'further_treatment', 'user_close', 'date_close', 'time_close', 'comment_close', 'medication', 'health_status_id'
     ];
 
     public function user(){
@@ -24,7 +24,7 @@ class Intervention extends Model implements Auditable
         return $this->belongsTo(HealthInformation::class);
     }
 
-    public function intervention_class(){
-        return $this->belongsTo(InterventionClass::class);
+    public function health_status(){
+        return $this->belongsTo(HealthStatus::class);
     }
 }

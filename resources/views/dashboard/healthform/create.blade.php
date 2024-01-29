@@ -25,9 +25,10 @@
                 </div>
 
                 <div class="form-group col-md-2">
-                    {!! Form::label('group_id', 'Abteilung:') !!}
-                    {!! Form::select('group_id', $groups, null, ['class' => 'form-control']) !!}
+                    {!! Form::label('group_text', 'Abteilung:') !!}
+                    {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
                 </div>
+                {!! Form::hidden('group_id', null, ['class' => 'form-control autocomplete_txt_group']) !!}
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
@@ -36,12 +37,13 @@
                 </div>
                 <div class="form-group col-md-2">
                     {!! Form::label('zip_code', 'Postleitzahl:') !!}
-                    {!! Form::number('zip_code', null, ['class' => 'form-control']) !!}
+                    {!! Form::number('zip_code', null, ['class' => 'form-control autocomplete_txt_city']) !!}
                 </div>
                 <div class="form-group col-md-2">
                     {!! Form::label('city', 'Ortschaft:') !!}
-                    {!! Form::text('city', null, ['class' => 'form-control']) !!}
+                    {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt_city']) !!}
                 </div>
+                {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt_city']) !!}
                 <div class="form-group col-md-2">
                     {!! Form::label('phone_number', 'Telefon:') !!}
                     {!! Form::text('phone_number', null, ['class' => 'form-control']) !!}
@@ -58,3 +60,89 @@
     </div>
 
 @endsection
+
+
+
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function(){
+        //autocomplete script
+            $(document).on('focus','.autocomplete_txt_city',function(){
+                type = $(this).attr('name');
+
+                if(type =='city')autoType='name';
+                if(type =='zip_code')autoType='plz';
+                if(type =='city_id')autoType='id';
+
+                $(this).autocomplete({
+                    minLength: 2,
+                    highlight: true,
+                    source: function( request, response ) {
+                        $.ajax({
+                            url: "{{ route('searchajaxcity') }}",
+                            dataType: "json",
+                            data: {
+                                term : request.term,
+                                type : type,
+                            },
+                            success: function(data) {
+                                var array = $.map(data, function (item) {
+                                    return {
+                                        label: item['plz'] + ' ' + item['name'],
+                                        value: item[autoType],
+                                        data : item
+                                    }
+                                });
+                                response(array)
+                            }
+                        });
+                    },
+                    select: function( event, ui ) {
+                        var data = ui.item.data;
+                        $("[name='city']").val(data.name);
+                        $("[name='zip_code']").val(data.plz);
+                        $("[name='city_id']").val(data.id);
+                    }
+                });
+            });
+            $(document).on('focus','.autocomplete_txt_group',function(){
+                type = $(this).attr('name');
+
+                if(type =='group_text')autoType='name';
+                if(type =='group_id')autoType='id';
+
+                $(this).autocomplete({
+                    minLength: 3,
+                    highlight: true,
+                    source: function( request, response ) {
+                        $.ajax({
+                            url: "{{ route('searchajaxgroups') }}",
+                            dataType: "json",
+                            data: {
+                                term : request.term,
+                                type : type,
+                            },
+                            success: function(data) {
+                                var array = $.map(data, function (item) {
+                                    return {
+                                        label: item['short_name'] + ' ' + item['name'],
+                                        value: item[autoType],
+                                        data : item
+                                    }
+                                });
+                                response(array)
+                            }
+                        });
+                    },
+                    select: function( event, ui ) {
+                        var data = ui.item.data;
+                        $("[name='group_text']").val(data.name);
+                        $("[name='group_id']").val(data.id);
+                    }
+                });
+            });
+
+        });
+    </script>
+@endpush
+

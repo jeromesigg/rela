@@ -26,6 +26,7 @@
                                 <tr>
                                     <th scope="col">Name</th>
                                     <th scope="col">Lagerleiter</th>
+                                    <th scope="col">Code</th>
                                     <th scope="col">End-Datum</th>
                                     <th scope="col">Abgeschlossen</th>
                                     <th>Abschliessen?</th>
@@ -36,15 +37,12 @@
                                 <tr>
                                     <td><a href="{{route('dashboard.camps.edit',$camp->id)}}">{{$camp->name}}</a></td>
                                     <td>{{$camp->user ? $camp->user['username'] : ''}}</a></td>
+                                    <td>{{$camp['code']}}</a></td>
                                     <td>{{$camp->end_date > 1 ? date('d.m.Y', strtotime($camp->end_date)) : ''}}</a></td>
                                     <td>{{$camp->finish ? 'Ja' : 'Nein'}}</td>
                                     <td>
                                         @if (!$camp->finish && Auth::user()->camp['id'] === $camp['id'])
-                                            {!! Form::model($camp, ['method' => 'DELETE', 'action'=>['AdminCampController@destroy',$camp], 'id'=> "DeleteForm"]) !!}
-                                            <div class="form-group">
-                                                {!! Form::submit('Lager abschliessen?', ['class' => 'btn btn-danger confirm'])!!}
-                                            </div>
-                                            {!! Form::close()!!}
+                                            <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
                                         @endif
                                     </td>
                                 </tr>
@@ -57,26 +55,4 @@
         </div>
     </section>
 @endsection
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        $(document).ready(function(){
-            $('.confirm').on('click', function(e){
-                e.preventDefault(); //cancel default action
-
-                swal({
-                    title: 'Lager löschen?',
-                    text: 'Beim Lager löschen werden alle Interventionen und hochgeladenen Dokumente gelöscht.',
-                    icon: 'warning',
-                    buttons: ["Abbrechen", "Ja!"],
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        document.getElementById("DeleteForm").submit();
-                    }
-                });
-            });
-        });
-    </script>
-@endpush
 
