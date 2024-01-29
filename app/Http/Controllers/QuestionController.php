@@ -22,11 +22,10 @@ class QuestionController extends Controller
     public function index()
     {
         //
-        $intervention_classes = interventionClass::where('show',true)->pluck('short_name');
         $healthinformation = [];
         $title = 'Individuelle Fragen';
         $help = Help::where('title',$title)->first();
-        return view('dashboard.questions.index', compact('intervention_classes', 'healthinformation', 'title', 'help'));
+        return view('dashboard.questions.index', compact('healthinformation', 'title', 'help'));
     }
 
     public function createDataTables()

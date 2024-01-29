@@ -133,7 +133,7 @@
 @endsection
 
 @push('scripts')
-    <script>
+    <script type="module">
     $(document).ready(function(){
         $('#datatable').DataTable({
             responsive: true,

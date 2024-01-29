@@ -5,7 +5,7 @@
     <section>
         <div class="container-fluid">
             <!-- Page Header-->
-            <x-intervention-table :interventionclasses="$intervention_classes" />
+            <x-intervention-table/>
         </div>
     </section>
 

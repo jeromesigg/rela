@@ -39,6 +39,10 @@ class AdminCampController extends Controller
         $title = 'Lagerübersicht';
         $help = Help::where('title',$title)->first();
 
+        $title_modal = 'Lager löschen?';
+        $text_modal = "Beim Lager löschen werden alle Interventionen und hochgeladenen Dokumente gelöscht.";
+        confirmDelete($title_modal, $text_modal);
+
         return view('dashboard.camps.index', compact('camps', 'title', 'help'));
     }
 
@@ -71,6 +75,7 @@ class AdminCampController extends Controller
             }
             $input['forms_finished'] = isset($input['closed_when_finished']);
             $input['closed_when_finished'] = isset($input['closed_when_finished']);
+            $input['show_names'] = isset($input['show_names']);
             $camp = Camp::create($input);
             Helper::updateGroup($camp, $input['group_text']);
             CampCreated::dispatch($camp);
@@ -108,6 +113,11 @@ class AdminCampController extends Controller
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Lager';
         $help['main_route'] =  '/dashboard/camps';
+
+        $title_modal = 'Lager löschen?';
+        $text_modal = "Beim Lager löschen werden alle Interventionen und hochgeladenen Dokumente gelöscht.";
+        confirmDelete($title_modal, $text_modal);
+
         return view('dashboard.camps.edit', compact('camp', 'users', 'title', 'help'));
     }
 
@@ -125,6 +135,7 @@ class AdminCampController extends Controller
             $input['independent_form_fill'] = isset($input['independent_form_fill']);
             $input['forms_finished'] = isset($input['closed_when_finished']);
             $input['closed_when_finished'] = isset($input['closed_when_finished']);
+            $input['show_names'] = isset($input['show_names']);
             $camp->update($input);
             Helper::updateGroup($camp, $input['group_text']);
         }

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('styles')
     <script src="https://cdn.tiny.cloud/1/dmco08revieu0ga6o07bfko0qaesvi9j7isjtjnjmg61gb4x/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
+    <script type="module">
         tinymce.init({
             selector: 'textarea#mytextarea'
         });

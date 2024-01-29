@@ -35,6 +35,11 @@
                     </div>
 
                     <div class="form-group">
+                        {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
+                        {!! Form::checkbox('show_names', '1', $camp['show_names'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
                         {!! Form::label('group_text', 'Abteilung:') !!}
                         {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
                     </div>
@@ -43,12 +48,8 @@
                         {!! Form::submit('Änderungen speichern', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
-                    {!! Form::model($camp, ['method' => 'DELETE', 'action'=>['AdminCampController@destroy',$camp->id], 'id'=> "DeleteForm"]) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Lager löschen', ['class' => 'btn btn-danger confirm'])!!}
-                    </div>
-                    {!! Form::close()!!}
-                 </div>cd <e></e>
+                    <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
+                </div>cd <e></e>
             </div>
         </div>
     </section>
@@ -56,22 +57,8 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+    <script type="module">
         $(document).ready(function(){
-            $('.confirm').on('click', function(e){
-                e.preventDefault(); //cancel default action
-
-                swal({
-                    title: 'Lager löschen?',
-                    text: 'Beim Lager löschen werden alle Qualifikationen und hochgeladenen Dokumente gelöscht.',
-                    icon: 'warning',
-                    buttons: ["Abbrechen", "Ja!"],
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        document.getElementById("DeleteForm").submit();
-                    }
-                });
-            });
             $(document).on('focus','.autocomplete_txt_group',function(){
                 type = $(this).attr('name');
 

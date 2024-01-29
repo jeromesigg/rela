@@ -12,7 +12,7 @@
         <a class="nav-link" href="{{ route('camps.create') }}">
             Lager erstellen
         </a>
-        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+        <hr class="h-1 mx-auto my-4 bg-gray-300 border-0 rounded md:my-10 dark:bg-gray-700">
         @foreach (Auth::user()->camp_users as $camp_user)
             @if(!$camp_user->camp['global_camp'] && $camp_user['active'])
                 <a class="nav-link" href="{{route('camps.update',$camp_user->camp['id'])  }}"

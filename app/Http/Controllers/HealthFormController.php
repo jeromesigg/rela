@@ -58,10 +58,6 @@ class HealthFormController extends Controller
             })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
-            ->addColumn('status', function (HealthForm $healthForm) {
-                $healthinfo = Helper::getHealthInfo($healthForm['code']);
-                return $healthinfo && $healthinfo->health_status ? $healthinfo->health_status['name'] : '';})
-
             ->addColumn('Actions', function(HealthForm $healthForm) {
                 $buttons = '<form action="'.\URL::route('healthforms.open', $healthForm).'" method="post">' . csrf_field();
                 $camp = Auth::user()->camp;

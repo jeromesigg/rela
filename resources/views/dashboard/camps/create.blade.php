@@ -37,6 +37,11 @@
                     </div>
 
                     <div class="form-group">
+                        {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
+                        {!! Form::checkbox('show_names', '1', null, ['class'=>'healthform__checkbox']) !!}
+                    </div>
+
+                    <div class="form-group">
                         {!! Form::label('group_text', 'Abteilung:') !!}
                         {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
                     </div>
