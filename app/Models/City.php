@@ -15,6 +15,8 @@ class City extends Model
         'name', 'plz'
     ];
 
+    protected $connection = 'mysql_info';
+
     protected $searchable = [
         'columns' => [
             'name' => 1,

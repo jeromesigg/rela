@@ -39,7 +39,6 @@
                         <th scope="col" >Geburtsdatum</th>
                         <th scope="col">Abteilung</th>
                         <th scope="col">Ort</th>
-                        <th scope="col">Beurteilung</th>
                         <th scope="col">Ausgefüllt</th>
                         <th scope="col">Öffnen</th>
                     </tr>
@@ -91,7 +90,6 @@
                     { data: 'birthday', name: 'birthday' },
                     { data: 'group', name: 'group' },
                     { data: 'city', name: 'city' },
-                    { data: 'status', name: 'status' },
                     { data: 'finish', name: 'finish' },
                     { data: 'Actions', name: 'Actions', orderable:false,serachable:false,sClass:'text-center'},
 

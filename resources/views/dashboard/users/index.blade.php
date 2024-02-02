@@ -160,9 +160,8 @@
             });
         });
         $(document).on('focus','.autocomplete_txt',function(){
-            autoType = $(this).attr('name');
-
-            if(autoType =='username_add')type='username';
+            var autoType = $(this).attr('name');
+            var type='username';
 
             $(this).autocomplete({
                 minLength: 3,

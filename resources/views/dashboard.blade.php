@@ -57,7 +57,7 @@
 
 
 @push('scripts')
-    <script type="text/javascript">
+    <script type="module">
 
         //autocomplete script
         $(document).on('focus','.autocomplete_txt',function(){
