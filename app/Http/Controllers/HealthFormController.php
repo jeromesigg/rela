@@ -153,27 +153,29 @@ class HealthFormController extends Controller
 
             }
 
+            $camp = Auth::user()->camp;
+
             // Insert to MySQL database
-            foreach($importData_arr as $importData){
-                if (!empty(trim($importData['ahv_nr'])) && !empty(trim($importData['geburtstag']))) {
-                    $group = Group::where('short_name', '=', $importData['abteilung'])->first();
+            foreach($importData_arr as $importData_row){
+                if (!empty(trim($importData_row['ahv_nr'])) && !empty(trim($importData_row['geburtstag']))) {
+                    $group = Group::where('short_name', '=', $importData_row['abteilung'])->first();
                     $code =  Helper::generateUniqueCode();
                     $insertData = array(
 
                         'code' => Crypt::encryptString($code),
-                        'first_name' => trim($importData['vorname']),
-                        'last_name' => trim($importData['nachname']),
-                        'nickname' => trim($importData['ceviname']),
-                        'street' => trim($importData['strasse']),
-                        'zip_code' => trim($importData['plz']),
-                        'city' => trim($importData['ort']),
-                        'birthday' => trim($importData['geburtstag']),
-                        'ahv' => trim($importData['ahv_nr']),
+                        'first_name' => trim($importData_row['vorname']),
+                        'last_name' => trim($importData_row['nachname']),
+                        'nickname' => trim($importData_row['ceviname']),
+                        'street' => trim($importData_row['strasse']),
+                        'zip_code' => trim($importData_row['plz']),
+                        'city' => trim($importData_row['ort']),
+                        'birthday' => trim($importData_row['geburtstag']),
+                        'ahv' => trim($importData_row['ahv_nr']),
                         'group_id' => $group ? $group['id'] : null,
+                        'camp_id' => $camp['id'],
                     );
-
-                    HealthForm::firstOrCreate(['ahv' => $importData['ahv_nr']], $insertData);
-                    HealthInformation::firstOrCreate(['code' => $code]);
+                    HealthForm::firstOrCreate(['ahv' => $importData_row['ahv_nr'], 'camp_id' => $camp['id']], $insertData);
+                    HealthInformation::firstOrCreate(['code' => $code, 'camp_id' => $camp['id']]);
                 }
             }
         }

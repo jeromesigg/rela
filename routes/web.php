@@ -92,6 +92,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::get('healthinformation/downloadProtocol/{healthinformation}', ['as'=>'downloadProtocol','uses'=>'HealthInformationController@downloadProtocol']);
         Route::post('healthforms/{healthform}/open', ['as'=>'healthforms.open','uses'=>'HealthFormController@open']);
         Route::get('dashboard/healthform/downloadFile', ['as'=>'healthforms.downloadFile', 'uses'=>'HealthFormController@downloadFile']);
+        Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
         Route::resource('dashboard/camps', 'AdminCampController', ['as' => 'dashboard']);
 
     });
@@ -100,7 +101,6 @@ Route::group(['middleware' => 'verified'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
         Route::resource('dashboard/helps', 'HelpController');
         Route::resource('dashboard/interventionclasses', 'InterventionClassController');
-        Route::post('dashboard/healthform/uploadFile', 'HealthFormController@uploadFile');
         Route::post('healthforms/{healthform}/newCode', ['as'=>'healthforms.newCode','uses'=>'HealthFormController@newCode']);
     });
 });

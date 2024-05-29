@@ -12,21 +12,19 @@
                 <div class="col-lg-4">
                     <a href="{{route('healthforms.create')}}" class="btn btn-primary" role="button">Gesundsheitsblatt erstellen</a>
                 </div>
-                    <div class="col-lg-4">
-                        <button id="showImport" class="btn btn-primary btn-sm">Gesundsheitsblätter aus Cevi-DB importieren</button>
-                    </div>
-                    <div class="col-lg-4">
-                        @if (Auth::user()->isManager())
-                            {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-                                <div class="form-group">
-                                    {{ Form::file('file',)}}
-                                </div>
-                                {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
-                            {!! Form::close() !!}
-                            <br>
-                        @endif
-                        <a href="{{route('healthforms.downloadFile')}}" class="btn btn-primary" role="button">Gesundsheitsblätter herunterladen</a>
-                    </div>
+                <div class="col-lg-4">
+                    @if (Auth::user()->isManager())
+                        {!! Html::link('files/vorlage.xlsx', 'Vorlage herunterladen', ['class' => 'font-medium text-blue-600 dark:text-blue-500 hover:underline']) !!}
+                        {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                            <div class="form-group">
+                                {{ Form::file('file',)}}
+                            </div>
+                            {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
+                        {!! Form::close() !!}
+                        <br>
+                    @endif
+                    <a href="{{route('healthforms.downloadFile')}}" class="btn btn-primary" role="button">Gesundsheitsblätter herunterladen</a>
+                </div>
             </div>
             <br>
             <table class="table table-striped table-bordered" style="width:100%" id="datatable">
