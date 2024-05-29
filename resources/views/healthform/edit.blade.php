@@ -209,12 +209,12 @@
 
 
 @push('scripts')
-    <script type="text/javascript">
+    <script type="module">
         //autocomplete script
         $(document).on('focus','.autocomplete_txt',function(){
-            type = $(this).attr('name');
+            var type = $(this).attr('name');
 
-            if(type =='healthform[city]')autoType='name';
+            var autoType='name';
             if(type =='healthform[zip_code]')autoType='plz';
             if(type =='city_id')autoType='id';
 

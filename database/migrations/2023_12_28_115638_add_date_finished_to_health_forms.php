@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('health_forms', function (Blueprint $table) {
+        Schema::connection('mysql_info')->table('health_forms', function (Blueprint $table) {
             //
             $table->date('date_finished')->nullable();
         });

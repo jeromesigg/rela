@@ -15,7 +15,6 @@ return new class extends Migration
             //
             $table->string('group_text')->nullable();
             $table->bigInteger('group_id')->index()->unsigned()->nullable();
-            $table->foreign('group_id')->references('id')->on('groups');
         });
     }
 
@@ -27,7 +26,6 @@ return new class extends Migration
         Schema::table('camps', function (Blueprint $table) {
             //
             $table->dropColumn('group_text');
-            $table->dropForeign(['group_id']);
             $table->dropColumn('group_id');
         });
     }

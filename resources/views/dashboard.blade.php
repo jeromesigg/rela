@@ -44,7 +44,7 @@
                     <h4><b>Kein Lager zugewiesen</b></h4>
                     <div class="row">
                         <div class="col-lg-12">
-                        Du hast <a href="{{ route('camps.create') }}">hier</a> ein Lager erstellen.
+                        Du kannst <a href="{{ route('camps.create') }}">hier</a> ein Lager erstellen.
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
 
 
 @push('scripts')
-    <script type="text/javascript">
+    <script type="module">
 
         //autocomplete script
         $(document).on('focus','.autocomplete_txt',function(){

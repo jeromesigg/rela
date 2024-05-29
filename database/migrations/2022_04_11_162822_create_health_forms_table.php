@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->date('birthday')->nullable();
             $table->string('phone_number')->nullable();
-            $table->bigInteger('group_id')->index()->unsigned();
-            $table->foreign('group_id')->references('id')->on('groups');
+            $table->bigInteger('group_id')->index()->unsigned()->nullable();
+            $table->foreign('group_id')->references('id')->on('groups')->nullable();
             $table->string('emergency_contact_name')->nullable();
             $table->string('emergency_contact_address')->nullable();
             $table->string('emergency_contact_phone')->nullable();

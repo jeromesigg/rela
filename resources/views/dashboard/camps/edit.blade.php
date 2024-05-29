@@ -49,7 +49,7 @@
                     </div>
                     {!! Form::close()!!}
                     <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
-                </div>cd <e></e>
+                </div>
             </div>
         </div>
     </section>
@@ -60,9 +60,9 @@
     <script type="module">
         $(document).ready(function(){
             $(document).on('focus','.autocomplete_txt_group',function(){
-                type = $(this).attr('name');
+                var type = $(this).attr('name');
 
-                if(type =='group_text')autoType='name';
+                var autoType='name';
                 if(type =='group_id')autoType='id';
 
                 $(this).autocomplete({

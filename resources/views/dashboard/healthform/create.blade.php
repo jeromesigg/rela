@@ -64,13 +64,13 @@
 
 
 @push('scripts')
-    <script type="text/javascript">
+    <script type="module">
         $(document).ready(function(){
         //autocomplete script
             $(document).on('focus','.autocomplete_txt_city',function(){
-                type = $(this).attr('name');
+                var type = $(this).attr('name');
 
-                if(type =='city')autoType='name';
+                var autoType='name';
                 if(type =='zip_code')autoType='plz';
                 if(type =='city_id')autoType='id';
 
@@ -106,9 +106,9 @@
                 });
             });
             $(document).on('focus','.autocomplete_txt_group',function(){
-                type = $(this).attr('name');
+                var type = $(this).attr('name');
 
-                if(type =='group_text')autoType='name';
+                var autoType='name';
                 if(type =='group_id')autoType='id';
 
                 $(this).autocomplete({
