@@ -38,6 +38,10 @@
                         {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
                         {!! Form::checkbox('show_names', '1', $camp['show_names'], ['class'=>'healthform__checkbox']) !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::label('konekta', 'Konekta:') !!}
+                        {!! Form::checkbox('konekta', '1', $camp['konekta'], ['class'=>'healthform__checkbox']) !!}
+                    </div>
 
                     <div class="form-group">
                         {!! Form::label('group_text', 'Abteilung:') !!}

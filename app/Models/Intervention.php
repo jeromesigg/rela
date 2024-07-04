@@ -13,7 +13,7 @@ class Intervention extends Model implements Auditable
 
     protected $fillable = [
         'id', 'health_information_id', 'date', 'time', 'parameter', 'value', 'comment', 'user_id', 'user_erf', 'file',
-        'further_treatment', 'user_close', 'date_close', 'time_close', 'comment_close', 'medication', 'health_status_id'
+        'further_treatment', 'user_close', 'date_close', 'time_close', 'comment_close', 'medication', 'health_status_id', 'intervention_master_id', 'serial_number', 'max_serial_number'
     ];
 
     public function user(){
@@ -27,4 +27,19 @@ class Intervention extends Model implements Auditable
     public function health_status(){
         return $this->belongsTo(HealthStatus::class);
     }
+
+    public function intervention(){
+        return $this->belongsTo(Intervention::class, 'intervention_master_id');
+    }
+
+    public function interventions()
+    {
+        return $this->hasMany(Intervention::class, 'intervention_master_id');
+    }
+
+    public function number()
+    {
+        return $this->intervention ? $this->intervention['serial_number'].'.'.$this['serial_number'] : $this['serial_number'];
+    }
+
 }

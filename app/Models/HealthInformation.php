@@ -31,7 +31,7 @@ class HealthInformation extends Model implements Auditable
     public $timestamps = false;
 
     public function interventions(){
-        return $this->hasMany(Intervention::class, 'health_information_id')->orderByDesc('date')->orderByDesc('time');
+        return $this->hasMany(Intervention::class, 'health_information_id')->orderByDesc('serial_number');
     }
 
     public function interventions_open(){
@@ -47,5 +47,6 @@ class HealthInformation extends Model implements Auditable
     {
         return 'code';
     }
+
 
 }

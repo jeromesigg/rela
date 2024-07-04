@@ -76,6 +76,7 @@ class AdminCampController extends Controller
             $input['forms_finished'] = isset($input['closed_when_finished']);
             $input['closed_when_finished'] = isset($input['closed_when_finished']);
             $input['show_names'] = isset($input['show_names']);
+            $input['konekta'] = isset($input['konekta']);
             $camp = Camp::create($input);
             Helper::updateGroup($camp, $input['group_text']);
             CampCreated::dispatch($camp);
@@ -136,6 +137,7 @@ class AdminCampController extends Controller
             $input['forms_finished'] = isset($input['closed_when_finished']);
             $input['closed_when_finished'] = isset($input['closed_when_finished']);
             $input['show_names'] = isset($input['show_names']);
+            $input['konekta'] = isset($input['konekta']);
             $camp->update($input);
             Helper::updateGroup($camp, $input['group_text']);
         }

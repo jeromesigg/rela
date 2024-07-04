@@ -98,13 +98,15 @@ class HealthInformationController extends Controller
             'time' => Carbon::now()->format('H:i'),
         ]);
         $name = Helper::getName($healthinformation);
+        $camp = Auth::user()->camp;
         $title = 'J+S-Patientenprotokoll';
         $subtitle = 'von ' . $healthinformation['code'] . $name;
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Teilnehmerübersicht';
         $help['main_route'] =  '/dashboard/healthinformation';
         $health_status = HealthStatus::pluck('name', 'id')->all();
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'title', 'help', 'subtitle','health_status'));
+        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions_open()->whereNull('intervention_master_id')->pluck('parameter', 'interventions.id')->toArray();
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'title', 'help', 'subtitle','health_status', 'camp', 'intervention_masters'));
 
     }
 

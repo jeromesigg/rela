@@ -191,9 +191,11 @@
             Abschluss</h4>
         <hr>
         <div class="form-row">
-            <div class="form-group col-md-4">
-                {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
-            </div>
+            @if(!$camp['konekta'])
+                <div class="form-group col-md-4">
+                    {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
+                </div>
+            @endif
             <div class="form-group col-md-6">
                 {!! Form::checkbox('healthinfo[accept_privacy_agreement]', '1', $healthinfo['accept_privacy_agreement']) !!}
                 Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Lagers gesammelt werden dürfen.

@@ -28,10 +28,10 @@
                     d.info = $healthinfo_id
                 }
             },
-            order: [[0, "desc" ],[1, "desc" ]],
+            order: [[0, "desc" ]],
             columns: [
+                { data: 'number', name: 'number' },
                 { data: 'date', name: 'date' },
-                { data: 'time', name: 'time' },
                 { data: 'code', name: 'code' },
                 { data: 'status', name: 'status' },
                 { data: 'intervention', name: 'intervention' },
@@ -47,23 +47,49 @@
         });
 
 
-    });
-    $('.ampel-btn').on('click', function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
+        $('.ampel-btn').on('click', function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            var url = $(this).data('remote');
+            var color = $(this).data('color');
+            console.log(color);
+            $.ajax({
+                url: url,
+                type: 'PATCH',
+                data: {},
+                success: function (res) {
+                    location.reload();
+                }
+            });
         });
-        var url = $(this).data('remote');
-        var color = $(this).data('color');
-        console.log(color);
-        $.ajax({
-            url: url,
-            type: 'PATCH',
-            data: {},
-            success: function (res) {
-                location.reload();
-            }
-        });
+
+        // Get the container element
+        var btnContainer = document.getElementById("filter_btn");
+
+        // Get all buttons with class="btn" inside the container
+        var btns_filter = btnContainer.getElementsByClassName("btn__filter");
+
+        // Loop through the buttons and add the active class to the current/clicked button
+        for (var i = 0; i < btns_filter.length; i++) {
+            btns_filter[i].addEventListener("click", function () {
+                var current = btnContainer.getElementsByClassName("active");
+                
+                // If there's no active class
+                if (current.length > 0) {
+                    current[0].className = current[0].className.replace("active", "");
+                }
+
+                // Add the active class to the current/clicked button
+                this.className += " active";
+                this.focus();
+                var active_btn = this.value;
+                $('#btn_value').val(active_btn);
+                table.draw();
+            });
+                
+        };
     });
 </script>

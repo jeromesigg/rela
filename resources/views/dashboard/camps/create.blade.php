@@ -40,6 +40,10 @@
                         {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
                         {!! Form::checkbox('show_names', '1', null, ['class'=>'healthform__checkbox']) !!}
                     </div>
+                    <div class="form-group">
+                        {!! Form::label('konakta', 'Konekta:') !!}
+                        {!! Form::checkbox('konakta', '1', null, ['class'=>'healthform__checkbox']) !!}
+                    </div>
 
                     <div class="form-group">
                         {!! Form::label('group_text', 'Abteilung:') !!}

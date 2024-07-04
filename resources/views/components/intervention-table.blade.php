@@ -1,13 +1,12 @@
+<x-filter-buttons/>
 <table class="table table-striped table-bordered" style="width:100%" id="datatable">
     <thead>
     <tr>
+        <th scope="col" style="width:3%;">Nummer</th>
         <th scope="col" style="width:3%;">Datum</th>
-        <th scope="col" style="width:3%">Zeit</th>
         <th scope="col" style="width:4%">Code</th>
         <th scope="col" style="width:5%">Status</th>
         <th scope="col" style="width:30%">1. Parameter / Symptom, 2. Wert, 3. Intervention / Medikation </th>
-{{--        <th scope="col" width="20%">Wert</th>--}}
-{{--        <th scope="col" width="20%">Intervention / Medikation</th>--}}
         <th scope="col" style="width:10%">Bild</th>
         <th scope="col" style="width:15%">Kommentar</th>
         <th scope="col" style="width:10%">Erfasst von</th>

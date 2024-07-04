@@ -39,13 +39,19 @@ class InterventionController extends Controller
         //
         $camp = Auth::user()->camp;
         $input = $request->all();
+        $filter = $input['filter'] === 'master';
         $healthinfo = HealthInformation::where('id','=',$input['info'])->first();
         $interventions = $camp->interventions()
+            ->when($filter, function($query){
+                $query->whereNull('intervention_master_id');})
             ->when($healthinfo, function($query, $healthinfo){
                 $query->where('health_information_id','=',$healthinfo['id']);})
             ->get();
 
         return DataTables::of($interventions)
+            ->addColumn('number', function (intervention $intervention) {
+                return $intervention->number();
+            })
             ->addColumn('code', function (intervention $intervention) {
                 $healthinfo = $intervention->health_information;
                 $code = $healthinfo['code'] . Helper::getName($healthinfo);
@@ -78,7 +84,7 @@ class InterventionController extends Controller
                 }
             })
             ->editColumn('date', function (intervention $intervention) {
-                return Carbon::parse($intervention['date'])->format('d.m.Y');
+                return Carbon::parse($intervention['date'])->format('d.m.Y') . '<br>' . $intervention['time'] ;
             })
             ->addColumn('intervention', function (intervention $intervention) {
                 $text = '1. '.$intervention['parameter'].'<br>';
@@ -87,56 +93,41 @@ class InterventionController extends Controller
                 return $text;
             })
             ->addColumn('actions', function (intervention $intervention) {
-                $close = isset($intervention['date_close']) ? '' : '&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
+                $close =  '';
+                if(!isset($intervention['date_close'])){
+                    if(!isset($intervention['intervention_master_id'])){
+                        $close = '&emsp;<a href='.\URL::route('interventions.create',['healthInformation' => $intervention->health_information, 'intervention' => $intervention]).'><i class="fa-solid fa-indent fa-xl"></i></i></a>&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
+                    }
+                    else{
+                        $close = '&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
+                    }
+                }
                 return '<a href='.\URL::route('interventions.edit',$intervention).'><i class="fa-regular fa-pen-to-square fa-xl"></i></a>' . $close;
             })
-            ->rawColumns(['code', 'picture', 'intervention', 'status', 'abschluss','actions'])
+            ->rawColumns(['code', 'picture', 'intervention', 'status', 'abschluss','actions', 'date'])
             ->make(true);
 
     }
 
     public function close(Intervention $intervention)
     {
-        $healthinformation = $intervention->health_information;
-        $title = 'J+S-Patientenprotokoll';
-        $subtitle = 'von ' . $healthinformation['code'];
-        $help = Help::where('title',$title)->first();
-        $help['main_title'] = 'Teilnehmerübersicht';
-        $help['main_route'] =  '/dashboard/healthinformation';
-        $health_status = HealthStatus::pluck('name', 'id')->all();
-
         if(!isset($intervention['date_close'])){
             $intervention['date_close'] = Carbon::now()->toDateString();
             $intervention['time_close'] = Carbon::now()->toTimeString();
         }
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status'));
+        return Helper::getHealthInformationShow($intervention);
     }
 
-    public function create(Request $request)
+    public function create(HealthInformation $healthInformation, Intervention $intervention)
     {
         //
-        $input = $request->all();
-        if($input['code']) {
-            $healthinfo = HealthInformation::where('code', '=', $input['code'])->first();
-            if ($healthinfo == null) {
-                return redirect()->to(url()->previous())
-                    ->withErrors('Es konnte kein Teilnehmer mit diesen Angaben gefunden werden.')
-                    ->withInput();
-            }
-            $intervention = new intervention([
-                'health_information_id' => $healthinfo['id'],
-                'date' => Carbon::now()->toDateString(),
-                'time' => Carbon::now()->toTimeString(),
-            ]);
-        }
-        else{
-            $intervention = new intervention([
-                'date' => Carbon::now()->toDateString(),
-                'time' => Carbon::now()->toTimeString(),
-            ]);
-        }
-        $healthinfos = HealthInformation::get()->sortBy('code')->pluck('code','id');
-        return view('dashboard.interventions.create', compact('intervention', 'healthinfos'));
+        $intervention = new intervention([
+            'intervention_master_id' => $intervention['id'],
+            'health_information_id' => $healthInformation['id'],
+            'date' => Carbon::now()->toDateString(),
+            'time' => Carbon::now()->toTimeString(),
+        ]);
+        return Helper::getHealthInformationShow($intervention, $healthInformation);
     }
 
     /**
@@ -168,9 +159,32 @@ class InterventionController extends Controller
         if (isset($input['intervention_id'])){
             $intervention = Intervention::findOrFail($input['intervention_id']);
             $intervention->update($input);
+            if(isset($intervention['date_close'])){
+                $interventions = $intervention->interventions();
+                foreach($interventions as $intervention_slave){
+                    if(!isset($intervention_slave['date_close'])){
+                        $intervention_slave->update([
+                            'date_close' => $intervention['date_close'], 
+                            'time_close' => $intervention['time_close'], 
+                            'comment_close' => $intervention['comment_close'], 
+                            'user_close' => $intervention['user_close']
+                        ]);
+                    }
+                }
+            }
         }
         else{
-            Intervention::create($input);
+            if(isset($input['intervention_master_id'])){
+                $intervention_master = Intervention::findOrFail($input['intervention_master_id']);
+                $input['serial_number'] = $intervention_master['max_serial_number'] + 1;
+                Intervention::create($input);
+                $intervention_master->update(['max_serial_number' => $input['serial_number']]);
+            }
+            else{
+                $input['serial_number'] = $camp['max_serial_number'] + 1;
+                Intervention::create($input);
+                $camp->update(['max_serial_number' => $input['serial_number']]);
+            }
         }
 
         return to_route('healthinformation.show',$health_information);
@@ -198,14 +212,7 @@ class InterventionController extends Controller
     public function edit(Intervention $intervention)
     {
         //
-        $healthinformation = $intervention->health_information;
-        $title = 'J+S-Patientenprotokoll';
-        $subtitle = 'von ' . $healthinformation['code'];
-        $help = Help::where('title',$title)->first();
-        $help['main_title'] = 'Teilnehmerübersicht';
-        $help['main_route'] =  '/dashboard/healthinformation';
-        $health_status = HealthStatus::pluck('name', 'id')->all();
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status'));
+        return Helper::getHealthInformationShow($intervention);
 
     }
 
