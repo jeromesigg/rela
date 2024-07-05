@@ -3,14 +3,16 @@
 namespace App\Helper;
 
 
-use App\Models\Camp;
-use App\Models\CampUser;
-use App\Models\Group;
-use App\Models\HealthForm;
-use App\Models\HealthInformation;
-use App\Models\Intervention;
-use App\Models\User;
 use Auth;
+use App\Models\Camp;
+use App\Models\Help;
+use App\Models\User;
+use App\Models\Group;
+use App\Models\CampUser;
+use App\Models\HealthForm;
+use App\Models\HealthStatus;
+use App\Models\Intervention;
+use App\Models\HealthInformation;
 use Illuminate\Support\Facades\Crypt;
 
 class Helper
@@ -115,5 +117,21 @@ class Helper
             $name = ' (' . $healthForm['nickname'] . ')';
         }
         return $name;
+    }
+
+    public static function getHealthInformationShow(Intervention $intervention, HealthInformation $healthinformation = null)
+    {
+        if($healthinformation === null){
+            $healthinformation = $intervention->health_information;
+        }
+        $title = 'J+S-Patientenprotokoll';
+        $subtitle = 'von ' . $healthinformation['code'];
+        $help = Help::where('title',$title)->first();
+        $help['main_title'] = 'Teilnehmerübersicht';
+        $help['main_route'] =  '/dashboard/healthinformation';
+        $health_status = HealthStatus::pluck('name', 'id')->all();
+        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions_open()->whereNull('intervention_master_id')->pluck('parameter', 'interventions.id')->toArray();
+        $camp = Auth::user()->camp;
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp'));
     }
 }
