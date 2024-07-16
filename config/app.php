@@ -16,7 +16,6 @@ return [
     'name' => env('APP_NAME', 'Cevi Gesundheits-DB'),
 
     'version' => 'V2.0',
-    'form_filling' => env('FORM_FILLING', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +179,7 @@ return [
         App\Providers\EventServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
 
     ],
 

@@ -13,6 +13,7 @@ use App\Models\HealthForm;
 use App\Models\HealthStatus;
 use App\Models\Intervention;
 use App\Models\HealthInformation;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 
 class Helper
@@ -124,14 +125,16 @@ class Helper
         if($healthinformation === null){
             $healthinformation = $intervention->health_information;
         }
+        $name = Helper::getName($healthinformation);
+        $camp = Auth::user()->camp;
         $title = 'J+S-Patientenprotokoll';
-        $subtitle = 'von ' . $healthinformation['code'];
+        $subtitle = 'von ' . $healthinformation['code'] . $name;
         $help = Help::where('title',$title)->first();
         $help['main_title'] = 'Teilnehmerübersicht';
         $help['main_route'] =  '/dashboard/healthinformation';
         $health_status = HealthStatus::pluck('name', 'id')->all();
-        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions_open()->whereNull('intervention_master_id')->pluck('parameter', 'interventions.id')->toArray();
-        $camp = Auth::user()->camp;
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp'));
+        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions()->select("id", DB::raw("CONCAT(interventions.serial_number,' ',interventions.parameter) as name"))->whereNull('intervention_master_id')->pluck('name', 'interventions.id')->toArray();
+        $interventions = $intervention->interventions()->get();
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp', 'interventions'));
     }
 }

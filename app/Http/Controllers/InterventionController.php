@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
-use App\Models\Camp;
-use App\Models\HealthInformation;
-use App\Models\HealthStatus;
-use App\Models\Help;
-use App\Models\Intervention;
-use App\Models\InterventionClass;
 use Carbon\Carbon;
+use App\Models\Camp;
+use App\Models\Help;
+use App\Helper\Helper;
+use Illuminate\Support\Str;
+use App\Models\HealthStatus;
+use App\Models\Intervention;
 use Illuminate\Http\Request;
+use App\Models\HealthInformation;
+use App\Models\InterventionClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use App\View\Components\AddNewIntervention;
 
 class InterventionController extends Controller
 {
@@ -93,16 +94,14 @@ class InterventionController extends Controller
                 return $text;
             })
             ->addColumn('actions', function (intervention $intervention) {
-                $close =  '';
-                if(!isset($intervention['date_close'])){
-                    if(!isset($intervention['intervention_master_id'])){
-                        $close = '&emsp;<a href='.\URL::route('interventions.create',['healthInformation' => $intervention->health_information, 'intervention' => $intervention]).'><i class="fa-solid fa-indent fa-xl"></i></i></a>&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
-                    }
-                    else{
-                        $close = '&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
-                    }
+                $actions =  '<a href='.\URL::route('interventions.edit',$intervention).'><i class="fa-regular fa-pen-to-square fa-xl"></i></a>';
+                if(!isset($intervention['intervention_master_id'])){
+                    $actions .= '&emsp;<a href='.\URL::route('interventions.createNew',['healthInformation' => $intervention->health_information, 'intervention' => $intervention]).'><i class="fa-solid fa-indent fa-xl"></i></a>';
                 }
-                return '<a href='.\URL::route('interventions.edit',$intervention).'><i class="fa-regular fa-pen-to-square fa-xl"></i></a>' . $close;
+                if(!isset($intervention['date_close'])){
+                    $actions .= '&emsp;<a href='.\URL::route('interventions.close',$intervention).'><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
+                }
+                return $actions;
             })
             ->rawColumns(['code', 'picture', 'intervention', 'status', 'abschluss','actions', 'date'])
             ->make(true);
@@ -118,7 +117,7 @@ class InterventionController extends Controller
         return Helper::getHealthInformationShow($intervention);
     }
 
-    public function create(HealthInformation $healthInformation, Intervention $intervention)
+    public function createNew(HealthInformation $healthInformation, Intervention $intervention)
     {
         //
         $intervention = new intervention([
@@ -129,6 +128,7 @@ class InterventionController extends Controller
         ]);
         return Helper::getHealthInformationShow($intervention, $healthInformation);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -177,15 +177,72 @@ class InterventionController extends Controller
             if(isset($input['intervention_master_id'])){
                 $intervention_master = Intervention::findOrFail($input['intervention_master_id']);
                 $input['serial_number'] = $intervention_master['max_serial_number'] + 1;
-                Intervention::create($input);
+                $intervention = Intervention::create($input);
                 $intervention_master->update(['max_serial_number' => $input['serial_number']]);
             }
             else{
                 $input['serial_number'] = $camp['max_serial_number'] + 1;
-                Intervention::create($input);
+                $intervention = Intervention::create($input);
                 $camp->update(['max_serial_number' => $input['serial_number']]);
             }
         }
+        if(isset($input['intervention_new'])){
+            $new_interventions = $input['intervention_new'];
+            $files_new = $request->file('intervention_new');
+            foreach($new_interventions as $key => $new_intervention){
+                $input_new = $new_intervention;
+                $input_new['user_id'] = $user['id'];
+                if(isset($intervention['intervention_master_id'])){
+                    $input_new['intervention_master_id'] = $intervention['intervention_master_id'];
+                }
+                else{
+                    $input_new['intervention_master_id'] = $intervention['id'];
+                }
+                
+                if(!$camp['demo'] && isset($files_new[$key])) {
+                    $file_new = $files_new[$key]['file'];
+                    $save_path = 'files/' . $camp['code'] .'/' . $health_information['code'];
+                    $directory = storage_path('app/public/'.$save_path);
+                    if (!File::isDirectory($directory)) {
+                        File::makeDirectory($directory, 0775, true);
+                    }
+                    $name =  Str::uuid() . '_' . str_replace(' ', '', $file_new->getClientOriginalName());
+                    Image::make($input_new['file'])->save($directory.'/'.$name, 80);
+                    $input_new['file'] = $save_path . '/' . $name;
+                }
+
+                $intervention_master = Intervention::findOrFail($input_new['intervention_master_id']);
+                $input_new['serial_number'] = $intervention_master['max_serial_number'] + 1;
+                Intervention::create($input_new);
+                $intervention_master->update(['max_serial_number' => $input_new['serial_number']]);
+            }
+        }
+
+        if(isset($input['intervention_sub'])){
+            $sub_interventions = $input['intervention_sub'];
+            $files_sub = $request->file('intervention_sub');
+            foreach($sub_interventions as $key => $sub_intervention){
+                $input_sub = $sub_intervention;
+                $input_sub['user_id'] = $user['id'];
+                
+                if(!$camp['demo'] && isset($files_sub[$key])) {
+                    $file_sub = $files_sub[$key]['file'];
+                    $save_path = 'files/' . $camp['code'] .'/' . $health_information['code'];
+                    $directory = storage_path('app/public/'.$save_path);
+                    if (!File::isDirectory($directory)) {
+                        File::makeDirectory($directory, 0775, true);
+                    }
+                    $name =  Str::uuid() . '_' . str_replace(' ', '', $file_sub->getClientOriginalName());
+                    Image::make($input_sub['file'])->save($directory.'/'.$name, 80);
+                    $input_sub['file'] = $save_path . '/' . $name;
+                }
+                $intervention_sub = Intervention::findOrFail($input_sub['intervention_id']);
+                $intervention_sub->update($input_sub);
+
+            }
+        }
+
+
 
         return to_route('healthinformation.show',$health_information);
 
@@ -201,6 +258,20 @@ class InterventionController extends Controller
     {
         //
 
+    }
+
+    public function addNew(Request $request)
+    {
+        //
+        $input = $request->all();
+        $health_status = HealthStatus::pluck('name', 'id')->all();
+        $intervention = new intervention([
+            'health_information_id' => $input['healthInformation_id'],
+            'date' => Carbon::now()->toDateString(),
+            'time' => Carbon::now()->toTimeString(),
+        ]);
+        $component = new AddNewIntervention($health_status, $input['index'], $intervention);
+        return $component->render()->with(['healthstatus' => $health_status, 'intervention' => $intervention, 'index' => $input['index']]);
     }
 
     /**

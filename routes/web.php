@@ -75,7 +75,8 @@ Route::group(['middleware' => 'verified'], function() {
     Route::resource('dashboard/interventions', 'InterventionController');
     Route::get('interventions/createDataTables', ['as'=>'interventions.CreateDataTables','uses'=>'InterventionController@createDataTables']);
     Route::get('interventions/close/{intervention}', ['as'=>'interventions.close','uses'=>'InterventionController@close']);
-    Route::get('healthinformation/{healthInformation}/intervention/{intervention}/create', ['as'=>'interventions.create','uses'=>'InterventionController@create']);
+    Route::get('healthinformation/{healthInformation}/intervention/{intervention}/createNew', ['as'=>'interventions.createNew','uses'=>'InterventionController@createNew']);
+    Route::get('interventions/addNew', ['as'=>'interventions.addNew','uses'=>'InterventionController@addNew']);
 
     Route::group(['middleware' => 'manager'], function() {
         Route::get('dashboard/users/searchajaxuser', ['as' => 'searchajaxuser', 'uses' => 'AdminUsersController@searchResponseUser']);
