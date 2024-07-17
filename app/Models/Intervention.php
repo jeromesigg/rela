@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Intervention extends Model implements Auditable
 {
@@ -41,5 +42,13 @@ class Intervention extends Model implements Auditable
     {
         return $this->intervention ? $this->intervention['serial_number'].'.'.$this['serial_number'] : $this['serial_number'];
     }
+
+    protected function intervention_name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['number'] . ' ' . $attributes['parameter']
+        );
+    }
+
 
 }

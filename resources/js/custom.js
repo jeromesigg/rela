@@ -1,21 +1,4 @@
 
-document.addEventListener("DOMContentLoaded", function () {
-    var homepageSlider = new Swiper(".homepage-slider", {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        speed: 1000,
-        autoplay: {
-            delay: 3000,
-        },
-
-        pagination: {
-            el: ".swiper-pagination",
-            dynamicBullets: true,
-            clickable: true,
-        },
-    });
-});
-
 /* =============================================
        TRIGGER COUNTER UP FUNCTION USING WAYPOINTS
    ================================================ */

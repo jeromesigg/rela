@@ -317,7 +317,7 @@ class HealthFormController extends Controller
                 return view('healthform.show', compact('healthform', 'healthinfo', 'title', 'subtitle', 'help'));
             } else {
                 $health_questions = $healthinfo->questions;
-                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions' 'title', 'subtitle', 'help', 'camp'));
+                return view('healthform.edit', compact('healthform', 'healthinfo', 'health_questions', 'title', 'subtitle', 'help', 'camp'));
             }
         }
         else{
