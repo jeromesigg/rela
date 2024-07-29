@@ -35,7 +35,7 @@ class HealthInformation extends Model implements Auditable
     }
 
     public function interventions_open(){
-        return $this->interventions()->where('date_close', '=',null);
+        return $this->interventions()->where('date_close', '=',null)->whereNull('intervention_master_id');
     }
 
     public function questions()

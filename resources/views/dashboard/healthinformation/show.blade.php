@@ -7,7 +7,7 @@
             <!-- Page Header-->
             <div class="row">
                 <div class="col-md-10">
-                    <h3>Intervention erfassen</h3>
+                    <h3>{{isset($intervention['id']) ? 'Intervention Nr. ' . $intervention->number() . ' aktualisieren' : 'Intervention erstellen'}}</h3>
                     {!! Form::model($intervention, ['method' => 'POST', 'action'=>'InterventionController@store', 'files' => true]) !!}
                         <div class="form-row">
                             <div class="form-group col-xl-2 col-lg-12">
@@ -69,6 +69,7 @@
                         </div>
                         @foreach($interventions as $key => $intervention_sub)
                             <hr class="h-0.5 mx-auto my-4 bg-gray-300 border-0 rounded md:my-10 dark:bg-gray-700">
+                            <p>Intervention Nr. {{$intervention_sub->number()}}</p>
                             <div class="form-row ml-10">
                                 <div class="form-group col-xl-2 col-lg-12">
                                     {!! Form::hidden('intervention_sub['.$key.'][health_information_id]', $intervention_sub['health_information_id']) !!}
@@ -123,37 +124,16 @@
                             </div>
                         @endforeach
                         <div id="container_new_interventions">
-                        
                         </div>
-                        @if(isset($intervention['date_close']))
-                            <hr class="h-1 mx-auto my-4 bg-gray-300 border-0 rounded md:my-10 dark:bg-gray-700">
-                            <div class="form-row">
-                                <div class="form-group col-xl-2 col-lg-12">
-                                    {!! Form::label('date_close', 'Datum Ende Behandlung:') !!}
-                                    {!! Form::date('date_close', null, ['class' => 'form-control', 'required']) !!}
-                                    <br>
-                                    {!! Form::label('time_close', 'Zeit Ende Behandlung:') !!}
-                                    {!! Form::time('time_close', null, ['class' => 'form-control', 'required']) !!}
-                                    <br>
-                                    {!! Form::label('user_close', 'Erfasser Ende Behandlung:') !!}
-                                    {!! Form::text('user_close', null, ['class' => 'form-control', 'required']) !!}
-                                </div>
-                                <div class="form-group col-xl-8 col-lg-12">
-                                    <div class="form-group">
-                                        {!! Form::label('further_treatment', 'Weiteres Prozedere:') !!}
-                                        {!! Form::textarea('further_treatment', null, ['class' => 'form-control', 'rows'=> 3, 'required']) !!}
-                                    </div>
-                                    <div class="form-group">
-                                        {!! Form::label('comment_close', 'Bemerkung Ende Behandlung:') !!}
-                                        {!! Form::textarea('comment_close', null, ['class' => 'form-control', 'rows'=> 3]) !!}
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                        <x-intervention-close :close="$intervention_close"/>
+                        
                         <div class="form-group">
-                            {!! Form::submit('Intervention erstellen', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
+                            {!! Form::submit(isset($intervention['id']) ? 'Intervention aktualisieren' : 'Intervention erstellen', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
                             @if(!isset($intervention['intervention_master_id']))
-                                <a href="#" class="btn btn-primary" role="button" onclick="addIntervention()">Untergeordnete Intervention hinzufügen</a>
+                                <a href="#" class="btn btn-primary" role="button" id="addIntervention">Untergeordnete Intervention hinzufügen</a>
+                            @endif
+                            @if(isset($intervention['id']) && !isset($intervention['date_close']))
+                                <a href="#" class="btn btn-primary" role="button" id="closeIntervention">Intervention abschliessen</a>
                             @endif
                         </div>
                     {!! Form::close()!!}
@@ -255,11 +235,8 @@
     <x-filter-buttons-javascript :healthinformation="$healthinformation"/>
     <script type="module">
         var new_interventions = 0;
-        function newDelete($index){
-            console.log($index);
-            document.getElementById("intervention_new_"+$index).remove();
-        }
-        function addIntervention(){
+        $('#addIntervention').click(function($e) {
+            $e.preventDefault();
             var health_information = @json($healthinformation);
             var intervention = @json($intervention);
             $.ajax({
@@ -271,80 +248,44 @@
                 },
                 success: function (response) {
                     $('#container_new_interventions').append(response);
+                    let el = document.getElementById('newDelete_' + new_interventions);
+                    el.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        this.parentElement.parentElement.parentElement.remove();
+                    });
                     new_interventions++;
                 },
             });
-            // var health_status = @json($health_status);
-            // console.log(health_status);
-            // Get the element where the inputs will be added to
-            // var container = document.getElementById("container_new_interventions");
-            // var hr = document.createElement("hr");
-            // hr.classList.add('h-0.5', 'mx-auto', 'my-4', 'bg-gray-300', 'border-0', 'rounded', 'md:my-10', 'dark:bg-gray-700');
-            // container.appendChild(hr);
-            // var br = document.createElement("br");
-            // // Append a node with a random text
-            // // Create an <input> element, set its type and name attributes
-            // var div_formrow = document.createElement("div");
-            // div_formrow.classList.add('form-row', 'ml-10');
+        });
+        $('#closeIntervention').click(function($e) {
+            $e.preventDefault();
+            var intervention = @json($intervention);
+            $.ajax({
+                url: '{{ route('interventions.closeAjax') }}',
+                type: 'GET',
+                data: {
+                    intervention_id: intervention['id'],
+                },
+                success: function (response) {
+                    $('#container_intervention_close').empty();
+                    $('#container_intervention_close').append(response);
+                    let date =  new Date();
+                    let dstrings = getHTML5DateTimeStringsFromDate(date);
+                    document.querySelector('#date_close').value = dstrings[0];
+                    document.querySelector('#time_close').value = dstrings[1];
+                },
+            });
+        });
+        function getHTML5DateTimeStringsFromDate(d) {
+            // Date string
+            let ds = d.getFullYear().toString().padStart(4, '0') + '-' + (d.getMonth()+1).toString().padStart(2, '0') + '-' + d.getDate().toString().padStart(2, '0');
 
-            // var div_form_group_1 = document.createElement("div");
-            // div_form_group_1.classList.add('form-group', 'col-xl-2', 'col-lg-12');
+            // Time string
+            let ts = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
 
-            // div_form_group_1.appendChild(CreateInput('hidden', 'intervention_new['+new_interventions+'][health_information_id]', false,  health_information['id']));
-            // div_form_group_1.appendChild(CreateInput('hidden', 'intervention_new['+new_interventions+'][intervention_id]'));
-
-            // var div_form_row_date = document.createElement("div");
-            // div_form_row_date.classList.add('form-row');
-
-            // var date = moment();
-            // var div_form_row_date_col = document.createElement("div");
-            // div_form_row_date_col.classList.add('form-group', 'col-xl-6', 'col-lg-12');
-            // div_form_row_date_col.appendChild( CreateLabel('Datum', 'intervention_new['+new_interventions+'][date]'));
-            // div_form_row_date_col.appendChild( CreateInput('date', 'intervention_new['+new_interventions+'][date]', true,  date.format('YYYY-MM-DD')));
-
-            // var div_form_row_time_col = document.createElement("div");
-            // div_form_row_time_col.classList.add('form-group', 'col-xl-6', 'col-lg-12');
-           
-            // div_form_row_time_col.appendChild( CreateLabel('Zeit', 'intervention_new['+new_interventions+'][time]'));
-            // div_form_row_time_col.appendChild( CreateInput('time', 'intervention_new['+new_interventions+'][time]', true,  date.format('HH:mm')));
-            // div_form_row_date.appendChild(div_form_row_date_col);
-            // div_form_row_date.appendChild(div_form_row_time_col);
-            // div_form_group_1.appendChild(div_form_row_date);
-            // div_form_group_1.appendChild(br);
-            // div_form_group_1.appendChild( CreateLabel('Erfasser', 'intervention_new['+new_interventions+'][user_erf]'));
-            // div_form_group_1.appendChild( CreateInput('text', 'intervention_new['+new_interventions+'][user_erf]', true));
-            // div_form_group_1.appendChild(br);
-            // div_form_group_1.appendChild( CreateLabel('Dringlichkeit', 'intervention_new['+new_interventions+'][health_status_id]'));
-            // div_form_group_1.appendChild( CreateInput('select', 'intervention_new['+new_interventions+'][health_status_id]', true, '', health_status));
-            // div_formrow.appendChild(div_form_group_1);
-            // container.appendChild(div_formrow);
-         
+            // Return them in array
+            return [ds, ts];
         }
-        // function CreateInput(inputType, name, required = false, value = '', array=[]){
-        //     var input = document.createElement("input");
-        //     input.type = inputType;
-        //     input.value =value;
-        //     input.name = name;
-        //     input.id =  name;
-        //     input.required = required;
-        //     input.classList.add('form-control');
-        //     if(array.length>0){
-        //         array.forEach(element => {
-        //             console.log(element);
-        //             var option = document.createElement("option");
-        //             option.value=element;
-        //         });
-        //     }
-        //     return input;
-        // }
-        // function CreateLabel(name, labelFor){
-        //     var label = document.createElement("label");
-        //     label.htmlFor = labelFor + ":";
-        //     label.innerHTML = name;
-        //     return label;
-        // }
-        window.addIntervention = addIntervention;
-        window.newDelete = newDelete;
     </script>
 @endpush
 

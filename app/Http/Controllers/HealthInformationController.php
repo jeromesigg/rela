@@ -54,7 +54,7 @@ class HealthInformationController extends Controller
                 return $status;
             })
             ->addColumn('interventions', function (HealthInformation $act_healthinfo) {
-                return count($act_healthinfo->interventions);
+                return count($act_healthinfo->interventions->whereNull('intervention_master_id'));
             })
             ->addColumn('interventions_open', function (HealthInformation $act_healthinfo) {
                 return count($act_healthinfo->interventions_open);

@@ -120,7 +120,7 @@ class Helper
         return $name;
     }
 
-    public static function getHealthInformationShow(Intervention $intervention, HealthInformation $healthinformation = null)
+    public static function getHealthInformationShow(Intervention $intervention, HealthInformation $healthinformation = null, $intervention_close = false)
     {
         if($healthinformation === null){
             $healthinformation = $intervention->health_information;
@@ -135,6 +135,15 @@ class Helper
         $health_status = HealthStatus::pluck('name', 'id')->all();
         $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions()->select("id", DB::raw("CONCAT(interventions.serial_number,' ',interventions.parameter) as name"))->whereNull('intervention_master_id')->pluck('name', 'interventions.id')->toArray();
         $interventions = $intervention->interventions()->get();
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp', 'interventions'));
+        $intervention_close = $intervention_close || isset($intervention['date_close']);
+        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp', 'interventions', 'intervention_close'));
+    }
+
+    public static function UpdateInterventionStatus(Intervention $intervention)
+    {
+        $intervention_sub = $intervention->interventions()->orderBy('serial_number', 'desc')->first();
+        if($intervention_sub){
+            $intervention->update(['health_status_id' => $intervention_sub['health_status_id']]);
+        }
     }
 }
