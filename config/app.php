@@ -179,8 +179,6 @@ return [
         App\Providers\EventServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\TelescopeServiceProvider::class,
-
     ],
 
     /*

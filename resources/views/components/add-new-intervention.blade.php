@@ -51,7 +51,7 @@
                 {!! Form::file('intervention_new['.$index.'][file]', ['accept' => 'image/*', 'capture'=>'camera']) !!}
             </div>
             <br>
-            <a href="#" onClick="newDelete({{$index}})"><i class="fa-solid fa-trash-can fa-2xl" style="color:red"></i></a>
+            <a href="#" id="newDelete_{{$index}}"><i class="fa-solid fa-trash-can fa-2xl" style="color:red"></i></a>
         </div>
     </div>
 </div>
