@@ -122,6 +122,7 @@ class InterventionController extends Controller
         if(!isset($intervention['date_close'])){
             $intervention['date_close'] = Carbon::now()->toDateString();
             $intervention['time_close'] = Carbon::now()->toTimeString();
+            $intervention['to_close'] = true;
         }
         return Helper::getHealthInformationShow($intervention, null, true);
     }
@@ -129,10 +130,12 @@ class InterventionController extends Controller
     public function closeAjax(Request $request)
     {
         $input = $request->all();
-        $intervention = Intervention::findOrFail($input['intervention_id']);
-        if(!isset($intervention['date_close'])){
-            $intervention['date_close'] = Carbon::now()->toDateString();
-            $intervention['time_close'] = Carbon::now()->toTimeString();
+        if(!isset($input['intervention_id'])){
+            $intervention = Intervention::findOrFail($input['intervention_id']);
+            if(!isset($intervention['date_close'])){
+                $intervention['date_close'] = Carbon::now()->toDateString();
+                $intervention['time_close'] = Carbon::now()->toTimeString();
+            }
         }
         $component = new InterventionClose(true);
         return $component->render()->with(['close' => true]);
