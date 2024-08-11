@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-xl-2 col-lg-12">
-                                <a href="#" class="intervention_image"> <img src="/img/xabcde.png" alt="" id="intervention_file" width="40%"></a>
+                                <a href="#" class="intervention_image"> <img src="/img/xabcde.jpg" alt="" id="intervention_file" width="40%"></a>
 
                                 <div class="form-group" id="intervention_picture">
                                     {!! Form::label('file', 'Bild:') !!}
@@ -128,11 +128,11 @@
                         <x-intervention-close :close="$intervention_close"/>
                         
                         <div class="form-group">
-                            {!! Form::submit(isset($intervention['id']) ? 'Intervention aktualisieren' : 'Intervention erstellen', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
+                            {!! Form::submit(isset($intervention['id']) ? 'Intervention aktualisieren' : 'Intervention speichern', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
                             @if(!isset($intervention['intervention_master_id']))
                                 <a href="#" class="btn btn-primary" role="button" id="addIntervention">Untergeordnete Intervention hinzufügen</a>
                             @endif
-                            @if(isset($intervention['id']) && !isset($intervention['date_close']))
+                            @if(!isset($intervention['date_close']) && !$intervention['to_close'])
                                 <a href="#" class="btn btn-primary" role="button" id="closeIntervention">Intervention abschliessen</a>
                             @endif
                         </div>
@@ -260,14 +260,17 @@
         $('#closeIntervention').click(function($e) {
             $e.preventDefault();
             var intervention = @json($intervention);
+            var intervention_id = intervention['id'] ?? 0;
+            console.log(intervention_id);
             $.ajax({
                 url: '{{ route('interventions.closeAjax') }}',
                 type: 'GET',
                 data: {
-                    intervention_id: intervention['id'],
+                    intervention_id: intervention_id,
                 },
                 success: function (response) {
                     $('#container_intervention_close').empty();
+                    $('#closeIntervention').remove();
                     $('#container_intervention_close').append(response);
                     let date =  new Date();
                     let dstrings = getHTML5DateTimeStringsFromDate(date);
