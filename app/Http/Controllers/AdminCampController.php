@@ -86,6 +86,7 @@ class AdminCampController extends Controller
         }
 
         return redirect('dashboard/camps');
+        
     }
 
     /**

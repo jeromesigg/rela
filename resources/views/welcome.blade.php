@@ -8,20 +8,20 @@
             <div class="overlay-content py-5">
                 <div class="container py-4">
                     <!-- Hero slider-->
-                    <div class="swiper-container homepage-slider">
+                    <div class="homepage-slider">
                         <div class="swiper-wrapper">
                             <!-- Hero Slide-->
-                            <div class="swiper-slide h-auto mb-5">
+                            <div class=" h-auto mb-5">
                                 <div class="row gy-5 h-100 align-items-center">
                                     <div class="col-lg-5 text-lg-end">
-                                        <h1 class="text-uppercase">Online Gesundheits-Datenbank für J+S-Lager</h1>
-                                        <ul class="list-unstyled text-uppercase fw-bold mb-0">
-                                            <li class="mb-2">Verwalte und Erstelle Gesundheitsblätter für dein
-                                                J+S-Lagersport/Trekking-Lager und behalte den Überblick über alles.
-                                            </li>
-                                        </ul>
-                                        <br>
-                                        <a class="btn btn-outline-light" href="/home">Gesundheitsblatt Ausfüllen</a>
+                                        <h2 class="mb-4 text-2xl font-extrabold leading-none tracking-tight md:text-3xl lg:text-5xl">
+                                        Online Gesundheits-Datenbank für J+S-Lager</h2>
+                                            <p class="mb-6 text-lg font-normal lg:text-xl8">
+                                                Verwalte und Erstelle Gesundheitsblätter für dein
+                                                    J+S-Lagersport/Trekking-Lager und behalte den Überblick über alles.
+                                            </p>
+                                            <br>
+                                            <a class="btn btn-outline-light" href="/home">Gesundheitsblatt Ausfüllen</a>
                                     </div>
                                     <div class="col-lg-7"><img class="img-fluid" src="img/template-homepage.png" alt="">
                                     </div>
@@ -38,46 +38,46 @@
             <div class="container py-4">
                 <div class="row gy-4">
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-desktop"></i></div>
-                        <h4 class="text-uppercase mb-3">Alles Online</h4>
-                        <p class="text-sm">Erstelle dein Lager, importiere deine Teilnehmende und erstelle die Gesundheitsblätter, alles Online. Die Teilnehmenden füllen die Gesundheitsblätter Online aus.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Alles Online</h4>
+                         <p class="text-gray-600 dark:text-gray-200 text-sm">Erstelle dein Lager, importiere deine Teilnehmende und erstelle die Gesundheitsblätter, alles Online. Die Teilnehmenden füllen die Gesundheitsblätter Online aus.</p>
                     </div>
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-lock"></i></div>
-                        <h4 class="text-uppercase mb-3">Sicher</h4>
-                        <p class="text-sm">Jeder Teilnehmende sieht nur das eigene Gesundheitsblatt. Die Leitenden sehen nur einen Code und keine zusätzlichen Personenbezogenen Daten.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Sicher</h4>
+                        <p class="text-gray-600 dark:text-gray-200 text-sm">Jeder Teilnehmende sieht nur das eigene Gesundheitsblatt. Die Leitenden sehen nur einen Code und keine zusätzlichen Personenbezogenen Daten.</p>
                     </div>
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-file-import"></i></div>
-                        <h4 class="text-uppercase mb-3">Import aus der Cevi-DB</h4>
-                        <p class="text-sm">Importiere alle Leitende und Teilnehmende direkt aus der Cevi-DB inklusive Profilbild, Benutzernahmen und E-Mail.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Import aus der Cevi-DB</h4>
+                        <p class="text-gray-600 dark:text-gray-200 text-sm">Importiere alle Leitende und Teilnehmende direkt aus der Cevi-DB inklusive Profilbild, Benutzernahmen und E-Mail.</p>
                     </div>
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-id-card"></i></div>
-                        <h4 class="text-uppercase mb-3">Interventionen</h4>
-                        <p class="text-sm">Erfasse für alle Teilnehmenden bestimmte Interventionen (Patientenüberwachung, Verabreichte Medikation, 1.Hilfe Leistungen, ...) und behalte den Überblick.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Interventionen</h4>
+                        <p class="text-gray-600 dark:text-gray-200 text-sm">Erfasse für alle Teilnehmenden bestimmte Interventionen (Patientenüberwachung, Verabreichte Medikation, 1.Hilfe Leistungen, ...) und behalte den Überblick.</p>
                     </div>
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-print"></i></div>
-                        <h4 class="text-uppercase mb-3">Ausdruckbar</h4>
-                        <p class="text-sm">Falls gewünscht können die Gesundheitsblätter als PDF heruntergeladen werden.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Ausdruckbar</h4>
+                        <p class="text-gray-600 dark:text-gray-200 text-sm">Falls gewünscht können die Gesundheitsblätter als PDF heruntergeladen werden.</p>
                     </div>
                     <!-- Service-->
-                    <div class="col-lg-4 col-md-6 block-icon-hover text-center">
+                    <div class="col-lg-4 col-md-6 block-icon-hover text-center mb-4">
                         <div class="icon icon-outlined icon-outlined-primary icon-thin mx-auto mb-3"><i
                                 class="fas fa-mobile-alt"></i></div>
-                        <h4 class="text-uppercase mb-3">Mobile Tauglich</h4>
-                        <p class="text-sm">Das Tool kann sowohl auf einem Laptop wie auch auf dem Smartphone bedient werden und kann so auch für eine rasche Intervention genutzt werden.</p>
+                        <h4 class="text-2xl font-bold dark:text-white">Mobile Tauglich</h4>
+                        <p class="text-gray-600 dark:text-gray-200 text-sm">Das Tool kann sowohl auf einem Laptop wie auch auf dem Smartphone bedient werden und kann so auch für eine rasche Intervention genutzt werden.</p>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
             <div class="container">
                 <div class="row gy-4 align-items-center">
                     <div class="col-md-6 text-center">
-                        <h2 class="text-uppercase">Lagerleitende Dashboard</h2>
+                        <h2 class="text-4xl font-bold text-heading">Lagerleitende Dashboard</h2>
                         <p class="lead mb-3">Erhalte den Überblick über dein Lager</p>
                         <p class="mb-3">Behalte den Überblick über deine Teilnehmenden, die Gesundheitsblätter und alle
                             Interventionen deines Lagers im Dashboard.</p>
@@ -106,7 +106,7 @@
                     <div class="icon icon-outlined icon-lg mx-auto mb-4">
                         <img src="img/cevi_pfad.svg" alt="Cevi Logo">
                     </div>
-                    <h2 class="text-uppercase mb-3">Du willst in deinem Lager immer die Übersicht haben?</h2>
+                    <h2 class="text-3xl font-bold text-heading mb-3">Du willst in deinem Lager immer die Übersicht haben?</h2>
                     <p class="lead mb-4">Registriere dich jetzt und erstelle gleich dein Lager.</p><a
                         class="btn btn-outline-light btn-lg" href="/register">Jetzt registrieren</a>
                 </div>
@@ -121,16 +121,16 @@
                         <div class="text-center text-gray">
                             <div class="icon-outlined border-gray-600 icon-lg mx-auto mb-3 icon-thin"><i
                                     class="fa-solid fa-campground"></i></div>
-                            <h1 class="counter mb-3" data-counter="{{$camp_counter}}">0</h1>
-                            <h2 class="text-uppercase fw-bold mb-0">Lager</h2>
+                            <h3 class="text-4xl font-bold text-heading counter mb-3" data-counter="{{$camp_counter}}">0</h3>
+                            <h4 class="text-3xl font-bold text-heading text-uppercase mb-0">Lager</h4>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6">
                         <div class="text-center text-gray">
                             <div class="icon-outlined border-gray-600 icon-lg mx-auto mb-3 icon-thin"><i
                                     class="fa-solid fa-poll-h"></i></div>
-                                 <h1 class="counter mb-3" data-counter="{{$healhform_counter}}">0</h1>
-                                <h2 class="text-uppercase fw-bold mb-0">Gesundheitsblätter</h2>
+                                 <h3 class="text-4xl font-bold text-heading counter mb-3" data-counter="{{$healhform_counter}}">0</h3>
+                                <h4 class="text-3xl font-bold text-heading text-uppercase mb-0">Gesundheitsblätter</h4>
                             </div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                         <div class="col-md-6"><img class="img-fluid d-block mx-auto" src="img/template-blatt.png"
                                                    alt="..."></div>
                         <div class="col-md-6 text-center">
-                            <h2 class="text-uppercase">Gesundheitsblätter online ausfüllen</h2>
+                            <h2 class="text-4xl font-bold text-heading">Gesundheitsblätter online ausfüllen</h2>
                             <p class="mb-3">Fülle die Gesundheitsblätter direkt Online aus.</p>
                         </div>
                     </div>
@@ -154,7 +154,7 @@
                 <div class="container">
                     <div class="row gy-4 align-items-center">
                         <div class="col-md-6">
-                            <h2 class="text-uppercase">Erstelle Interventionen zu deinen Teilnehmenden</h2>
+                            <h2 class="text-4xl font-bold text-heading">Erstelle Interventionen zu deinen Teilnehmenden</h2>
                             <p class="mb-3">Erstelle direkt eine Intervention, wenn Teilnehmende ein Medikament benötigen oder behandelt wurden. Sammle
                                 die Intervention und verschaff dir als Lagerleitung einen Überblick über deine Teilnehmende.
                             <p>
@@ -169,7 +169,7 @@
                 <div class="container text-center">
                     <div class="row">
                         <div class="col-lg-6 p-3">
-                            <h3 class="text-uppercase mb-0">Versuche es gleich selbst mit einem Test-Login aus.</h3>
+                            <h3 class="text-2xl font-bold text-heading mb-0">Versuche es gleich selbst mit einem Test-Login aus.</h3>
                         </div>
                         <div class="col-lg-2 p-3"><a class="btn btn-outline-light" href="/loginLagerleiter">Lagerleitende</a></div>
                         <div class="col-lg-2 p-3"><a class="btn btn-outline-light" href="/loginLeiter">Helfende</a></div>

@@ -146,4 +146,18 @@ class Helper
             $intervention->update(['health_status_id' => $intervention_sub['health_status_id']]);
         }
     }
+
+    public static function getAvatarPath($avatar)
+    {
+        $path = null;
+        if($avatar){
+            if(str_starts_with($avatar, 'https')){
+                $path = $avatar;
+            }
+            else{
+                $path = asset("storage/".$avatar);
+            }
+        }
+        return $path;
+    }
 }

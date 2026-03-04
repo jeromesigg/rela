@@ -7,21 +7,19 @@
             <!-- Page Header-->
             <div class="row">
                 <div class="col-6">
-                    {!! Form::open(['action'=>'QuestionController@store']) !!}
-                    <div class="form-row">
-                        <div class="form-group col-md-10">
-                            {!! Form::label('name', 'Frage:') !!}
-                            {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group col-md-2">
-                            {!! Form::label('sortindex', 'Sort-Index:') !!}
-                            {!! Form::number('sortindex', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Frage erstellen', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('dashboard.questions.store')" accept-charset="UTF-8" method="POST">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="name" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Sort Index:" name="sortindex" type="number" required=true placeholder="0"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Frage Erstellen
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
                 </div>
                 <div class="col-6">
                     <table class="table table-striped table-bordered" style="width:100%" id="datatable">

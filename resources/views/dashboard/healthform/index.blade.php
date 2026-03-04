@@ -14,13 +14,17 @@
                 </div>
                 <div class="col-lg-4">
                     @if (Auth::user()->isManager())
-                        {!! Html::link('files/vorlage.xlsx', 'Vorlage herunterladen', ['class' => 'font-medium text-blue-600 dark:text-blue-500 hover:underline']) !!}
-                        {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-                            <div class="form-group">
-                                {{ Form::file('file',)}}
-                            </div>
-                            {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
-                        {!! Form::close() !!}
+                        <a href="files/vorlage.xlsx" target="blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Vorlage herunterladen</a>
+                        <x-forms.form :action="route('dashboard.healthforms.uploadFile')" accept-charset="UTF-8" method="POST" enctype="multipart/form-data">
+                            <x-forms.container>
+                                <x-forms.file name="file" required=true/>
+                            </x-forms.container>
+                            <x-forms.container>
+                                <x-forms.button type="submit" class="btn btn-primary">
+                                    Teilnehmerliste hochladen
+                                </x-forms.button>
+                            </x-forms.container> 
+                        </x-forms.form>
                         <br>
                     @endif
                     <a href="{{route('healthforms.downloadFile')}}" class="btn btn-primary" role="button">Gesundsheitsblätter herunterladen</a>

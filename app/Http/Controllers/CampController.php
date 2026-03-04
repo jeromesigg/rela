@@ -49,36 +49,39 @@ class CampController extends Controller
      */
     public function store(Request $request)
     {
-           $validator = Validator::make($request->all(), [
-                    'name' => 'unique:camps',
-                ]);
+        $validator = Validator::make($request->all(), [
+                'name' => 'unique:camps',
+        ]);
 
-                if ($validator->fails()) {
-                    return redirect()->to(url()->previous())
-                                ->withErrors($validator, 'camps')
-                                ->withInput();
-                }
-                if (!Auth::user()->demo) {
+        if ($validator->fails()) {
+            return redirect()->to(url()->previous())
+                        ->withErrors($validator, 'camps')
+                        ->withInput();
+        }
+        if (!Auth::user()->demo) {
 
-                    $input = $request->all();
+            $input = $request->all();
 
-                    $user = User::findOrFail(Auth::user()->id);
-                    $input['user_id'] = $user->id;
-                    $input['global_camp'] = false;
-                    $input['code'] = Helper::generateUniqueCampCode();
-                    $input['forms_finished'] = isset($input['closed_when_finished']);
-                    $input['closed_when_finished'] = isset($input['closed_when_finished']);
-                    $camp = Camp::create($input);
-                    CampCreated::dispatch($camp);
-                    $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Lagerleiter')]);
-                    CampUser::create([
-                        'user_id' => $user->id,
-                        'camp_id' => $camp->id,
-                        'role_id' => config('status.role_Lagerleiter'),]);
-                }
+            $user = User::findOrFail(Auth::user()->id);
+            $input['user_id'] = $user->id;
+            $input['global_camp'] = false;
+            $input['code'] = Helper::generateUniqueCampCode();
+            $input['forms_finished'] = isset($input['closed_when_finished']);
+            $input['closed_when_finished'] = isset($input['closed_when_finished']);
+            $input['independent_form_fill'] = isset($input['independent_form_fill']);
+            $input['show_names'] = isset($input['show_names']);
+            $input['konekta'] = isset($input['konekta']);
+            $camp = Camp::create($input);
+            CampCreated::dispatch($camp);
+            $user->update(['camp_id' => $camp->id, 'role_id' => config('status.role_Lagerleiter')]);
+            CampUser::create([
+                'user_id' => $user->id,
+                'camp_id' => $camp->id,
+                'role_id' => config('status.role_Lagerleiter'),]);
+        }
 
-                return redirect('dashboard');
-            }
+        return redirect('dashboard');
+    }
 
     /**
      * Display the specified resource.

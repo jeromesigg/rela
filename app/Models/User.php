@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Nicolaslopezj\Searchable\SearchableTrait;
+use App\Helper\Helper;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -100,5 +101,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function camps()
     {
         return $this->belongsToMany('App\Models\Camp', 'camp_users')->where('finish', '=', false);
+    }
+
+        public function getAvatar()
+    {
+        $camp = Auth::user()->camp;
+        $camp_user = CampUser::where('user_id', $this->id)->where('camp_id', $camp->id)->first();
+        $path = null;
+        if ($camp_user) {
+            $path = Helper::getAvatarPath($camp_user->avatar);
+        }
+        if($path === null){
+            $path = Helper::getAvatarPath($this->avatar);
+        }
+        if($path === null){
+            $path = '/img/default_avatar.svg';
+        }
+        return $path;
     }
 }

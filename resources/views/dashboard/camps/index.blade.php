@@ -8,15 +8,32 @@
             <div class="row">
                 @if (!$camps)
                 <div class="col-sm-3">
-                    {!! Form::open(['action'=>'AdminCampsController@store']) !!}
-                        <div class="form-group">
-                            {!! Form::label('name', 'Name:') !!}
-                            {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('Lager erstellen', ['class' => 'btn btn-primary'])!!}
-                        </div>
-                    {!! Form::close()!!}
+                <x-forms.form :action="route('camps.store')" accept-charset="UTF-8" method="POST">
+                    <x-forms.container>
+                        <x-forms.text label="Name:" name="name" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Schlussdatum:" name="end_date" type="date" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.checkbox label="Teilnehmer füllen selber Gesundheitsblatt aus" name="independent_form_fill" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.checkbox label="Keine Änderungen möglich nach Abschluss des Gesundheitsblattes" name="closed_when_finished"  required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.checkbox label="Die Namen der Teilnehmenden werden auch den Helfenden angezeigt" name="show_names" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Abteilung:" name="group_text" required=true class="autocomplete_txt_group"/>
+                    </x-forms.container>
+                    <x-forms.hidden name="group_id" class="autocomplete_txt"/>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Lager erstellen
+                        </x-forms.button>
+                    </x-forms.container> 
+                </x-forms.form>
                 </div>
                 @endif
                 <div class="col-sm-9">

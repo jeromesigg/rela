@@ -71,7 +71,7 @@ Route::group(['middleware' => 'verified'], function() {
     Route::resource('dashboard/healthinformation', 'HealthInformationController');
     Route::get('healthinformation/createDataTables', ['as'=>'healthinformation.CreateDataTables','uses'=>'HealthInformationController@createDataTables']);
     Route::get('healthinformation/searchajaxcode', ['as'=>'searchajaxcode','uses'=>'HealthInformationController@searchResponseCode']);
-    Route::get('healthinformation/search', ['uses'=>'HealthInformationController@search']);
+    Route::get('healthinformation/search', ['as'=>'healthinformation.search','uses'=>'HealthInformationController@search']);
     Route::resource('dashboard/interventions', 'InterventionController');
     Route::get('interventions/createDataTables', ['as'=>'interventions.CreateDataTables','uses'=>'InterventionController@createDataTables']);
     Route::get('interventions/close/{intervention}', ['as'=>'interventions.close','uses'=>'InterventionController@close']);
@@ -89,6 +89,7 @@ Route::group(['middleware' => 'verified'], function() {
         Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
         Route::post('dashboard/healthforms/import',  ['as'=>'healthforms.import', 'uses'=>'HealthFormController@import']);
         Route::get('dashboard/healthforms/showOrEdit/{healthform}',  ['as'=>'healthforms.showOrEdit', 'uses'=>'HealthFormController@showOrEdit']);
+        Route::get('dashboard/healthforms/uploadFile',  ['as'=>'dashboard.healthforms.uploadFile', 'uses'=>'HealthFormController@UploadFile']);
         Route::get('healthforms/createDataTables', ['as'=>'healthforms.CreateDataTables','uses'=>'HealthFormController@createDataTables']);
         Route::get('healthinformation/print/{healthInformation}', ['as'=>'healthinformation.print','uses'=>'HealthInformationController@print']);
         Route::post('dashboard/healthinformation/uploadProtocol/{healthinformation}', ['as'=>'uploadProtocol','uses'=>'HealthInformationController@uploadProtocol']);
@@ -103,7 +104,7 @@ Route::group(['middleware' => 'verified'], function() {
     Route::group(['middleware' => 'admin'], function() {
         Route::get('audits', ['as'=>'dashboard.audits', 'uses'=>'AuditController@index']);
         Route::resource('dashboard/helps', 'HelpController');
-        Route::resource('dashboard/interventionclasses', 'InterventionClassController');
+        // Route::resource('dashboard/interventionclasses', 'InterventionClassController');
         Route::post('healthforms/{healthform}/newCode', ['as'=>'healthforms.newCode','uses'=>'HealthFormController@newCode']);
     });
 });

@@ -8,53 +8,36 @@
             <header>
                 <h1 class="h3 display">Lager</h1>
             </header>
-            <div class="row">
-                <div class="col-sm-6">
-                    {!! Form::model($camp, ['method' => 'Patch', 'action'=>['AdminCampController@update',$camp->id]]) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('user_id', 'Lagerleiter:') !!}
-                        {!! Form::select('user_id', $users, null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('end_date', 'Schlussdatum:') !!}
-                        {!! Form::date('end_date', null,  ['class' => 'form-control', 'required']) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('independent_form_fill', 'Teilnehmer füllen selber Gesundheitsblatt aus:') !!}
-                        {!! Form::checkbox('independent_form_fill', '1', $camp['independent_form_fill'], ['class'=>'healthform__checkbox']) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('closed_when_finished', 'Bei Abschluss des Gesundheitsblattes sind keine Änderungen mehr möglich:') !!}
-                        {!! Form::checkbox('closed_when_finished', '1', $camp['closed_when_finished'], ['class'=>'healthform__checkbox']) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('show_names', 'Die Namen der Teilnehmenden werden auch den Helfenden angezeigt:') !!}
-                        {!! Form::checkbox('show_names', '1', $camp['show_names'], ['class'=>'healthform__checkbox']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('konekta', 'Konekta:') !!}
-                        {!! Form::checkbox('konekta', '1', $camp['konekta'], ['class'=>'healthform__checkbox']) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('group_text', 'Abteilung:') !!}
-                        {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
-                    </div>
-                    {!! Form::hidden('group_id', null, ['class' => 'form-control autocomplete_txt_group']) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Änderungen speichern', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
-                    <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
-                </div>
-            </div>
+            <x-forms.form :action="route('dashboard.camps.update', $camp->id)" accept-charset="UTF-8" method="PATCH" :model="$camp">
+                <x-forms.container>
+                    <x-forms.text label="Name:" name="name" required=true/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.select label="Lagerleiter:" name="user_id" required=true :collection="$users"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.text label="Schlussdatum:" name="end_date" type="date" required=true/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.checkbox label="Teilnehmer füllen selber Gesundheitsblatt aus" name="independent_form_fill" class="healthform__checkbox" value="{{$camp['independent_form_fill']}}"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.checkbox label="Bei Abschluss des Gesundheitsblattes sind keine Änderungen mehr möglich" name="closed_when_finished" class="healthform__checkbox" value="{{$camp['closed_when_finished']}}"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.checkbox label="Die Namen der Teilnehmenden werden auch den Helfenden angezeigt" name="show_names" class="healthform__checkbox" value="{{$camp['show_names']}}"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.text label="Abteilung:" name="group_text" required=true class="autocomplete_txt_group"/>
+                </x-forms.container>
+                <x-forms.hidden name="group_id" required=true class="autocomplete_txt_group"/>
+                <x-forms.container>
+                    <x-forms.button type="submit" class="btn btn-primary">
+                        Lager aktualisieren
+                    </x-forms.button>
+                </x-forms.container> 
+            </x-forms.form>
+            <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
         </div>
     </section>
 @endsection

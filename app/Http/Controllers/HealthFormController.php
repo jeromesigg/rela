@@ -54,7 +54,7 @@ class HealthFormController extends Controller
             })
             ->editColumn('nickname', function (HealthForm $healthForm) {
                 $nickname = $healthForm->nickname;
-                return '<a href='.\URL::route('healthforms.showOrEdit',$healthForm).'>'.$nickname.'</a>';
+                return '<a class="font-medium text-fg-brand hover:underline text-blue-500" href='.\URL::route('healthforms.showOrEdit',$healthForm).'>'.$nickname.'</a>';
             })
             ->editColumn('finish', function (HealthForm $healthForm) {
                 return $healthForm->finish ? 'Ja' : 'Nein';})
@@ -340,11 +340,16 @@ class HealthFormController extends Controller
                 'healthinfo.accept_privacy_agreement.required' => 'Für den Abschluss brauchen wir deine Bestätigung.',]);
         }
         else {
-            $validator = Validator::make($request->all(), [
-                'healthform.file_allergies' => 'mimes:pdf|max:2000',
-            ], [
-                'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
-                'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+            if($request->hasFile('healthform.file_allergies')) {
+                $validator = Validator::make($request->all(), [
+                    'healthform.file_allergies' => 'mimes:pdf|max:2000',
+                ], [
+                    'healthform.file_allergies.max' => 'Die maximale Dateigrösse beträgt 2 MB.',
+                    'healthform.file_allergies.mimes' => 'Nur PDF-Dateien sind erlaubt.',]);
+            }
+            else{
+                $validator = Validator::make($request->all(), []);
+            }
         }
 
         if ($validator->fails()) {

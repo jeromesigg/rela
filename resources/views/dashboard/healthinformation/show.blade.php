@@ -8,139 +8,126 @@
             <div class="row">
                 <div class="col-md-10">
                     <h3>{{isset($intervention['id']) ? 'Intervention Nr. ' . $intervention->number() . ' aktualisieren' : 'Intervention erstellen'}}</h3>
-                    {!! Form::model($intervention, ['method' => 'POST', 'action'=>'InterventionController@store', 'files' => true]) !!}
-                        <div class="form-row">
-                            <div class="form-group col-xl-2 col-lg-12">
-                                {!! Form::hidden('health_information_id', $intervention['health_information_id']) !!}
-                                {!! Form::hidden('intervention_id', $intervention['id']) !!}
+                    
+                    <x-forms.form :action="route('interventions.store')" accept-charset="UTF-8" method="POST" :model="$intervention" fullWidth=true files=true>
+                        <x-forms.row>
+                            <x-forms.container class="col-xl-2 col-lg-12">
+                                <x-forms.hidden name="health_information_id" :value="$intervention['health_information_id']"/>
+                                <x-forms.hidden name="intervention_id" :value="$intervention['id']"/>
                                 @if(!isset($intervention['id']) || isset($intervention['intervention_master_id']))
-                                    {!! Form::label('intervention_master_id', 'Übergeordnete Intervention:') !!}
-                                    {!! Form::select('intervention_master_id', $intervention_masters, null, ['class' => 'form-control']) !!}
+                                    <x-forms.select label="Übergeordnete Intervention:" name="intervention_master_id" :collection="$intervention_masters"/>
                                 @endif
                                 <br>
-                                <div class="form-row">
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('date', 'Datum:') !!}
-                                        {!! Form::date('date', null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('time', 'Zeit:') !!}
-                                        {!! Form::time('time', null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
-                                </div>
+                                <x-forms.row>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text label="Datum:" name="date" type="date" required=true/>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text label="Zeit:" name="time" type="time" required=true/>
+                                    </x-forms.container>
+                                </x-forms.row>
                                 <br>
-                                {!! Form::label('user_erf', 'Erfasser:') !!}
-                                {!! Form::text('user_erf', null, ['class' => 'form-control', 'required']) !!}
+                                <x-forms.text label="Erfasser:" name="user_erf" required=true/>
                                 <br>
-                                {!! Form::label('health_status_id', 'Dringlichkeit:') !!}
-                                {!! Form::select('health_status_id', $health_status, null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group col-xl-8 col-lg-12">
+                                <x-forms.select label="Dringlichkeit:" name="health_status_id" required=true :collection="$health_status"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-8 col-lg-12">
 
-                                <div class="form-row">
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                    {!! Form::label('parameter','Parameter / Symptom:', ['id'=>'parameter_label']) !!}
-                                    {!! Form::textarea('parameter', null, ['class' => 'form-control', 'required', 'rows'=> 3, 'id'=>'parameter_value']) !!}
-                                    </div>
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('value', 'Wert:', ['id'=>'value_label']) !!}
-                                        {!! Form::textarea('value', null, ['class' => 'form-control', 'rows'=> 3]) !!}
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('medication', 'Intervention / Medikation:') !!}
-                                        {!! Form::textarea('medication', null, ['class' => 'form-control', 'rows'=> 4]) !!}
-                                    </div>
-                                    <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('comment', 'Bemerkung:') !!}
-                                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows'=> 4]) !!}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-xl-2 col-lg-12">
+                                <x-forms.row>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text-area label="Parameter / Symptom:" name="parameter" required=true rows=3 id="parameter_value"/>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text-area label="Wert:" name="value" rows=3/>
+                                    </x-forms.container>
+                                </x-forms.row>
+                                <x-forms.row>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text-area label="Intervention / Medikation:" name="medication" rows=4/>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text-area label="Bemerkung:" name="comment" rows=4/>
+                                    </x-forms.container>
+                                </x-forms.row>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-lg-12">
                                 <a href="#" class="intervention_image"> <img src="/img/xabcde.jpg" alt="" id="intervention_file" width="40%"></a>
-
-                                <div class="form-group" id="intervention_picture">
-                                    {!! Form::label('file', 'Bild:') !!}
-                                    {!! Form::file('file', ['accept' => 'image/*', 'capture'=>'camera']) !!}
-                                </div>
-                            </div>
-                        </div>
+                                <x-forms.container id="intervention_picture">
+                                    <x-forms.file label="Bild:" name="file" accept="image/*" capture="camera"/>
+                                </x-forms.container>
+                            </x-forms.container>
+                        </x-forms.row>
                         @foreach($interventions as $key => $intervention_sub)
                             <hr class="h-0.5 mx-auto my-4 bg-gray-300 border-0 rounded md:my-10 dark:bg-gray-700">
                             <p>Intervention Nr. {{$intervention_sub->number()}}</p>
-                            <div class="form-row ml-10">
-                                <div class="form-group col-xl-2 col-lg-12">
-                                    {!! Form::hidden('intervention_sub['.$key.'][health_information_id]', $intervention_sub['health_information_id']) !!}
-                                    {!! Form::hidden('intervention_sub['.$key.'][intervention_id]', $intervention_sub['id']) !!}
+                            <x-forms.row class="ml-10">
+                                <x-forms.container class="col-xl-2 col-lg-12">
+                                    <x-forms.hidden name="intervention_sub['.$key.'][health_information_id]" :value="$intervention_sub['health_information_id']"/>
+                                    <x-forms.hidden name="intervention_sub['.$key.'][intervention_id]" :value=" $intervention_sub['id']"/>
                                     <br>
-                                    <div class="form-row">
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                            {!! Form::label('intervention_sub['.$key.'][date]', 'Datum:') !!}
-                                            {!! Form::date('intervention_sub['.$key.'][date]', $intervention_sub['date'], ['class' => 'form-control', 'required']) !!}
-                                        </div>
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                            {!! Form::label('intervention_sub['.$key.'][time]', 'Zeit:') !!}
-                                            {!! Form::time('intervention_sub['.$key.'][time]',  $intervention_sub['time'], ['class' => 'form-control', 'required']) !!}
-                                        </div>
-                                    </div>
+                                    <x-forms.row>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text label="Datum:" name="intervention_sub['.$key.'][date]" type="date" required=true/>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text label="Zeit:" name="intervention_sub['.$key.'][time]" type="time" required=true/>
+                                    </x-forms.container>                                    
+                                    </x-forms.row>
                                     <br>
-                                    {!! Form::label('intervention_sub['.$key.'][user_erf]', 'Erfasser:') !!}
-                                    {!! Form::text('intervention_sub['.$key.'][user_erf]',  $intervention_sub['user_erf'], ['class' => 'form-control', 'required']) !!}
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.text label="ZErfasser:" name="intervention_sub['.$key.'][user_erf]" required=true/>
+                                    </x-forms.container>          
                                     <br>
-                                    {!! Form::label('intervention_sub['.$key.'][health_status_id]', 'Dringlichkeit:') !!}
-                                    {!! Form::select('intervention_sub['.$key.'][health_status_id]', $health_status,  $intervention_sub['health_status_id'], ['class' => 'form-control', 'required']) !!}
-                                </div>
-                                <div class="form-group col-xl-8 col-lg-12">
-
-                                    <div class="form-row">
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                        {!! Form::label('intervention_sub['.$key.'][parameter]','Parameter / Symptom:', ['id'=>'parameter_label']) !!}
-                                        {!! Form::textarea('intervention_sub['.$key.'][parameter]',  $intervention_sub['parameter'], ['class' => 'form-control', 'required', 'rows'=> 3, 'id'=>'parameter_value']) !!}
-                                        </div>
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                            {!! Form::label('intervention_sub['.$key.'][value]', 'Wert:', ['id'=>'value_label']) !!}
-                                            {!! Form::textarea('intervention_sub['.$key.'][value]',  $intervention_sub['value'], ['class' => 'form-control', 'rows'=> 3]) !!}
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                            {!! Form::label('intervention_sub['.$key.'][medication]', 'Intervention / Medikation:') !!}
-                                            {!! Form::textarea('intervention_sub['.$key.'][medication]',  $intervention_sub['medication'], ['class' => 'form-control', 'rows'=> 4]) !!}
-                                        </div>
-                                        <div class="form-group col-xl-6 col-lg-12">
-                                            {!! Form::label('intervention_sub['.$key.'][comment]', 'Bemerkung:') !!}
-                                            {!! Form::textarea('intervention_sub['.$key.'][comment]',  $intervention_sub['comment'], ['class' => 'form-control', 'rows'=> 4]) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xl-2 col-lg-12">
-                                    <div class="form-group" id="intervention_picture">
-                                        {!! Form::label('intervention_sub['.$key.'][file]', 'Bild:') !!}
-                                        {!! Form::file('intervention_sub['.$key.'][file]', ['accept' => 'image/*', 'capture'=>'camera']) !!}
-                                    </div>
-                                </div>
-                            </div>
+                                    <x-forms.container class="col-xl-6 col-lg-12">
+                                        <x-forms.select label="Dringlichkeit:" name="intervention_sub['.$key.'][health_status_id]" :collection="$health_status" required=true/>
+                                    </x-forms.container>          
+                                </x-forms.container>
+                                <x-forms.container class="col-xl-8 col-lg-12">
+                                    <x-forms.row>
+                                        <x-forms.container class="col-xl-6 col-lg-12">
+                                            <x-forms.text-area label="Parameter / Symptom:" name="intervention_sub['.$key.'][parameter]" required=true rows=3 id="parameter_value"/>
+                                        </x-forms.container>
+                                        <x-forms.container class="col-xl-6 col-lg-12">
+                                            <x-forms.text-area label="Wert:" name="intervention_sub['.$key.'][value]" rows=3/>
+                                        </x-forms.container>
+                                    </x-forms.row>
+                                    <x-forms.row>
+                                        <x-forms.container class="col-xl-6 col-lg-12">
+                                            <x-forms.text-area label="Intervention / Medikation:" name="intervention_sub['.$key.'][medication]" rows=4/>
+                                        </x-forms.container>
+                                        <x-forms.container class="col-xl-6 col-lg-12">
+                                            <x-forms.text-area label="Bemerkung:" name="intervention_sub['.$key.'][comment]" rows=4/>
+                                        </x-forms.container>
+                                    </x-forms.row>
+                                </x-forms.container>
+                                <x-forms.container class="col-xl-2 col-lg-12">
+                                    <x-forms.container class="col-xl-6 col-lg-12" id="intervention_picture">
+                                    <x-forms.file label="Bild:" name="intervention_sub['.$key.'][file]" accept="image/*" capture="camera"/>
+                                    </x-forms.container>
+                                </x-forms.container>
+                            </x-forms.row>
                         @endforeach
                         <div id="container_new_interventions">
                         </div>
                         <x-intervention-close :close="$intervention_close"/>
                         
                         <div class="form-group">
-                            {!! Form::submit(isset($intervention['id']) ? 'Intervention aktualisieren' : 'Intervention speichern', ['class' => 'btn btn-primary', 'id' => 'submit_btn'])!!}
+                        
+                            <x-forms.button type="submit" class="btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" id="submit_btn">
+                                @isset($intervention['id']) {{ __('Intervention aktualisieren') }} @else {{ __('Intervention speichern') }} @endisset
+                            </x-forms.button>
                             @if(!isset($intervention['intervention_master_id']))
-                                <a href="#" class="btn btn-primary" role="button" id="addIntervention">Untergeordnete Intervention hinzufügen</a>
+                                <a href="#" class="btn focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" role="button" id="addIntervention">Untergeordnete Intervention hinzufügen</a>
                             @endif
                             @if(!isset($intervention['date_close']) && !$intervention['to_close'])
-                                <a href="#" class="btn btn-primary" role="button" id="closeIntervention">Intervention abschliessen</a>
+                                <a href="#" class="btn focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" role="button" id="closeIntervention">Intervention abschliessen</a>
                             @endif
                         </div>
-                    {!! Form::close()!!}
+                    </x-forms.form>
                 </div>
                 <div class="col-md-2">
                     @if(!$camp['konekta'])
-                        {!! Html::link('files/Notfallblatt.pdf', 'J+S-Notfallblatt herunterladen', ['target' => 'blank', 'class' =>'btn btn-primary']) !!}
+                            <a href="files/Notfallblatt.pdf" target="blank" class="btn btn-primary">J+S-Notfallblatt herunterladen</a>
                         @if(Auth::user()->isManager())
                             <br>
                             <br>
@@ -153,15 +140,17 @@
                                     </ul>
                                 </div>
                             @endif
-                            {!! Form::model($healthinformation, ['method' => 'POST', 'action'=>['HealthInformationController@uploadProtocol', $healthinformation], 'files' => true]) !!}
+                            <x-forms.form :action="route('uploadProtocol', $healthinformation)" accept-charset="UTF-8" method="POSH" :model="$healthinformation" files=true>
 
-                            <div class="form-group">
-                                {!! Form::file('file_protocol', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group">
-                                {!! Form::submit('J+S-Notfallblatt hochladen', ['class' => 'btn btn-primary'])!!}
-                            </div>
-                            {!! Form::close()!!}
+                                <x-forms.container>
+                                    <x-forms.file name="file_protocol"/>
+                                </x-forms.container>
+                                <x-forms.container>
+                                    <x-forms.button type="submit" class="btn btn-primary">
+                                        J+S-Notfallblatt hochladen
+                                    </x-forms.button>
+                                </x-forms.container>
+                            </x-forms.form>
                             <br>
                             @if ($healthinformation['file_protocol'])
                                 <a href={{$healthinformation['file_protocol'] ? route('downloadProtocol',$healthinformation) : '#'}}>Protokoll herunterladen</a>
