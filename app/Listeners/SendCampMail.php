@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\CampCreated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -23,7 +21,6 @@ class SendCampMail
     /**
      * Handle the event.
      *
-     * @param  \App\Events\CampCreated  $event
      * @return void
      */
     public function handle(CampCreated $event)

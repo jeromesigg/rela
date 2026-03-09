@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\UserCreated;
 use App\Models\Camp;
 use App\Models\CampUser;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class CreateCampUser
 {
@@ -23,7 +21,6 @@ class CreateCampUser
     /**
      * Handle the event.
      *
-     * @param  \App\Events\UserCreated  $event
      * @return void
      */
     public function handle(UserCreated $event)
@@ -34,12 +31,12 @@ class CreateCampUser
         $camp_user->update([
             'role_id' => config('status.role_Teilnehmer'),
         ]);
-        if (!$event->user->camp) {
+        if (! $event->user->camp) {
             $event->user->update([
                 'camp_id' => $camp_global['id'],
             ]);
         }
-        if (!$event->user->role) {
+        if (! $event->user->role) {
             $event->user->update([
                 'role_id' => config('status.role_Teilnehmer'),
             ]);

@@ -15,7 +15,7 @@ class Group extends Model
         'columns' => [
             'short_name' => 1,
             'name' => 1,
-        ]
+        ],
     ];
 
     protected $connection = 'mysql_info';

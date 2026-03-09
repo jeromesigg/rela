@@ -9,7 +9,6 @@ class Question extends Model
 {
     use HasFactory;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -19,7 +18,7 @@ class Question extends Model
         'name',
         'camp_id',
         'active',
-        'sortindex'
+        'sortindex',
     ];
 
     /**
@@ -31,7 +30,8 @@ class Question extends Model
         'active' => 'boolean',
     ];
 
-    public function camp(){
+    public function camp()
+    {
         return $this->belongsTo(Camp::class);
     }
 }

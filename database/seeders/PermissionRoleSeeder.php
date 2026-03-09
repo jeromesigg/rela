@@ -25,7 +25,7 @@ class PermissionRoleSeeder extends Seeder
         Role::create(['id' => config('status.role_Helfer'),        'name' => 'Helfer',        'is_admin' => false, 'is_manager' => false, 'is_helper' => true]);
         Role::create(['id' => config('status.role_Teilnehmer'),    'name' => 'Teilnehmende',  'is_admin' => false, 'is_manager' => false, 'is_helper' => false]);
 
-        $user = User::create( [
+        $user = User::create([
             'id' => 1,
             'username' => 'Administrator',
             'email' => 'admin@ehealth',

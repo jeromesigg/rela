@@ -26,7 +26,7 @@ class Camp extends Model
 
     protected $fillable = [
         'name', 'user_id', 'independent_form_fill', 'global_camp', 'finish', 'code', 'end_date', 'counter', 'group_id', 'group_text', 'closed_when_finished',
-        'forms_finished', 'show_names', 'konekta', 'max_serial_number'
+        'forms_finished', 'show_names', 'konekta', 'max_serial_number',
     ];
 
     protected $casts = [
@@ -43,6 +43,7 @@ class Camp extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
     public function allUsers()
     {
         return $this->belongsToMany('App\Models\User', 'camp_users')
@@ -52,12 +53,12 @@ class Camp extends Model
     public function camp_users_all()
     {
         return $this->hasMany(CampUser::class)
-                ->where('camp_users.role_id', '<>', config('status.role_Administrator'));
+            ->where('camp_users.role_id', '<>', config('status.role_Administrator'));
     }
 
     public function questions()
     {
-        return $this->hasMany(Question::class)->where('questions.active', '=',true);
+        return $this->hasMany(Question::class)->where('questions.active', '=', true);
     }
 
     public function interventions()
@@ -67,16 +68,16 @@ class Camp extends Model
 
     public function health_infos()
     {
-        return $this->hasMany( HealthInformation::class);
+        return $this->hasMany(HealthInformation::class);
     }
+
     public function health_forms()
     {
-        return HealthForm::where('camp_id',$this['id']);
+        return HealthForm::where('camp_id', $this['id']);
     }
 
     public function group()
     {
         return $this->belongsTo(Group::class);
     }
-
 }

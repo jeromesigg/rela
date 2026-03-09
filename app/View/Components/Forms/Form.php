@@ -24,7 +24,9 @@ class Form extends Component
      * Request method.
      */
     public $model;
+
     public $fullWidth = false;
+
     /**
      * Create a new component instance.
      */

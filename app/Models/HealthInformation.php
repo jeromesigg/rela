@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Queue\Monitor;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,31 +10,34 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class HealthInformation extends Model implements Auditable
 {
-    use \OwenIt\Auditing\Auditable;
     use HasFactory;
-    use SearchableTrait;
     use HasUuid;
+    use \OwenIt\Auditing\Auditable;
+    use SearchableTrait;
 
     protected $fillable = [
         'code', 'recent_issues', 'recent_issues_doctor', 'drug_longterm', 'drug_demand', 'drug_emergency', 'drugs_only_contact',
-        'ointment_only_contact', 'chronicle_diseases', 'file_protocol', 'allergy', 'camp_id', 'health_status_id', 'accept_privacy_agreement'
+        'ointment_only_contact', 'chronicle_diseases', 'file_protocol', 'allergy', 'camp_id', 'health_status_id', 'accept_privacy_agreement',
     ];
 
     protected $searchable = [
         'columns' => [
             'code' => 1,
-        ]
+        ],
     ];
 
     public $incrementing = false;
+
     public $timestamps = false;
 
-    public function interventions(){
+    public function interventions()
+    {
         return $this->hasMany(Intervention::class, 'health_information_id')->orderByDesc('serial_number');
     }
 
-    public function interventions_open(){
-        return $this->interventions()->where('date_close', '=',null)->whereNull('intervention_master_id');
+    public function interventions_open()
+    {
+        return $this->interventions()->where('date_close', '=', null)->whereNull('intervention_master_id');
     }
 
     public function questions()
@@ -47,6 +49,4 @@ class HealthInformation extends Model implements Auditable
     {
         return 'code';
     }
-
-
 }

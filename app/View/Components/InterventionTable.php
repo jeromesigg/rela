@@ -6,7 +6,6 @@ use Illuminate\View\Component;
 
 class InterventionTable extends Component
 {
-
     public function __construct()
     {
         //
