@@ -39,7 +39,7 @@
                                 </a>
                             </div>
                             <div class="col-2">
-                                @if(!Auth::user()->demo && $camp->user['id']===Auth::user()->id)
+                                @if(!Auth::user()->demo && !$camp->user || ($camp->user['id']===Auth::user()->id))
                                 <a class="block py-2 text-center text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                                     href="{{route('dashboard.camps.edit',$camp)  }}">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -49,7 +49,7 @@
                         </div>
 
                         <form id="camps-update-form-{{$camp['id']}}"
-                                action="{{route('dashboard.camps.update',$camp['id'])  }}" method="POST"
+                                action="{{route('camps.update',$camp['id'])  }}" method="POST"
                                 style="display: none;">
                             {{ method_field('PUT') }}
                             @csrf

@@ -11,8 +11,8 @@
         "bootstrap": "^4.3.1",
         "cross-env": "^7.0.3",
         "flowbite": "^1.8.1",
-        "jquery-ui": "^1.13.2",
         "jquery": "^3.7.1",
+        "jquery-ui": "^1.13.2",
         "laravel-datatables-vite": "^0.5.2",
         "laravel-echo": "^1.14.2",
         "laravel-vite-plugin": "^2.1.0",
@@ -21,7 +21,7 @@
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.32.11",
         "sass-loader": "^10.1.1",
-        "tailwindcss": "^3.4.1",
+        "tailwindcss": "^3.4.19",
         "vite": "^7.3.1",
         "vue": "^3.0.0",
         "vue-template-compiler": "^0.1.0"
@@ -29,6 +29,7 @@
     "dependencies": {
         "chart.js": "^2.9.4",
         "chokidar": "^3.5.1",
-        "dropify": "^0.2.2"
+        "dropify": "^0.2.2",
+        "simple-datatables": "^10.2.0"
     }
 }

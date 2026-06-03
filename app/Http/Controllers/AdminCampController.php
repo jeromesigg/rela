@@ -40,9 +40,8 @@ class AdminCampController extends Controller
 
         $title_modal = 'Lager löschen?';
         $text_modal = 'Beim Lager löschen werden alle Interventionen und hochgeladenen Dokumente gelöscht.';
-        confirmDelete($title_modal, $text_modal);
 
-        return view('dashboard.camps.index', compact('camps', 'title', 'help'));
+        return view('dashboard.camps.index', compact('camps', 'title', 'help', 'title_modal', 'text_modal'));
     }
 
     /**
@@ -116,9 +115,8 @@ class AdminCampController extends Controller
 
         $title_modal = 'Lager löschen?';
         $text_modal = 'Beim Lager löschen werden alle Interventionen und hochgeladenen Dokumente gelöscht.';
-        confirmDelete($title_modal, $text_modal);
 
-        return view('dashboard.camps.edit', compact('camp', 'users', 'title', 'help'));
+        return view('dashboard.camps.edit', compact('camp', 'users', 'title', 'help', 'title_modal', 'text_modal'));
     }
 
     /**
