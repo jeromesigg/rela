@@ -72,14 +72,13 @@
 
 @endsection
 @push('scripts')
-    <script type="module">
+<script type="module">
         $(document).ready(function(){
-            $('#datatable').DataTable({
+            const table = $('#datatable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
                 pageLength: 25,
-                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },
@@ -93,10 +92,11 @@
                     { data: 'group', name: 'group' },
                     { data: 'city', name: 'city' },
                     { data: 'finish', name: 'finish' },
-                    { data: 'Actions', name: 'Actions', orderable:false,serachable:false,sClass:'text-center'},
-
+                    { data: 'Actions', name: 'Actions', orderable: false, searchable: false }
                 ]
             });
+            
+            initFlowbite();
         });
         $('#showImport').on('click', function () {
             $('#importModal').modal('show');

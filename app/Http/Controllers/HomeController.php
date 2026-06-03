@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Help;
-use App\Models\InterventionClass;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -25,15 +23,17 @@ class HomeController extends Controller
         $akt_User = Auth::user();
         $camp = $akt_User->camp;
         $title = 'Dashboard';
-        $subtitle = $camp['global_camp'] ? '' : ' für Lager "' . $camp['name'] . '" (' . $camp['code'] . ')';
-        $help = Help::where('title',$title)->first();
-        return view('dashboard', compact( 'camp', 'title', 'help', 'subtitle'));
+        $subtitle = $camp['global_camp'] ? '' : ' für Lager "'.$camp['name'].'" ('.$camp['code'].')';
+        $help = Help::where('title', $title)->first();
+
+        return view('dashboard', compact('camp', 'title', 'help', 'subtitle'));
     }
 
     public function home()
     {
         $title = 'Gesundheitsblatt ausfüllen';
-        $help = Help::where('title',$title)->first();
+        $help = Help::where('title', $title)->first();
+
         return view('home', compact('title', 'help'));
     }
 }

@@ -9,11 +9,17 @@ use Illuminate\View\Component;
 class Text extends Component
 {
     public string $name;
+
     public string $label;
+
     public string $id;
+
     public string $type;
+
     public bool $required;
+
     public $value;
+
     /**
      * Create a new component instance.
      */

@@ -9,10 +9,15 @@ use Illuminate\View\Component;
 class Checkbox extends Component
 {
     public string $name;
+
     public string $label;
+
     public string $id;
+
     public bool $required;
+
     public $value;
+
     /**
      * Create a new component instance.
      */
@@ -24,7 +29,6 @@ class Checkbox extends Component
         $this->id = $id ?? $name;
         $this->value = $value;
     }
-
 
     /**
      * Get the view / contents that represent the component.

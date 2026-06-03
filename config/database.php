@@ -64,7 +64,7 @@ return [
         ],
 
         'mysql_info' => [
-            'driver' => 'mysql',
+            'driver' => env('DB_CONNECTION_INFO', 'mysql'),
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST_INFO', '127.0.0.1'),
             'port' => env('DB_PORT_INFO', '3306'),

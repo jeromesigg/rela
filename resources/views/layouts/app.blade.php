@@ -11,7 +11,6 @@
             <x-footer/>
         </div>
     <!-- jQuery -->
-        @include('sweetalert::alert')
         @stack('scripts')
     </body>
 </html>

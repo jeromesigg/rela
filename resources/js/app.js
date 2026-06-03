@@ -16,7 +16,7 @@ import 'bootstrap';
 import 'laravel-datatables-vite';
 import './front.js';
 import './jqBootstrapValidation.js';
-import 'flowbite';
+import  'flowbite';
 // import { DataTable } from "simple-datatables";
 // import './swiper-bundle.min.js';
 import './jquery.waypoints.min.js';

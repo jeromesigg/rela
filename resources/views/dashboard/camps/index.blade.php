@@ -59,7 +59,11 @@
                                     <td>{{$camp->finish ? 'Ja' : 'Nein'}}</td>
                                     <td>
                                         @if (!$camp->finish && Auth::user()->camp['id'] === $camp['id'])
-                                            <a href="{{ route('dashboard.camps.destroy', $camp) }}" class="btn btn-danger" data-confirm-delete="true">Lager abschliessen?</a>
+                                            <x-forms.form :action="route('dashboard.camps.destroy', $camp)" method="DELETE" :model="$camp" id="DeleteForm">
+                                                <x-forms.button type="submit" name="submit-delete" class="confirm-finish focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                    Lager abschliessen?
+                                                </x-forms.button>
+                                            </x-forms.form>
                                         @endif
                                     </td>
                                 </tr>
@@ -73,3 +77,31 @@
     </section>
 @endsection
 
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module">
+        window.addEventListener("load", function() {
+           
+            $('.confirm-finish').on('click', function(e){
+                e.preventDefault(); //cancel default action
+
+                Swal.fire({
+                    title: "{{$title_modal}}",
+                    text: "{{$text_modal}}",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ja',
+                    cancelButtonText: 'Abbrechen',
+                    confirmButtonColor: 'blue',
+                    cancelButtonColor: 'red',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById("DeleteForm").submit();
+                    }
+                });
+            });
+
+        });
+    </script>
+@endpush

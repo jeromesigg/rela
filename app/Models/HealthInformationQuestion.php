@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HealthInformationQuestion extends Model
 {
     use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,14 +17,16 @@ class HealthInformationQuestion extends Model
     protected $fillable = [
         'answer',
         'health_information_id',
-        'question_id'
+        'question_id',
     ];
 
-    public function question(){
+    public function question()
+    {
         return $this->belongsTo(Question::class);
     }
 
-    public function health_information(){
+    public function health_information()
+    {
         return $this->belongsTo(HealthInformation::class);
     }
 }
