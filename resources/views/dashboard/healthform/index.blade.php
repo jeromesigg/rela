@@ -14,13 +14,17 @@
                 </div>
                 <div class="col-lg-4">
                     @if (Auth::user()->isManager())
-                        {!! Html::link('files/vorlage.xlsx', 'Vorlage herunterladen', ['class' => 'font-medium text-blue-600 dark:text-blue-500 hover:underline']) !!}
-                        {!! Form::open(['action' => 'HealthFormController@uploadFile', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-                            <div class="form-group">
-                                {{ Form::file('file',)}}
-                            </div>
-                            {{ Form::submit('Teilnehmerliste hochladen', ['class' => 'btn btn-primary']) }}
-                        {!! Form::close() !!}
+                        <a href="files/vorlage.xlsx" target="blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Vorlage herunterladen</a>
+                        <x-forms.form :action="route('dashboard.healthforms.uploadFile')" accept-charset="UTF-8" method="POST" enctype="multipart/form-data">
+                            <x-forms.container>
+                                <x-forms.file name="file" required=true/>
+                            </x-forms.container>
+                            <x-forms.container>
+                                <x-forms.button type="submit" class="btn btn-primary">
+                                    Teilnehmerliste hochladen
+                                </x-forms.button>
+                            </x-forms.container> 
+                        </x-forms.form>
                         <br>
                     @endif
                     <a href="{{route('healthforms.downloadFile')}}" class="btn btn-primary" role="button">Gesundsheitsblätter herunterladen</a>
@@ -68,14 +72,13 @@
 
 @endsection
 @push('scripts')
-    <script type="module">
+<script type="module">
         $(document).ready(function(){
-            $('#datatable').DataTable({
+            const table = $('#datatable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
                 pageLength: 25,
-                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },
@@ -89,10 +92,11 @@
                     { data: 'group', name: 'group' },
                     { data: 'city', name: 'city' },
                     { data: 'finish', name: 'finish' },
-                    { data: 'Actions', name: 'Actions', orderable:false,serachable:false,sClass:'text-center'},
-
+                    { data: 'Actions', name: 'Actions', orderable: false, searchable: false }
                 ]
             });
+            
+            initFlowbite();
         });
         $('#showImport').on('click', function () {
             $('#importModal').modal('show');

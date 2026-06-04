@@ -5,26 +5,23 @@
     <div class="container-fluid">
         <!-- Page Header-->
         <div class="row">
-
             <div class="col-sm-6">
-
-                {!! Form::model($question, ['method' => 'PATCH', 'action'=>['QuestionController@update' , $question]]) !!}
-                <div class="form-group">
-                    {!! Form::label('name', 'Frage:') !!}
-                    {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::label('sortindex', 'Sort-Index:') !!}
-                    {!! Form::text('sortindex', null, ['class' => 'form-control']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::checkbox('active', '1', null) !!}
-                    {!! Form::label('active', 'Aktiv') !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::submit('Update Individuelle Fragen', ['class' => 'btn btn-primary'])!!}
-                </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('dashboard.questions.update', $question)" accept-charset="UTF-8" method="PATCH" :model="$question">
+                    <x-forms.container>
+                        <x-forms.text label="Name:" name="name" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Sort Index:" name="sortindex" type="number" required=true placeholder="0"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.checkbox label="Aktiv" name="active" value="{{$question['active']}}"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Individuelle Frage Aktualisieren
+                        </x-forms.button>
+                    </x-forms.container> 
+                </x-forms.form>
             </div>
         </div>
     </div>

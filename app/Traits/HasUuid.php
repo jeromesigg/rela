@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 trait HasUuid
 {
@@ -15,7 +15,6 @@ trait HasUuid
      * The mysterious “Ordered UUID” by
      *      Italo Baeza Cabrera: https://itnext.io/laravel-the-mysterious-ordered-uuid-29e7500b4f8
      */
-
     public static function boot()
     {
         parent::boot();
@@ -47,7 +46,7 @@ trait HasUuid
             $uuidFieldName = $model->getUuidFieldName();
             $originalUuid = $model->getOriginal($uuidFieldName);
 
-            if (!empty($originalUuid)) {
+            if (! empty($originalUuid)) {
                 if ($originalUuid !== $model->{$uuidFieldName}) {
                     $model->{$uuidFieldName} = $originalUuid;
                     Log::warning('Attempt to change existing UUID blocked');
@@ -59,7 +58,6 @@ trait HasUuid
     /**
      * Static call to search for a record via the UUID
      *
-     * @param $uuid
      *
      * @return mixed
      */
@@ -70,26 +68,20 @@ trait HasUuid
 
     /**
      * Generates a test UUID with the model name as a prefix for easy distinction when testing
-     *
-     * @param $model
-     *
-     * @return string
      */
     public static function generateReadableUuidForTesting($model): string
     {
-        $className = strtolower(class_basename($model)) . '-';
+        $className = strtolower(class_basename($model)).'-';
 
         $numToRemove = strlen($className);
         $remaining = (36 - (int) $numToRemove);
 
-        return $className . Str::substr(static::generateUuid(), $numToRemove, $remaining);
+        return $className.Str::substr(static::generateUuid(), $numToRemove, $remaining);
     }
 
     /**
      * Generates a "Time Ordered" UUID which is generated in conjunction with the server timestamp.  Less unique, but
      * useful if ordering by time is important
-     *
-     * @return string
      */
     public static function generateTimeOrderedUuid(): string
     {
@@ -98,8 +90,6 @@ trait HasUuid
 
     /**
      * Generates a standard version 4 UUID
-     *
-     * @return string
      */
     public static function generateUuid(): string
     {
@@ -108,8 +98,6 @@ trait HasUuid
 
     /**
      * Checks to see if "Time Ordered" UUIDs have been specified
-     *
-     * @return bool
      */
     public function getUseTimeOrderedUuid(): bool
     {
@@ -122,8 +110,6 @@ trait HasUuid
 
     /**
      * Check to see if a specific column name has been specified for the UUID
-     *
-     * @return string
      */
     public function getUuidFieldName(): string
     {
@@ -131,7 +117,7 @@ trait HasUuid
             return $this->getKeyName();
         }
 
-        if (!empty($this->uuidFieldName)) {
+        if (! empty($this->uuidFieldName)) {
             return $this->uuidFieldName;
         }
 
@@ -141,8 +127,6 @@ trait HasUuid
     /**
      *  Scoping method to search for a record via the UUID
      *
-     * @param $query
-     * @param $uuid
      *
      * @return mixed
      */

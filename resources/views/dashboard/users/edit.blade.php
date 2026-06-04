@@ -17,44 +17,40 @@
                     </div>
                 @endif
 
-                {!! Form::model($user, ['method' => 'PATCH', 'action'=>['AdminUsersController@update' , $user]]) !!}
-                <div class="form-group">
-                    {!! Form::label('username', 'Name:') !!}
-                    {!! Form::text('username', null, ['class' => 'form-control', 'placeholder' => 'name@abt', 'autocomplete' => 'username',  'required']) !!}
-                </div>
-                <div id="user_information_form">
-                    <div class="form-group">
-                        {!! Form::label('email', 'E-Mail:') !!}
-                        {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'name@abt.ch', 'autocomplete' => 'email', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('role_id', 'Rolle:') !!}
-                        {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('active', 'Aktiv:') !!}
-                        {!! Form::checkbox('active', '1', $camp_user['active']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('password', 'Passwort:') !!}
-                        {!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'autocomplete' => 'new-password']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('password_confirmation', __('Passwort bestätigen')) !!}
-                        {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password-confirm', 'autocomplete' => 'new-password']) !!}
-                    </div>
-                </div>
+                <x-forms.form :action="route('dashboard.users.update', $user)" accept-charset="UTF-8" method="PATCH" :model="$user">
+                    <x-forms.container>
+                        <x-forms.text label="Name:" name="username" required=true placeholder="name@abt.ch" autocomplete="username"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="E-Mail:" name="email" type="email" required=true placeholder="name@abt.ch" autocomplete="email"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.select label="Rolle:" name="role_id" required=true :collection="$roles"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.checkbox label="Aktiv" name="active" value="{{$user['active']}}"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Passwort:" name="password" required=true type="password" autocomplete="new-password"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Passwort bestätigen:" name="password_confirmation" required=true type="password" autocomplete="new-password"/>
+                    </x-forms.container>
+                    <x-forms.hidden name="user_id" class="autocomplete_txt"/>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Person aktualisieren
+                        </x-forms.button>
+                    </x-forms.container> 
+                </x-forms.form>
 
-                <div class="form-group">
-                    {!! Form::submit('Person aktualisieren', ['class' => 'btn btn-primary'])!!}
-                </div>
-                {!! Form::close()!!}
-
-                {!! Form::open(['method' => 'DELETE', 'action'=>['AdminUsersController@destroy', $user]]) !!}
-                <div class="form-group">
-                {!! Form::submit('Personen löschen', ['class' => 'btn btn-danger'])!!}
-                </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('dashboard.users.destroy', $user)" accept-charset="UTF-8" method="DELETE">
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-danger">
+                            Person löschen
+                        </x-forms.button>
+                    </x-forms.container> 
+                </x-forms.form>
             </div>
         </div>
     </div>

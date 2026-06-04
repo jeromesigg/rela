@@ -3,60 +3,51 @@
 @section('page')
     <x-page-title :title="$title" :help="$help"/>
     <div class="wide" id="all">
-        {!! Form::open(['method' => 'POST', 'action'=>'HealthFormController@store']) !!}
+        <x-forms.form :action="route('healthforms.store')" accept-charset="UTF-8" method="POST" fullWidth=true>
             <h4>1. Personalie</h4>
             <hr>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    {!! Form::label('first_name', 'Vorname:') !!}
-                    {!! Form::text('first_name', null, ['class' => 'form-control', 'required']) !!}
-                </div>
-                <div class="form-group col-md-3">
-                    {!! Form::label('last_name', 'Name:') !!}
-                    {!! Form::text('last_name', null, ['class' => 'form-control', 'required']) !!}
-                </div>
-                <div class="form-group col-md-2">
-                    {!! Form::label('nickname', 'v/o:') !!}
-                    {!! Form::text('nickname', null, ['class' => 'form-control', 'required']) !!}
-                </div>
-                <div class="form-group col-md-2">
-                    {!! Form::label('birthday', 'Geburtstag:') !!}
-                    {!! Form::date('birthday', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <div class="form-group col-md-2">
-                    {!! Form::label('group_text', 'Abteilung:') !!}
-                    {!! Form::text('group_text', null, ['class' => 'form-control autocomplete_txt_group', 'required']) !!}
-                </div>
-                {!! Form::hidden('group_id', null, ['class' => 'form-control autocomplete_txt_group']) !!}
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    {!! Form::label('street', 'Strasse:') !!}
-                    {!! Form::text('street', null, ['class' => 'form-control']) !!}
-                </div>
-                <div class="form-group col-md-2">
-                    {!! Form::label('zip_code', 'Postleitzahl:') !!}
-                    {!! Form::number('zip_code', null, ['class' => 'form-control autocomplete_txt_city']) !!}
-                </div>
-                <div class="form-group col-md-2">
-                    {!! Form::label('city', 'Ortschaft:') !!}
-                    {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt_city']) !!}
-                </div>
-                {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt_city']) !!}
-                <div class="form-group col-md-2">
-                    {!! Form::label('phone_number', 'Telefon:') !!}
-                    {!! Form::text('phone_number', null, ['class' => 'form-control']) !!}
-                </div>
-                <div class="form-group col-md-2">
-                    {!! Form::label('auv', 'AHV-Nummer') !!}
-                    {!! Form::text('ahv', null, ['class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                {!! Form::submit('Gesundheitsblatt erstellen', ['class' => 'btn btn-primary'])!!}
-            </div>
-        {!! Form::close()!!}
+             <x-forms.row>
+                <x-forms.container class="col-md-3">
+                    <x-forms.text label="Vorname:" name="first_name" required=true/>
+                </x-forms.container>
+                <x-forms.container class="col-md-3">
+                    <x-forms.text label="Nachname:" name="last_name" required=tru/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="v/o:" name="nickname" required=true/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="Geburtstag:" name="birthday" type="date"/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="Abteilung:" name="group_text" class="autocomplete_txt_group"/>
+                </x-forms.container>
+                <x-forms.hidden name="group_id" class="autocomplete_txt_group"/>
+            </x-forms.row>
+            <x-forms.row>
+                <x-forms.container class="col-md-4">
+                    <x-forms.text label="Strasse:" name="street"/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="Postleitzahl:" name="zip_code" class="autocomplete_txt_city"/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="Ortschaft:" name="city" class="autocomplete_txt_city"/>
+                </x-forms.container>
+                <x-forms.hidden name="city_id" class="autocomplete_txt_city"/>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="Telefon:" name="phone_number"/>
+                </x-forms.container>
+                <x-forms.container class="col-md-2">
+                    <x-forms.text label="AHV-Nummer:" name="ahv"/>
+                </x-forms.container>
+            </x-forms.row>
+            <x-forms.container>
+                <x-forms.button type="submit" class="btn btn-primary">
+                    Gesundheitsblatt erstellen
+                </x-forms.button>
+            </x-forms.container> 
+        </x-forms.form>
     </div>
 
 @endsection

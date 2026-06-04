@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class InterventionClose extends Component
 {
     public $close;
+
     /**
      * Create a new component instance.
      */

@@ -8,20 +8,19 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class HealthFormsImport implements ToModel, WithHeadingRow, WithCalculatedFormulas
+class HealthFormsImport implements ToModel, WithCalculatedFormulas, WithHeadingRow
 {
     use Importable;
+
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         return new HealthForm([
             'group' => $row[0],
-            'last_name'     => $row[4],
-            'first_name'    => $row[5],
+            'last_name' => $row[4],
+            'first_name' => $row[5],
             'nickname' => $row[6] ? $row[6] : $row[5],
             'street' => $row[7],
             'zip_code' => $row[8],

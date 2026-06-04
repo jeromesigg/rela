@@ -26,27 +26,27 @@
             <div class="row">
 
                 <div class="col-sm-6">
+                    <x-forms.form :action="route('helps.update', $help)" accept-charset="UTF-8" method="PATCH" :model="$help">
+                        <x-forms.container>
+                            <x-forms.text label="Titel:" name="title" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text-area label="Inhalt:" name="content"  rows=10/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Artikel aktualisieren
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
 
-                    {!! Form::model($help, ['method' => 'PATCH', 'action'=>['HelpController@update' , $help]]) !!}
-                    <div class="form-group">
-                        {!! Form::label('title', 'Titel:') !!}
-                        {!! Form::text('title', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('content', 'Inhalt:') !!}
-                        {!! Form::textarea('content', null, ['class' => 'form-control','rows' => 10, 'id' => "mytextarea"]) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::submit('Hilfe-Artikel aktualisieren', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
-
-                    {!! Form::open(['method' => 'DELETE', 'action'=>['HelpController@destroy',$help]]) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Hilfe-Artikel löschen', ['class' => 'btn btn-danger'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('helps.destroy', $help)" accept-charset="UTF-8" method="DELETE">
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-danger">
+                                Artikel löschen
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
                 </div>
             </div>
         </div>

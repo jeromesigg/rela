@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class AuditController extends Controller
 {
     //
@@ -11,6 +9,7 @@ class AuditController extends Controller
     {
         $audits = \OwenIt\Auditing\Models\Audit::with('user')
             ->orderBy('created_at', 'desc')->get();
+
         return view('dashboard.audits', compact('audits'));
     }
 }

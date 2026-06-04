@@ -33,13 +33,13 @@ class HelpController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //
         Help::create($request->all());
+
         return redirect('dashboard/helps');
     }
 
@@ -69,7 +69,6 @@ class HelpController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -77,6 +76,7 @@ class HelpController extends Controller
     {
         //
         $help->update($request->all());
+
         return redirect('dashboard/helps');
     }
 
@@ -90,6 +90,7 @@ class HelpController extends Controller
     {
         //
         $help->delete();
+
         return redirect('dashboard/helps');
     }
 }

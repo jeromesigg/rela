@@ -14,20 +14,11 @@ return new class extends Migration
         Schema::table('interventions', function (Blueprint $table) {
             //
             $table->text('medication')->nullable();
-            $table->dropForeign(['intervention_class_id']);
-            $table->dropColumn('intervention_class_id');
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::table('interventions', function (Blueprint $table) {
-            //
-            $table->bigInteger('intervention_class_id')->index()->unsigned();
-            $table->foreign('intervention_class_id')->references('id')->on('intervention_classes');
-        });
-    }
+    public function down(): void {}
 };

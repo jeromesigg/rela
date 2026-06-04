@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\HealthForm;
 use App\Models\HealthInformation;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class HealthFormSeeder extends Seeder
@@ -17,7 +16,7 @@ class HealthFormSeeder extends Seeder
     public function run()
     {
         //
-        for ($i=0;$i<300;$i++) {
+        for ($i = 0; $i < 300; $i++) {
             $health_form = HealthForm::factory()->create();
             HealthInformation::firstOrCreate(['code' => $health_form['code']]);
         }

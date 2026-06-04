@@ -12,175 +12,141 @@
                 </ul>
             </div>
         @endif
-        {!! Form::model($healthform, ['method' => 'Patch', 'action'=>['HealthFormController@update',$healthform], 'files' => true]) !!}
+        <x-forms.form :action="route('healthform.update', $healthform)" accept-charset="UTF-8" method="PATCH" :model="$healthform" fullWidth=true>
         <h4>1. Personalie</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[first_name]', 'Vorname:') !!}
-                {!! Form::text('healthform[first_name]', $healthform['first_name'], ['class' => 'form-control', 'required']) !!}
-            </div>
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[last_name]', 'Name:') !!}
-                {!! Form::text('healthform[last_name]', $healthform['last_name'], ['class' => 'form-control', 'required']) !!}
-            </div>
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[nickname]', 'v/o:') !!}
-                {!! Form::text('healthform[nickname]', $healthform['nickname'], ['class' => 'form-control', 'required']) !!}
-            </div>
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[birthday]', 'Geburtstag:') !!}
-                {!! Form::date('healthform[birthday]', $healthform['birthday'], ['class' => 'form-control', 'required']) !!}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {!! Form::label('healthform[street]', 'Strasse:') !!}
-                {!! Form::text('healthform[street]', $healthform['street'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-2">
-                {!! Form::label('healthform[zip_code]', 'Postleitzahl:') !!}
-                {!! Form::number('healthform[zip_code]', $healthform['zip_code'], ['class' => 'form-control autocomplete_txt']) !!}
-            </div>
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[city]', 'Ortschaft:') !!}
-                {!! Form::text('healthform[city]', $healthform['city'], ['class' => 'form-control autocomplete_txt']) !!}
-            </div>
-            {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[phone_number]', 'Telefon (Bei Leitungspersonen):') !!}
-                {!! Form::text('healthform[phone_number]', $healthform['phone_number'], ['class' => 'form-control']) !!}
-            </div>
-        </div>
+        <x-forms.row>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Vorname:" name="healthform[first_name]" required=true value="{{$healthform['first_name']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Nachname:" name="healthform[last_name]" required=true value="{{$healthform['last_name']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="v/o:" name="healthform[nickname]" required=true value="{{$healthform['nickname']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Geburtstag:" name="healthform[birthday]" required=true value="{{$healthform['birthday']}}" type="date"/>
+            </x-forms.container>
+        </x-forms.row>
+        <x-forms.row>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Strasse:" name="healthform[street]" value="{{$healthform['street']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Postleitzahl:" name="healthform[zip_code]" class="autocomplete_txt" value="{{$healthform['zip_code']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Ortschaft:" name="healthform[city]" class="autocomplete_txt" value="{{$healthform['city']}}"/>
+            </x-forms.container>
+            <x-forms.hidden name="city_id" class="autocomplete_txt"/>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Telefon (Bei Leitungspersonen):" name="healthform[phone_number]" value="{{$healthform['phone_number']}}"/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <h4>2. Eltern (im Notfall zu erreichende Person)</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                {!! Form::label('healthform[emergency_contact_name]', 'Name:') !!}
-                {!! Form::text('healthform[emergency_contact_name]', $healthform['emergency_contact_name'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-5">
-                {!! Form::label('healthform[emergency_contact_address]', 'Wohnadresse während der Lagerwoche:') !!}
-                {!! Form::text('healthform[emergency_contact_address]', $healthform['emergency_contact_address'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-3">
-                {!! Form::label('healthform[emergency_contact_phone]', 'Telefon:') !!}
-                {!! Form::text('healthform[emergency_contact_phone]', $healthform['emergency_contact_phone'], ['class' => 'form-control']) !!}
-            </div>
-        </div>
+        <x-forms.row>
+            <x-forms.container class="col-md-4">
+                <x-forms.text label="Name:" name="healthform[emergency_contact_name]" value="{{$healthform['emergency_contact_name']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-5">
+                <x-forms.text label="Wohnadresse während der Lagerwoche:" name="healthform[emergency_contact_address]" value="{{$healthform['emergency_contact_address']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-3">
+                <x-forms.text label="Telefon:" name="healthform[emergency_contact_phone]" value="{{$healthform['emergency_contact_phone']}}"/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <h4>3. Hausarzt, Versicherung</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {!! Form::label('healthform[doctor_contact]', 'Hausarzt: Name, Telefon:') !!}
-                {!! Form::text('healthform[doctor_contact]', $healthform['doctor_contact'], ['class' => 'form-control']) !!}
-            </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('healthform[health_insurance_contact]', 'Krankenkasse: Name, Versichertennummer:') !!}
-                {!! Form::text('healthform[health_insurance_contact]', $healthform['health_insurance_contact'], ['class' => 'form-control']) !!}
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {!! Form::label('healthform[accident_insurance_contact]', 'Unfallversicherung: Name, Versichertennummer:') !!}
-                {!! Form::text('healthform[accident_insurance_contact]', $healthform['accident_insurance_contact'], ['class' => 'form-control']) !!}
-            </div>
-        </div>
+        <x-forms.row>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Hausarzt: Name, Telefon:" name="healthform[doctor_contact]" value="{{$healthform['doctor_contact']}}"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Krankenkasse: Name, Versichertennummer:" name="healthform[health_insurance_contact]" value="{{$healthform['health_insurance_contact']}}"/>
+            </x-forms.container>
+        </x-forms.row>
+        <x-forms.row>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Unfallversicherung: Name, Versichertennummer:" name="healthform[accident_insurance_contact]" value="{{$healthform['accident_insurance_contact']}}"/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <h4>4. Allergien</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-12">
-                {!! Form::label('healthinfo[allergy]', 'Allergische Substanz - Wie zeigt sich die Allergie?') !!}
-                {!! Form::textarea('healthinfo[allergy]', $healthinfo['allergy'], ['class' => 'form-control', 'rows' => 3]) !!}
-            </div>
-
-        </div>
+        <x-forms.row>
+            <x-forms.container class="col-md-12">
+                <x-forms.text-area label="Allergische Substanz - Wie zeigt sich die Allergie?" name="healthinfo[allergy]" value="{{$healthinfo['allergy']}}" rows=3/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <h4>5. Gesundheitszustand</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {!! Form::label('healthinfo[recent_issues]', 'kürzliche Unfälle / Krankheiten abgeschlossen?') !!}
-                {!! Form::textarea('healthinfo[recent_issues]', $healthinfo['recent_issues'], ['class' => 'form-control', 'rows' => 2]) !!}
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::label('healthinfo[recent_issues_doctor]', 'behandelnder Arzt: Name, Telefon:') !!}
-                    {!! Form::text('healthinfo[recent_issues_doctor]', $healthinfo['recent_issues_doctor'], ['class' => 'form-control']) !!}
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            {!! Form::label('healthinfo[drug_longterm]', 'Dauermedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
-            {!! Form::textarea('healthinfo[drug_longterm]', $healthinfo['drug_longterm'], ['class' => 'form-control', 'rows' => 2]) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('healthinfo[drug_demand]', 'Bei Bedarf: Medikament (mitgeben!), Dosis:') !!}
-            {!! Form::textarea('healthinfo[drug_demand]', $healthinfo['drug_demand'], ['class' => 'form-control', 'rows' => 2]) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('healthinfo[drug_emergency]', 'Notfallmedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:') !!}
-            {!! Form::textarea('healthinfo[drug_emergency]', $healthinfo['drug_emergency'], ['class' => 'form-control', 'rows' => 2]) !!}
-        </div>
+        <x-forms.row>
+            <x-forms.container class="col-md-6">
+                <x-forms.text-area label="kürzliche Unfälle / Krankheiten abgeschlossen?" name="healthinfo[recent_issues]" value="{{$healthinfo['recent_issues']}}" rows=2/>
+            </x-forms.container>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="behandelnder Arzt: Name, Telefon:" name="healthinfo[recent_issues_doctor]" value="{{$healthinfo['recent_issues_doctor']}}"/>
+            </x-forms.container>
+        </x-forms.row>
+            <x-forms.container>
+                <x-forms.text-area label="Dauermedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:" name="healthinfo[drug_longterm]" value="{{$healthinfo['drug_longterm']}}" rows=2/>
+            </x-forms.container>
+            <x-forms.container>
+                <x-forms.text-area label="Bei Bedarf: Medikament (mitgeben!), Dosis:" name="healthinfo[drug_demand]" value="{{$healthinfo['drug_demand']}}" rows=2/>
+            </x-forms.container>
+            <x-forms.container>
+                <x-forms.text-area label="Notfallmedikation: Medikament (mitgeben!), Dosis, Zeitpunkt:" name="healthinfo[drug_emergency]" value="{{$healthinfo['drug_emergency']}}" rows=2/>
+            </x-forms.container>
         <br>
         <h4>6. Ergänzungen</h4>
         <hr>
-        <div class="form-row">
+        <x-forms.row>
             <div class="col-md-6">
-                <div class="form-group">
-                    {!! Form::checkbox('healthform[swimmer]', '1', $healthform['swimmer']) !!}
-                    {!! Form::label('healthform[swimmer]', 'Teilnehmer/-in kann schwimmen') !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::checkbox('healthinfo[ointment_only_contact]', '1', $healthinfo['ointment_only_contact'], ['class'=>'healthform__checkbox']) !!}
-                    <label for="healthinfo[ointment_only_contact]">
-                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>lokale</b> Medikamente (Desinfektionsspray, Salber, Augentropfen, etc.) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
-                    </label>
-                </div>
-                <div class="form-group">
-                    {!! Form::checkbox('healthinfo[drugs_only_contact]', '1', $healthinfo['drugs_only_contact'], ['class'=>'healthform__checkbox']) !!}
-                    <label for="healthinfo[drugs_only_contact]">
-                        Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>orale</b> Medikamente (z.B. Halslutschtabletten, orale Schmerzmedikamente) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen.
-                    </label>
-                </div>
+                <x-forms.container>
+                    <x-forms.checkbox label="Teilnehmer/-in kann schwimmen" name="healthform[swimmer]" value="{{$healthform['swimmer']}}"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.checkbox label="Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>lokale</b> Medikamente (Desinfektionsspray, Salber, Augentropfen, etc.) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen." name="healthinfo[ointment_only_contact]" value="{{$healthinfo['ointment_only_contact']}}"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.checkbox label="Mir dürfen bei Bedarf und unter Berücksichtigung allfälliger Allergien rezeptfreie <b>orale</b> Medikamente (z.B. Halslutschtabletten, orale Schmerzmedikamente) selbständig vom Sanitätsteam verabreicht werden. Wir behalten uns vor, in Notfällen ohne Rücksprache einen Arzt aufzusuchen." name="healthinfo[drugs_only_contact]" value="{{$healthinfo['drugs_only_contact']}}"/>
+                </x-forms.container>
             </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('healthinfo[chronicle_diseases]', 'Bemerkungen (chronische Leiden, Bettnässer usw.)') !!}
-                {!! Form::textarea('healthinfo[chronicle_diseases]', $healthinfo['chronicle_diseases'], ['class' => 'form-control', 'rows' => 9]) !!}
-            </div>
-        </div>
+            <x-forms.container class="col-md-6">
+                <x-forms.text-area label="Bemerkungen (chronische Leiden, Bettnässer usw.)" name="healthinfo[chronicle_diseases]" value="{{$healthinfo['chronicle_diseases']}}" rows=9/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <h4>7. Impfungen und Allergiepass</h4>
         <hr>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                {!! Form::label('healthform[vaccination]', 'Letzte Tetanus Impfung erfolgt am:') !!}
-                {!! Form::text('healthform[vaccination]', $healthform['vaccination'], ['class' => 'form-control' , 'placeholder' => 'Datum bzw Keine']) !!}
-            </div>
-            <div class="form-group col-md-6">
+        <x-forms.row>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Letzte Tetanus Impfung erfolgt am:" name="healthform[vaccination]" value="{{$healthform['vaccination']}}" placeholder="Datum bzw Keine"/>
+            </x-forms.container>
+            <x-forms.container class="col-md-6">
                 @if(isset($healthform['file_allergies']))
                     Allergiepass schon hochgeladen <br>
                 @endif
-                {!! Form::label('healthform[file_allergies]', 'Allergiepass:') !!}
-                {!! Form::file('healthform[file_allergies]', null, ['class' => 'form-control']) !!}
-            </div>
-        </div>
+                <x-forms.file label="Allergiepass:" name="healthform[file_allergies]"/>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         @if($health_questions->count()>0)
 
             <h4>8. Lagerspezifische Fragen</h4>
             <hr>
-            <div class="form-row">
+            <x-forms.row>
                 @foreach($health_questions as $health_question)
-                    <div class="form-group col-md-6">
-                        {!! Form::label('health_question['. $health_question->id.']', $health_question->question['name']) !!}
-                        {!! Form::text('health_question['. $health_question->id.']', $health_question['answer'], ['class' => 'form-control']) !!}
-                    </div>
+                    <x-forms.container class="col-md-6">
+                        <x-forms.text label="{{$health_question->question['name']}}" name="health_question[{{$health_question->id}}]" value="{{$health_question['answer']}}"/>
+                    </x-forms.container>
                 @endforeach
-            </div>
+            </x-forms.row>
             <br>
         @endif
         <h4> @if($health_questions->count()>0)
@@ -190,21 +156,26 @@
             @endif
             Abschluss</h4>
         <hr>
-        <div class="form-row">
+        <x-forms.row>
             @if(!$camp['konekta'])
-                <div class="form-group col-md-4">
-                    {!! Form::submit('Gesundheitsblatt speichern', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'save'])!!}
-                </div>
+                <x-forms.container class="col-md-4">
+                    <x-forms.button type="submit" class="btn btn-primary" name="submit_btn" value="save">
+                        Gesundheitsblatt speichern
+                    </x-forms.button>
+                </x-forms.container> 
             @endif
             <div class="form-group col-md-6">
-                {!! Form::checkbox('healthinfo[accept_privacy_agreement]', '1', $healthinfo['accept_privacy_agreement']) !!}
-                Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Lagers gesammelt werden dürfen.
+                <x-forms.checkbox label="Ich bestätige, dass alle Angaben vollständig sind, der Wahrheit entsprechen und dass meine Gesundheits-Daten für die Zeitdauer des Lagers gesammelt werden dürfen." name="healthinfo[accept_privacy_agreement]" value="{{$healthinfo['accept_privacy_agreement']}}"/>
                 <br>
-
-                {!! Form::submit('Gesundheitsblatt abschliessen', ['class' => 'btn btn-primary', 'name' => 'submit_btn', 'value' => 'close'])!!}
+                <x-forms.container>
+                    <x-forms.button type="submit" class="btn btn-primary" name="submit_btn" value="close">
+                        Gesundheitsblatt abschliessen
+                    </x-forms.button>
+                </x-forms.container> 
             </div>
-        </div>
-        {!! Form::close()!!}
+        </x-forms.row>
+
+        </x-forms.form>
     </div>
 
 @endsection

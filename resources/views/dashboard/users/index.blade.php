@@ -13,21 +13,21 @@
             </header>
             <div class="row">
                 <div class="col-lg-3">
-                    <p>Person Suchen:</p>
-                    {!! Form::open(['method' => 'POST', 'action'=>'AdminUsersController@add']) !!}
-                    <div class="form-group">
-                        {!! Form::label('username_add', 'Name:') !!}
-                        {!! Form::text('username_add', null, ['class' => 'form-control autocomplete_txt', 'placeholder' => 'name@abt', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('role_id_add', 'Rolle:') !!}
-                        {!! Form::select('role_id_add', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    {!! Form::hidden('user_id', null, ['class' => 'form-control autocomplete_txt']) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Person Hinzufügen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <p>Person Suchen:</p>                    
+                    <x-forms.form :action="route('users.add')" accept-charset="UTF-8" method="POST">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="username_add" required=true class="autocomplete_txt" placeholder="name@abt.ch"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.select label="Rolle:" name="role_id_add" required=true :collection="$roles"/>
+                        </x-forms.container>
+                        <x-forms.hidden name="user_id" class="autocomplete_txt"/>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Person Hinzufügen
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
                 </div>
                 <div class="col-lg-3">
                     @if (config('app.import_db'))
@@ -48,36 +48,30 @@
                         </div>
                     @endif
                     <p>Person Erstellen:</p>
-                    {!! Form::open(['method' => 'POST', 'action'=>'AdminUsersController@store',  'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('username', 'Name:') !!}
-                        {!! Form::text('username', null, ['class' => 'form-control', 'placeholder' => 'name@abt', 'autocomplete' => 'username',  'required']) !!}
-                    </div>
-                    <div id="user_information_form">
-                        <div class="form-group">
-                            {!! Form::label('email', 'E-Mail:') !!}
-                            {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'name@abt.ch', 'autocomplete' => 'email', 'required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('role_id', 'Rolle:') !!}
-                            {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('password', 'Passwort:') !!}
-                            {!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'autocomplete' => 'new-password', 'required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('password_confirmation', __('Passwort bestätigen')) !!}
-                            {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password-confirm', 'autocomplete' => 'new-password', 'required']) !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::submit('Person Erstellen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
-
+                    <x-forms.form :action="route('dashboard.users.store')" accept-charset="UTF-8" method="POST">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="username" required=true placeholder="name@abt.ch" autocomplete="username"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="E-Mail:" name="email" type="email" required=true placeholder="name@abt.ch" autocomplete="email"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.select label="Rolle:" name="role_id" required=true :collection="$roles"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Passwort:" name="password" required=true type="password" autocomplete="new-password"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Passwort bestätigen:" name="password_confirmation" required=true type="password" autocomplete="new-password"/>
+                        </x-forms.container>
+                        <x-forms.hidden name="user_id" class="autocomplete_txt"/>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Person Erstellen
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
+                    
                 </div>
     {{--                <div class="col-lg-4">--}}
     {{--                    {!! Html::link('files/vorlage.xlsx', 'Vorlage herunterladen') !!}--}}

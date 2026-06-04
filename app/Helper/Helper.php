@@ -2,49 +2,49 @@
 
 namespace App\Helper;
 
-
-use Auth;
 use App\Models\Camp;
-use App\Models\Help;
-use App\Models\User;
-use App\Models\Group;
 use App\Models\CampUser;
+use App\Models\Group;
 use App\Models\HealthForm;
-use App\Models\HealthStatus;
-use App\Models\Intervention;
 use App\Models\HealthInformation;
+use App\Models\HealthStatus;
+use App\Models\Help;
+use App\Models\Intervention;
+use App\Models\User;
+use Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Crypt;
 
 class Helper
 {
-    static function getHealthInfo($code)
+    public static function getHealthInfo($code)
     {
         $healthinfos = HealthInformation::get();
         $healthinfo = null;
-        foreach ($healthinfos as $act_healthinfo){
-            if($code == $act_healthinfo['code']){
+        foreach ($healthinfos as $act_healthinfo) {
+            if ($code == $act_healthinfo['code']) {
                 $healthinfo = $act_healthinfo;
                 break;
             }
         }
+
         return $healthinfo;
     }
 
-    static function getHealthForm($code)
+    public static function getHealthForm($code)
     {
         $healthforms = HealthForm::get();
         $healthform = null;
-        foreach ($healthforms as $act_healthform){
-            if($code == $act_healthform['code']){
+        foreach ($healthforms as $act_healthform) {
+            if ($code == $act_healthform['code']) {
                 $healthform = $act_healthform;
                 break;
             }
         }
+
         return $healthform;
     }
 
-    static function updateGroup($master, $group_text)
+    public static function updateGroup($master, $group_text)
     {
         $group = Group::where('name', '=', $group_text)->first();
         if (isset($group)) {
@@ -52,7 +52,7 @@ class Helper
         } else {
             $master->update(['group_id' => null]);
         }
-}
+    }
 
     public static function updateCamp(User $user, Camp $camp)
     {
@@ -74,7 +74,8 @@ class Helper
     {
         do {
             $code = random_int(100000, 999999);
-        } while (HealthInformation::where('code', "=", $code)->first());
+        } while (HealthInformation::where('code', '=', $code)->first());
+
         return $code;
     }
 
@@ -82,31 +83,34 @@ class Helper
     {
         do {
             $code = random_int(1000, 9999);
-        } while (Camp::where('code', "=", $code)->first());
+        } while (Camp::where('code', '=', $code)->first());
+
         return $code;
     }
 
-    public static function getHealthStatus(Intervention $intervention){
+    public static function getHealthStatus(Intervention $intervention)
+    {
         $status = null;
-        if(!isset($intervention['date_close'])) {
-            $red = $intervention['health_status_id'] == config('status.health_red') ? 'red': '';
-            $yellow = $intervention['health_status_id'] == config('status.health_yellow') ? 'yellow': '';
-            $green = ($intervention['health_status_id'] == config('status.health_green')) || !isset($intervention['health_status_id']) ? 'green': '';
+        if (! isset($intervention['date_close'])) {
+            $red = $intervention['health_status_id'] == config('status.health_red') ? 'red' : '';
+            $yellow = $intervention['health_status_id'] == config('status.health_yellow') ? 'yellow' : '';
+            $green = ($intervention['health_status_id'] == config('status.health_green')) || ! isset($intervention['health_status_id']) ? 'green' : '';
 
             $status = '<div class="text-center-profile mbl">
                                     <div class="ampel row" id="ampel">
                                         <div class="ampel-btn col-4">
-                                            <div class="circle '. $red .'"></div>
+                                            <div class="circle '.$red.'"></div>
                                         </div>
                                         <div class="ampel-btn col-4">
-                                            <div class="circle '. $yellow .'"></div>
+                                            <div class="circle '.$yellow.'"></div>
                                         </div>
                                         <div class="ampel-btn col-4">
-                                             <div class="circle '. $green .'"></div>
+                                             <div class="circle '.$green.'"></div>
                                         </div>
                                     </div>
                                 </div>';
         }
+
         return $status;
     }
 
@@ -115,35 +119,51 @@ class Helper
         $name = '';
         if (Auth::user()->isManager() || Auth::user()->camp['show_names']) {
             $healthForm = Helper::getHealthForm($healthInformation['code']);
-            $name = ' (' . $healthForm['nickname'] . ')';
+            $name = ' ('.$healthForm['nickname'].')';
         }
+
         return $name;
     }
 
-    public static function getHealthInformationShow(Intervention $intervention, HealthInformation $healthinformation = null, $intervention_close = false)
+    public static function getHealthInformationShow(Intervention $intervention, ?HealthInformation $healthinformation = null, $intervention_close = false)
     {
-        if($healthinformation === null){
+        if ($healthinformation === null) {
             $healthinformation = $intervention->health_information;
         }
         $name = Helper::getName($healthinformation);
         $camp = Auth::user()->camp;
         $title = 'J+S-Patientenprotokoll';
-        $subtitle = 'von ' . $healthinformation['code'] . $name;
-        $help = Help::where('title',$title)->first();
+        $subtitle = 'von '.$healthinformation['code'].$name;
+        $help = Help::where('title', $title)->first();
         $help['main_title'] = 'Teilnehmerübersicht';
-        $help['main_route'] =  '/dashboard/healthinformation';
+        $help['main_route'] = '/dashboard/healthinformation';
         $health_status = HealthStatus::pluck('name', 'id')->all();
-        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions()->select("id", DB::raw("CONCAT(interventions.serial_number,' ',interventions.parameter) as name"))->whereNull('intervention_master_id')->pluck('name', 'interventions.id')->toArray();
+        $intervention_masters = ['' => 'Übergeordnete Intervention'] + $healthinformation->interventions()->select('id', DB::raw("CONCAT(interventions.serial_number,' ',interventions.parameter) as name"))->whereNull('intervention_master_id')->pluck('name', 'interventions.id')->toArray();
         $interventions = $intervention->interventions()->get();
         $intervention_close = $intervention_close || isset($intervention['date_close']);
-        return view('dashboard.healthinformation.show', compact('healthinformation',  'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp', 'interventions', 'intervention_close'));
+
+        return view('dashboard.healthinformation.show', compact('healthinformation', 'intervention', 'help', 'title', 'subtitle', 'health_status', 'intervention_masters', 'camp', 'interventions', 'intervention_close'));
     }
 
     public static function UpdateInterventionStatus(Intervention $intervention)
     {
         $intervention_sub = $intervention->interventions()->orderBy('serial_number', 'desc')->first();
-        if($intervention_sub){
+        if ($intervention_sub) {
             $intervention->update(['health_status_id' => $intervention_sub['health_status_id']]);
         }
+    }
+
+    public static function getAvatarPath($avatar)
+    {
+        $path = null;
+        if ($avatar) {
+            if (str_starts_with($avatar, 'https')) {
+                $path = $avatar;
+            } else {
+                $path = asset('storage/'.$avatar);
+            }
+        }
+
+        return $path;
     }
 }

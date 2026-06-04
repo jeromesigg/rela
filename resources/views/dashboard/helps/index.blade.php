@@ -24,20 +24,19 @@
             </header>
             <div class="row">
                 <div class="col-sm-4">
-                    <p>Artikel Erfassen:</p>
-                    {!! Form::open(['method' => 'POST', 'action'=>'HelpController@store']) !!}
-                    <div class="form-group">
-                        {!! Form::label('title', 'Titel:') !!}
-                        {!! Form::text('title', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('content', 'Inhalt:') !!}
-                        {!! Form::textarea('content', null, ['class' => 'form-control','rows' => 10, 'id' => "mytextarea"]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Artikel Erfassen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('helps.store')" accept-charset="UTF-8" method="POST">
+                        <x-forms.container>
+                            <x-forms.text label="Titel:" name="title" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text-area label="Inhalt:" name="content"  rows=10/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Artikel Erfassen
+                            </x-forms.button>
+                        </x-forms.container> 
+                    </x-forms.form>
                 </div>
                 <div class="col-md-8">
                     <table class="table table-striped table-responsive" id="datatable">

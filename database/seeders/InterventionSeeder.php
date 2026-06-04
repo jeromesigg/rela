@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Intervention;
 use Illuminate\Database\Seeder;
-use Faker\Factory;
 
 class InterventionSeeder extends Seeder
 {

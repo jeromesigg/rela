@@ -12,7 +12,7 @@ class City extends Model
     use SearchableTrait;
 
     protected $fillable = [
-        'name', 'plz'
+        'name', 'plz',
     ];
 
     protected $connection = 'mysql_info';
@@ -21,6 +21,6 @@ class City extends Model
         'columns' => [
             'name' => 1,
             'plz' => 1,
-        ]
+        ],
     ];
 }

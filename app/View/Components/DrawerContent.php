@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class DrawerContent extends Component
 {
     public $help;
+
     /**
      * Create a new component instance.
      */

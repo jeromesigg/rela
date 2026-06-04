@@ -3,11 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\HealthStatus;
-use App\Models\InterventionClass;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class BasisdatenSeeder extends Seeder
 {

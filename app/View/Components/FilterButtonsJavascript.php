@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class FilterButtonsJavascript extends Component
 {
     public $healthinformation;
+
     /**
      * Create a new component instance.
      *
