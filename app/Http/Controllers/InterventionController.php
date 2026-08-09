@@ -108,13 +108,6 @@ class InterventionController extends Controller
             })
             ->addColumn('actions', function (intervention $intervention) {
                 $actions = '<a href='.\URL::route('interventions.edit', $intervention).' title="Intervention Bearbeiten"><i class="fa-regular fa-pen-to-square fa-xl"></i></a>';
-                if (! isset($intervention['intervention_master_id'])) {
-                    $actions .= '&emsp;<a href='.\URL::route('interventions.createNew', ['healthInformation' => $intervention->health_information, 'intervention' => $intervention]).' title="Untergeordnete Erstellen"><i class="fa-solid fa-indent fa-xl"></i></a>';
-                }
-                if (! isset($intervention['date_close'])) {
-                    $actions .= '&emsp;<a href='.\URL::route('interventions.close', $intervention).' title="Intervention Abschliessen"><i class="fa-solid fa-heart-circle-check fa-xl"></i></a>';
-                }
-
                 return $actions;
             })
             ->rawColumns(['code', 'picture', 'intervention', 'status', 'abschluss', 'actions', 'date'])
