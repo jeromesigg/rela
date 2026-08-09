@@ -12,16 +12,13 @@
         id="dropdown-manager">
         <ul aria-labelledby="dropdown-manager" class="h-dropdown py-1 text-gray-700 dark:text-gray-300 overflow-y-auto" >
             <li>
-                    <a class="nav-link" href="{{route('healthforms.index')}}">Gesundheitsblätter</a>
+                <a class="nav-link" href="{{route('dashboard.users.index')}}">Leiter</a>
             </li>
-                        <li>
-                    <a class="nav-link" href="{{route('dashboard.users.index')}}">Leiter</a>
+            <li>
+                <a class="nav-link" href="{{route('dashboard.questions.index')}}">Fragen</a>
             </li>
-                        <li>
-                    <a class="nav-link" href="{{route('dashboard.questions.index')}}">Fragen</a>
-            </li>
-                        <li>
-                    <a class="nav-link" href="{{route('dashboard.camps.index')}}">Lager</a>
+            <li>
+                <a class="nav-link" href="{{route('dashboard.camps.index')}}">Lager</a>
             </li>
         </ul>
     </div>

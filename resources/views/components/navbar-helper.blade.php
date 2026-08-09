@@ -12,6 +12,9 @@
         id="dropdown-helper">
         <ul aria-labelledby="dropdown-helper" class="h-dropdown py-1 text-gray-700 dark:text-gray-300 overflow-y-auto" >
             <li>
+                    <a class="nav-link" href="{{route('healthforms.index')}}">Gesundheitsblätter</a>
+            </li>
+            <li>
                 <a class="nav-link" href="{{route('healthinformation.index')}}">Teilnehmerübersicht</a>
             </li>
             <li>

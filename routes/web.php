@@ -78,6 +78,8 @@ Route::group(['middleware' => 'verified'], function () {
     Route::get('healthinformation/{healthInformation}/intervention/{intervention}/createNew', ['as' => 'interventions.createNew', 'uses' => 'InterventionController@createNew']);
     Route::get('interventions/addNew', ['as' => 'interventions.addNew', 'uses' => 'InterventionController@addNew']);
     Route::get('interventions/closeAjax', ['as' => 'interventions.closeAjax', 'uses' => 'InterventionController@closeAjax']);
+    Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
+    Route::get('healthforms/createDataTables', ['as' => 'healthforms.CreateDataTables', 'uses' => 'HealthFormController@createDataTables']);
 
     Route::group(['middleware' => 'manager'], function () {
         Route::get('dashboard/users/searchajaxuser', ['as' => 'searchajaxuser', 'uses' => 'AdminUsersController@searchResponseUser']);
@@ -86,11 +88,9 @@ Route::group(['middleware' => 'verified'], function () {
         Route::get('users/createDataTables', ['as' => 'users.CreateDataTables', 'uses' => 'AdminUsersController@createDataTables']);
         Route::resource('dashboard/questions', 'QuestionController', ['as' => 'dashboard']);
         Route::get('questions/createDataTables', ['as' => 'questions.CreateDataTables', 'uses' => 'QuestionController@createDataTables']);
-        Route::resource('dashboard/healthforms', 'HealthFormController')->except(['show', 'update', 'edit']);
         Route::post('dashboard/healthforms/import', ['as' => 'healthforms.import', 'uses' => 'HealthFormController@import']);
         Route::get('dashboard/healthforms/showOrEdit/{healthform}', ['as' => 'healthforms.showOrEdit', 'uses' => 'HealthFormController@showOrEdit']);
         Route::get('dashboard/healthforms/uploadFile', ['as' => 'dashboard.healthforms.uploadFile', 'uses' => 'HealthFormController@UploadFile']);
-        Route::get('healthforms/createDataTables', ['as' => 'healthforms.CreateDataTables', 'uses' => 'HealthFormController@createDataTables']);
         Route::get('healthinformation/print/{healthInformation}', ['as' => 'healthinformation.print', 'uses' => 'HealthInformationController@print']);
         Route::post('dashboard/healthinformation/uploadProtocol/{healthinformation}', ['as' => 'uploadProtocol', 'uses' => 'HealthInformationController@uploadProtocol']);
         Route::get('healthinformation/downloadProtocol/{healthinformation}', ['as' => 'downloadProtocol', 'uses' => 'HealthInformationController@downloadProtocol']);

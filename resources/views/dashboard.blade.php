@@ -41,6 +41,27 @@
                         </div>
                     </div>
                 </div>
+                
+                @if($camp['konekta'])
+                    <hr class="h-px my-8 bg-neutral-quaternary border-0">
+                    <div >
+                        <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Ceviname</th>
+                                    <th scope="col">Vorname</th>
+                                    <th scope="col">Nachname</th>
+                                    <th scope="col" >Geburtsdatum</th>
+                                    <th scope="col">Abteilung</th>
+                                    <th scope="col">Ort</th>
+                                    <th scope="col">Ausgefüllt</th>
+                                    <th scope="col">Öffnen</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                @endif
             @else
                 <div class="container p-4">
                     <h4><b>Kein Lager zugewiesen</b></h4>
@@ -90,6 +111,31 @@
                     $("[name='healthinformation_id']").val(data.id);
                 }
             });
+        });
+        $(document).ready(function(){
+            const table = $('#datatable').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                pageLength: 25,
+                language: {
+                    "url": "/lang/Datatables.json"
+                },
+                ajax: "{!! route('healthforms.CreateDataTables') !!}",
+                columns: [
+                    { data: 'code', name: 'code' },
+                    { data: 'nickname', name: 'nickname' },
+                    { data: 'first_name', name: 'first_name' },
+                    { data: 'last_name', name: 'last_name' },
+                    { data: 'birthday', name: 'birthday' },
+                    { data: 'group', name: 'group' },
+                    { data: 'city', name: 'city' },
+                    { data: 'finish', name: 'finish' },
+                    { data: 'Actions', name: 'Actions', orderable: false, searchable: false }
+                ]
+            });
+            
+            initFlowbite();
         });
     </script>
 @endpush
